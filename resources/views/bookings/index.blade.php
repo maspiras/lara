@@ -1,34 +1,51 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="row">
-    <div class="col-lg-12 margin-tb">
-        <div class="pull-left">
-            <h2>Rooms</h2>
-        </div>
-        <div class="pull-right">
-            @can('room-create')
-            <a class="btn btn-success btn-sm mb-2" href="{{ route('bookings.create') }}"><i class="fa fa-plus"></i> Create New Product</a>
-            @endcan
+    <!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Bookings</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+              <li class="breadcrumb-item active">Bookings</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">            
+                <div class="col-lg-12 margin-tb">                
+                    <div class="pull-right">
+                        @can('room-create')                        
+                        <a class="btn btn-success" href="{{ route('bookings.create') }}"><i class="fa fa-plus"></i> Create New Booking</a>&nbsp;                        
+                        <a class="btn btn-warning" href="{{ route('bookings.create') }}"><i class="fa fa-users"></i> Create New Group Booking</a>
+                        @endcan
+                    </div>    
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-@session('success')
-    <div class="alert alert-success" role="alert"> 
-        {{ $value }}
-    </div>
-@endsession
-
-<table class="table table-bordered">
-    <tr>
-        <th>No</th>
-        <th>Name</th>
-        <th>Details</th>
-        <th width="280px">Action</th>
-    </tr>
-    
-</table>
-
-
 @endsection
+
+@push('scripts')
+<script>
+  $(function () {    
+    /* For Active Menu */
+    $('.treeview-bookings').addClass('active');
+  });
+</script>
+@endpush
+        
+
