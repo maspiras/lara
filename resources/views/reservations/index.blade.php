@@ -28,8 +28,7 @@
                 <div class="col-lg-12 margin-tb">                
                     <div class="pull-right">
                         @can('room-create')                        
-                        <a class="btn btn-success" href="{{ route('reservations.create') }}"><i class="fa fa-plus"></i> Create New Booking</a>&nbsp;                        
-                        <a class="btn btn-warning" href="{{ route('reservations.create') }}"><i class="fa fa-users"></i> Create New Group Booking</a>
+                        <a class="btn btn-success" href="{{ route('reservations.create') }}"><i class="fa fa-plus"></i> Create New Reservation</a>&nbsp;                                                
                         @endcan
                     </div>    
                 </div>
@@ -40,12 +39,7 @@
 @endsection
 
 @push('scripts')
-<script>
-  $(function () {    
-    /* For Active Menu */
-    $('.treeview-reservations').addClass('active');
-  });
-</script>
+<script type="text/javascript" src="{{ url('/') }}/js/reservation.js"></script>
 @endpush
         
 

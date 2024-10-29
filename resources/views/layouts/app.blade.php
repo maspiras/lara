@@ -18,12 +18,7 @@
 
   @yield('content')
 
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
-
+<p>&nbsp;</p>
   @include('default.common.footer')
   
 </div>

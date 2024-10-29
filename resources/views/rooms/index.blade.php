@@ -29,6 +29,7 @@
                 <div class="col-lg-12 margin-tb">
                     
                     <div class="pull-right">
+                    <p> The interesting value is: {{ $i }} </p>
                         @can('room-create')
                         <a class="btn btn-success btn-sm mb-2" href="{{ route('rooms.create') }}"><i class="fa fa-plus"></i> Create New Room</a>
                         @endcan
@@ -87,8 +88,7 @@
 @push('scripts')
 <script>
   $(function () {    
-    /* For Active Menu */
-    $('.treeview-rooms').addClass('active');
+    
   });
 </script>
 @endpush

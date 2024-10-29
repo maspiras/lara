@@ -31,7 +31,8 @@ class ReservationController extends Controller
      */
     public function create()
     {
-        //
+        return view('reservations.create')
+            ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**

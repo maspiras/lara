@@ -42,17 +42,17 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('rooms.index') }}" class="nav-link treeview-rooms">              
-              <i class="nav-icon fas fa-person-booth"></i>
-              <p>Rooms</p>
-            </a>
-          </li>
-          <li class="nav-item">
             <a href="{{ url('/') }}/reservations" class="nav-link treeview-reservations">              
               <i class="nav-icon fas fa-person-booth"></i>
               <p>Reservations</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('rooms.index') }}" class="nav-link treeview-rooms">              
+              <i class="nav-icon fas fa-person-booth"></i>
+              <p>Rooms</p>
+            </a>
+          </li>          
           <li class="nav-item">          
             <!-- Authentication -->
             <form method="POST" action="{{ route('logout') }}">
