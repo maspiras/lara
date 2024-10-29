@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Repositories\BookingRepository;
+use App\Repositories\ReservationRepository;
 
-class BookingController extends Controller
+class ReservationController extends Controller
 {
-    private $bookingRepository;
-    public function __construct(BookingRepository $bookingRepository)
+    private $reservationRepository;
+    public function __construct(ReservationRepository $reservationRepository)
     {
-        $this->bookingRepository = $bookingRepository;
+        $this->reservationRepository = $reservationRepository;
     }
 
     /**
@@ -20,9 +20,9 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = array();#$this->bookingRepository->getPaginate(5);        
+        $reservations = array();#$this->bookingRepository->getPaginate(5);        
 
-        return view('bookings.index',compact('bookings'))
+        return view('reservations.index',compact('reservations'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 

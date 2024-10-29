@@ -8,12 +8,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Bookings</h1>
+            <h1 class="m-0">Reservations</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-              <li class="breadcrumb-item active">Bookings</li>
+              <li class="breadcrumb-item active">Reservations</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -28,8 +28,8 @@
                 <div class="col-lg-12 margin-tb">                
                     <div class="pull-right">
                         @can('room-create')                        
-                        <a class="btn btn-success" href="{{ route('bookings.create') }}"><i class="fa fa-plus"></i> Create New Booking</a>&nbsp;                        
-                        <a class="btn btn-warning" href="{{ route('bookings.create') }}"><i class="fa fa-users"></i> Create New Group Booking</a>
+                        <a class="btn btn-success" href="{{ route('reservations.create') }}"><i class="fa fa-plus"></i> Create New Booking</a>&nbsp;                        
+                        <a class="btn btn-warning" href="{{ route('reservations.create') }}"><i class="fa fa-users"></i> Create New Group Booking</a>
                         @endcan
                     </div>    
                 </div>
@@ -43,7 +43,7 @@
 <script>
   $(function () {    
     /* For Active Menu */
-    $('.treeview-bookings').addClass('active');
+    $('.treeview-reservations').addClass('active');
   });
 </script>
 @endpush

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Rooms\RoomsController;
-use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ReservationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
     Route::resource('rooms', RoomsController::class);
-    Route::resource('bookings', BookingController::class);
+    Route::resource('reservations', ReservationController::class);
 });
 
 /* Route::group(['middleware' => ['auth']], function() {
