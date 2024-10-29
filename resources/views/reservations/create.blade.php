@@ -37,19 +37,19 @@
             </div>
             <div class="card-body">
               <div class="form-group">
-                <label for="inputName">checkin</label>
+                <label for="inputName">Checkin</label>
                     <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                        <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                        <input type="text" id="checkin" name="checkin" class="form-control datetimepicker-input" data-target="#reservationdate"/>
                         <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>                
               </div>
               <div class="form-group">
-                <label for="inputName">checkout</label>
-                    <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                        <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate"/>
-                        <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                <label for="inputName">Checkout</label>
+                    <div class="input-group date" id="reservationcheckout" data-target-input="nearest">
+                        <input type="text" id="checkout" name="checkout" class="form-control datetimepicker-input" data-target="#reservationcheckout"/>
+                        <div class="input-group-append" data-target="#reservationcheckout" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>                
@@ -59,13 +59,13 @@
                 <label for="inputStatus">Adults</label>
                 <div class="input-group">
                         <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                        <span class="input-group-text"><i class="far fa-user"></i></span>
                         </div>
-                        <select id="inputStatus" class="form-control custom-select">
-                        <option disabled>Select one</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
+                        <select id="inputStatus" name="adults" class="form-control custom-select">
+                        <option selected>1</option>
+                        @for ($a = 0; $a <= 300; $a++)
+                        <option> {{ $a }}</option>
+                        @endfor
                         </select>
                     </div>
               </div>
@@ -73,13 +73,13 @@
                     <label for="inputStatus">Childs</label>                
                     <div class="input-group">
                         <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                        <span class="input-group-text"><i class="far fa-user"></i></span>
                         </div>
-                        <select id="inputStatus" class="form-control custom-select">
+                        <select id="inputStatus" name="childs" class="form-control custom-select">
                         <option disabled>Select one</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
+                        @for ($c = 0; $c <= 100; $c++)
+                        <option> {{ $c }}</option>
+                        @endfor
                         </select>
                     </div>
               </div>
@@ -87,13 +87,13 @@
                 <label for="inputStatus">Pets</label>
                 <div class="input-group">
                         <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                        <span class="input-group-text"><i class="far fa-cat"></i></span>
                         </div>
-                        <select id="inputStatus" class="form-control custom-select">
+                        <select id="inputStatus" name="pets" class="form-control custom-select">
                         <option disabled>Select one</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
+                        @for ($p = 0; $p <= 50; $p++)
+                        <option> {{ $p }}</option>
+                        @endfor
                         </select>
                     </div>
               </div>
@@ -103,11 +103,99 @@
             <!-- /.card-body -->
           </div>
           <!-- /.card -->
+          
+          <div class="card card-primary collapsed-card">
+              <div class="card-header">
+                <h3 class="card-title">Room/s</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                  Rooms List
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+
+            <div class="card card-warning">
+            <div class="card-header">
+              <h3 class="card-title">Guest Information</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="inputEstimatedBudget">Name</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Name">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputSpentBudget">Phone</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Phone">
+                </div>
+
+              </div>
+              <div class="form-group">
+                <label for="inputEstimatedDuration">Email</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                  </div>
+                  <input type="email" class="form-control" placeholder="Email">
+                </div>
+
+              </div>
+              
+              <div class="form-group">
+                <label for="inputDescription">Project Description</label>
+                <textarea id="inputDescription" class="form-control" rows="4" placeholder="Additional information"></textarea>
+              </div>
+
+              <div class="form-group">
+                  <label>Booking Source</label>
+                  <select class="form-control select2" style="width: 100%;">
+                    <option selected="selected">Other</option>
+                    <option value="1">Phone</option>
+                    <option>Facebook/Messenger/FB Page</option>
+                    <option>Tiktok</option>
+                    <option>Instagram</option>                    
+                    <option>Email</option>
+                    <option>Booking.com</option>
+                    <option>Airbnb</option>
+                    <option>Website</option>                    
+                  </select>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+
+          
         </div>
         <div class="col-md-6">
-          <div class="card card-secondary">
+          
+          
+          <!-- Start Rates -->
+          <div class="card card-info">
             <div class="card-header">
-              <h3 class="card-title">Budget</h3>
+              <h3 class="card-title">Rates</h3>
 
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -117,24 +205,46 @@
             </div>
             <div class="card-body">
               <div class="form-group">
-                <label for="inputEstimatedBudget">Estimated budget</label>
-                <input type="number" id="inputEstimatedBudget" class="form-control" value="2300" step="1">
+                <label for="inputEstimatedBudget">Rates per day</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="0.00">
+                </div>
               </div>
               <div class="form-group">
-                <label for="inputSpentBudget">Total amount spent</label>
-                <input type="number" id="inputSpentBudget" class="form-control" value="2000" step="1">
+                <label for="inputSpentBudget">Days stay</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-moon"></i></span>
+                  </div>
+                  <input type="text" disabled class="form-control" placeholder="1" name="daystay" id="daystay">
+                </div>
+
               </div>
               <div class="form-group">
-                <label for="inputEstimatedDuration">Estimated project duration</label>
-                <input type="number" id="inputEstimatedDuration" class="form-control" value="20" step="0.1">
+                <label for="inputEstimatedDuration">Rates per stay</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
+                  </div>
+                  <input type="email" class="form-control" placeholder="0.00">
+                </div>
+
               </div>
+              
+              
             </div>
             <!-- /.card-body -->
           </div>
           <!-- /.card -->
+          <!-- End Rates -->
+
+          <!-- Start payment -->
           <div class="card card-info">
             <div class="card-header">
-              <h3 class="card-title">Files</h3>
+              <h3 class="card-title">Payment</h3>
 
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -142,77 +252,79 @@
                 </button>
               </div>
             </div>
-            <div class="card-body p-0">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>File Name</th>
-                    <th>File Size</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
+            <div class="card-body">
 
-                  <tr>
-                    <td>Functional-requirements.docx</td>
-                    <td>49.8005 kb</td>
-                    <td class="text-right py-0 align-middle">
-                      <div class="btn-group btn-group-sm">
-                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                      </div>
-                    </td>
-                  <tr>
-                    <td>UAT.pdf</td>
-                    <td>28.4883 kb</td>
-                    <td class="text-right py-0 align-middle">
-                      <div class="btn-group btn-group-sm">
-                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                      </div>
-                    </td>
-                  <tr>
-                    <td>Email-from-flatbal.mln</td>
-                    <td>57.9003 kb</td>
-                    <td class="text-right py-0 align-middle">
-                      <div class="btn-group btn-group-sm">
-                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                      </div>
-                    </td>
-                  <tr>
-                    <td>Logo.png</td>
-                    <td>50.5190 kb</td>
-                    <td class="text-right py-0 align-middle">
-                      <div class="btn-group btn-group-sm">
-                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                      </div>
-                    </td>
-                  <tr>
-                    <td>Contract-10_12_2014.docx</td>
-                    <td>44.9715 kb</td>
-                    <td class="text-right py-0 align-middle">
-                      <div class="btn-group btn-group-sm">
-                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                      </div>
-                    </td>
+              <div class="form-group">
+                  <label>Currency</label>
+                  <select class="form-control select2" style="width: 100%;">
+                    <option selected="selected">PHP</option>
+                    <option value="1">PHP</option>
+                    <option value="2">USD</option>
+                    <option value="3">EUR</option>                    
+                    <option value="3">CAD</option>
+                    <option value="3">AUD</option>
+                    <option value="3">GBP</option>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label>Payment status</label>
+                  <select class="form-control select2" style="width: 100%;">
+                    <option selected="selected">No payment</option>
+                    <option value="1">Prepayment paid</option>
+                    <option>Fully paid</option>                 
+                  </select>
+              </div>  
 
-                </tbody>
-              </table>
+              <div class="form-group">
+                  <label>Type of payment</label>
+                  <select class="form-control select2" style="width: 100%;">
+                    <option selected="selected">Select</option>
+                    <option value="1">Pay with cash</option>
+                    <option value="2">Pay via online money transfer</option>
+                    <option value="3">Pay via debit/credit card</option>
+                    <option value="4">Pay via Cheque</option>
+                  </select>
+              </div>  
+
+              <div class="form-group">
+                <label for="inputEstimatedDuration">Prepayment</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="0.00">
+                </div>
+              </div>
+
+              
+
+              
+              
+              
             </div>
             <!-- /.card-body -->
           </div>
           <!-- /.card -->
+          <!-- End payment -->
+
+          <div class="col-12">
+                  
+                  <button type="submit" class="btn btn-success btn-lg float-right"><i class="far fa-credit-card"></i> Save Reservation
+                  </button>
+                  <button type="cancel" class="btn btn-secondary btn-lg float-right" style="margin-right: 5px;">
+                    <i class="fas fa-download"></i> Cancel Reservation
+                  </button>
+                </div>
+
+          <!-- /.card -->
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-12">
           <a href="#" class="btn btn-secondary">Cancel</a>
           <input type="submit" value="Save Changes" class="btn btn-success float-right">
         </div>
-      </div>
+      </div> -->
     </section>
     <!-- /.content -->
 
@@ -252,12 +364,12 @@
 <script type="text/javascript" src="{{ url('/') }}/js/reservation.js"></script>
 <script>
   $(function () {
-  
-
-   
-
-    //Date picker
+      //Date picker
     $('#reservationdate').datetimepicker({
+        format: 'L'
+    });
+
+    $('#reservationcheckout').datetimepicker({
         format: 'L'
     });
 
@@ -302,8 +414,9 @@
    
     $("input[data-bootstrap-switch]").each(function(){
       $(this).bootstrapSwitch('state', $(this).prop('checked'));
-    })
+    });
 
+    
   })
 </script>
 @endpush

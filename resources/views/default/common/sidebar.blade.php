@@ -43,16 +43,22 @@
           </li>
           <li class="nav-item">
             <a href="{{ url('/') }}/reservations" class="nav-link treeview-reservations">              
-              <i class="nav-icon fas fa-person-booth"></i>
+              <i class="nav-icon fas fa-calendar-alt"></i>
               <p>Reservations</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('rooms.index') }}" class="nav-link treeview-rooms">              
+            <a href="{{ url('/') }}/rooms" class="nav-link treeview-rooms">              
               <i class="nav-icon fas fa-person-booth"></i>
               <p>Rooms</p>
             </a>
-          </li>          
+          </li>
+          <li class="nav-item">
+            <a href="{{ url('/') }}/employees" class="nav-link treeview-rooms">              
+              <i class="nav-icon fas fa-address-book"></i>
+              <p>Employees</p>
+            </a>
+          </li>           
           <li class="nav-item">          
             <!-- Authentication -->
             <form method="POST" action="{{ route('logout') }}">
