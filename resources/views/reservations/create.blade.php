@@ -232,7 +232,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="0.00">
+                  <input type="text" id="ratesperday" name="ratesperday" class="form-control" placeholder="0.00">
                 </div>
               </div>
               <div class="form-group">
@@ -251,7 +251,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="email" class="form-control" placeholder="0.00">
+                  <input type="number" min="1" step="any" id="ratesperday" name="ratesperday" class="form-control" placeholder="0.00">
                 </div>
 
               </div>
@@ -391,23 +391,51 @@
 
 <script>
   $(function () {
+    var Reservation = {
+      DayStay: function(frm, e){
+        var d1 = new Date($('#checkin').val());   
+        var d2 = new Date($('#checkout').val());       
+        var diff = ( d2.getTime() - d1.getTime() ) / (1000 * 60 * 60 * 24);              
+        $('#daystay').val(diff);
+        //e.preventDefault();
+      },
+      Rates: function(frm, e){        
+        $('#ratesperday').val($('#ratesperday').val() * $('#daystay').val());
+      }
+    }
 
     $.validator.setDefaults({
-    submitHandler: function () {
-      if($('#reservationForm input:checked').length <= 0){
-        $('.roomlistcard').removeClass('card-primary');
-        $('.roomlistcard').addClass('card-danger');
-        $('.roomlistcard div h3').text('Room/s: This field is required');
-          alert("rooms required");
-      }else{
-        $('.roomlistcard').removeClass('card-danger');
-        $('.roomlistcard').addClass('card-primary');
-        $('.roomlistcard div h3').text('Room/s');
-        alert( "Form successful submitted!" );
+      submitHandler: function () {
+        if($('#reservationForm input:checked').length <= 0){
+          $('.roomlistcard').removeClass('card-primary');
+          $('.roomlistcard').addClass('card-danger');
+          $('.roomlistcard div h3').text('Room/s: This field is required');
+            alert("rooms required");
+        }else{
+          $('.roomlistcard').removeClass('card-danger');
+          $('.roomlistcard').addClass('card-primary');
+          $('.roomlistcard div h3').text('Room/s');
+          alert( "Form successful submitted!" );
+        }
+        
       }
-      
-    }
-  });
+    });
+
+    $('#checkin').on('input', function() {
+      Reservation.DayStay($(this));        
+    });
+
+    $('#checkout').on('input', function() {
+      Reservation.DayStay($(this));        
+    });
+
+    /* $('#ratesperday').on('input', function() {
+      Reservation.Rates($(this));        
+    });  
+    $('#ratesperdayy').on('input', function() {
+      Reservation.Rates($(this));        
+    });  */ 
+
   $('#reservationForm').validate({
     rules: {
       checkin: {
