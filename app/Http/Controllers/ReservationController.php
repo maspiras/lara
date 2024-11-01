@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 use App\Repositories\ReservationRepository;
 use App\Repositories\RoomRepository;
 
+use Illuminate\Foundation\Validation\ValidatesRequests;
+
 class ReservationController extends Controller
 {
+    use ValidatesRequests;
     private $reservationRepository;
     private $roomRepository;
     public function __construct(ReservationRepository $reservationRepository, RoomRepository $roomRepository)
@@ -42,10 +46,12 @@ class ReservationController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+     */    
+    public function store(Request $request): RedirectResponse
     {
-        //
+        request()->validate([
+            'prepayment' => 'required',
+        ]);
     }
 
     /**

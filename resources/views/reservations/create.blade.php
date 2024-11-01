@@ -21,9 +21,25 @@
     </div>
     <!-- /.content-header -->
 
-    <!-- Main content -->
-    <form id="reservationForm">                
+    <!-- Main content -->    
+    <form method="post" id="reservationForm" action="{{ route('reservations.store') }}">
+    @csrf              
     <section class="content">
+    
+      @if ($errors->any())
+        <div class="row">
+          <div class="col-md-12">
+            <div class="alert alert-danger">
+                <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+          </div>
+        </div>
+      @endif
       <div class="row">
         <div class="col-md-6">
           <div class="card card-primary">
@@ -241,7 +257,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-moon"></i></span>
                   </div>
-                  <input type="text" disabled class="form-control" placeholder="1" name="daystay" id="daystay">
+                  <input type="text" disabled class="form-control" placeholder="1" value="1" name="daystay" id="daystay">
                 </div>
 
               </div>
@@ -251,7 +267,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="number" min="1" step="any" id="ratesperday" name="ratesperday" class="form-control" placeholder="0.00">
+                  <input type="number" step="any" id="ratesperstay" name="ratesperstay" class="form-control" placeholder="0.00">
                 </div>
 
               </div>
@@ -314,7 +330,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="0.00">
+                  <input type="text" class="form-control" id="prepayment" name="prepayment" placeholder="0.00">
                 </div>
               </div>
 
@@ -399,18 +415,33 @@
         $('#daystay').val(diff);
         //e.preventDefault();
       },
-      Rates: function(frm, e){        
-        $('#ratesperday').val($('#ratesperday').val() * $('#daystay').val());
+      RatesPerDay: function(frm, e){        
+        if($('#daystay').val() == 0){
+          $('#ratesperstay').val($('#ratesperday').val());
+        }else{
+          $('#ratesperstay').val($('#ratesperday').val() * $('#daystay').val());
+        }
+        
+      },
+      RatesPerStay: function(frm, e){        
+        $('#ratesperday').val($('#ratesperstay').val() / $('#daystay').val());
       }
     }
 
-    $.validator.setDefaults({
+    $('#ratesperday').on('change keyup', function() {
+      Reservation.RatesPerDay();
+    });
+
+    $('#ratesperstay').on('change keyup', function() {
+      Reservation.RatesPerStay();
+    });
+
+    /* $.validator.setDefaults({
       submitHandler: function () {
         if($('#reservationForm input:checked').length <= 0){
           $('.roomlistcard').removeClass('card-primary');
           $('.roomlistcard').addClass('card-danger');
-          $('.roomlistcard div h3').text('Room/s: This field is required');
-            alert("rooms required");
+          $('.roomlistcard div h3').text('Room/s: This field is required');            
         }else{
           $('.roomlistcard').removeClass('card-danger');
           $('.roomlistcard').addClass('card-primary');
@@ -419,14 +450,33 @@
         }
         
       }
+    }); */
+
+    $('#reservationForm').submit(function(e){
+      if($('#reservationForm input:checked').length <= 0){
+          $('.roomlistcard').removeClass('card-primary');
+          $('.roomlistcard').addClass('card-danger');
+          $('.roomlistcard div h3').text('Room/s: This field is required');    
+          e.preventDefault();        
+        }else{
+          $('.roomlistcard').removeClass('card-danger');
+          $('.roomlistcard').addClass('card-primary');
+          $('.roomlistcard div h3').text('Room/s');
+          alert( "Form successful submitted!" );
+        }
+        //e.preventDefault();
+        
     });
 
     $('#checkin').on('input', function() {
-      Reservation.DayStay($(this));        
+      Reservation.DayStay($(this)); 
+      Reservation.RatesPerDay();       
     });
 
     $('#checkout').on('input', function() {
-      Reservation.DayStay($(this));        
+      Reservation.DayStay($(this));      
+      //Reservation.RatesPerStay();  
+      Reservation.RatesPerDay();
     });
 
     /* $('#ratesperday').on('input', function() {
@@ -436,7 +486,7 @@
       Reservation.Rates($(this));        
     });  */ 
 
-  $('#reservationForm').validate({
+  /* $('#reservationForm').validate({
     rules: {
       checkin: {
         required: true,        
@@ -481,7 +531,7 @@
     unhighlight: function (element, errorClass, validClass) {
       $(element).removeClass('is-invalid');
     }
-  });
+  }); */
 
     
       //Date picker
