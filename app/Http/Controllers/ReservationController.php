@@ -6,13 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Repositories\ReservationRepository;
+use App\Repositories\RoomRepository;
 
 class ReservationController extends Controller
 {
     private $reservationRepository;
-    public function __construct(ReservationRepository $reservationRepository)
+    private $roomRepository;
+    public function __construct(ReservationRepository $reservationRepository, RoomRepository $roomRepository)
     {
         $this->reservationRepository = $reservationRepository;
+        $this->roomRepository = $roomRepository;
     }
 
     /**
@@ -21,7 +24,7 @@ class ReservationController extends Controller
     public function index()
     {
         $reservations = array();#$this->bookingRepository->getPaginate(5);        
-
+        
         return view('reservations.index',compact('reservations'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -31,7 +34,9 @@ class ReservationController extends Controller
      */
     public function create()
     {
-        return view('reservations.create')
+        $rooms = $this->roomRepository->all();
+        #$rooms = $this->roomRepository->getPaginate(2);   
+        return view('reservations.create',compact('rooms'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 

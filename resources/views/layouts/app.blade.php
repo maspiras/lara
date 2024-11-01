@@ -18,7 +18,7 @@
 
   @yield('content')
 
-<p>&nbsp;</p>
+
   @include('default.common.footer')
   
 </div>

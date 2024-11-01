@@ -22,6 +22,7 @@
     <!-- /.content-header -->
 
     <!-- Main content -->
+    <form id="reservationForm">                
     <section class="content">
       <div class="row">
         <div class="col-md-6">
@@ -39,7 +40,7 @@
               <div class="form-group">
                 <label for="inputName">Checkin</label>
                     <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                        <input type="text" id="checkin" name="checkin" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                        <input type="text" required id="checkin" name="checkin" class="form-control datetimepicker-input" data-target="#reservationdate" placeholder="mm/dd/yyyy" />
                         <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
@@ -48,7 +49,7 @@
               <div class="form-group">
                 <label for="inputName">Checkout</label>
                     <div class="input-group date" id="reservationcheckout" data-target-input="nearest">
-                        <input type="text" id="checkout" name="checkout" class="form-control datetimepicker-input" data-target="#reservationcheckout"/>
+                        <input type="text" required id="checkout" name="checkout" class="form-control datetimepicker-input" data-target="#reservationcheckout"  placeholder="mm/dd/yyyy" />
                         <div class="input-group-append" data-target="#reservationcheckout" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
@@ -56,12 +57,12 @@
               </div>
               
               <div class="form-group">
-                <label for="inputStatus">Adults</label>
+                <label for="adults">Adults</label>
                 <div class="input-group">
                         <div class="input-group-prepend">
                         <span class="input-group-text"><i class="far fa-user"></i></span>
                         </div>
-                        <select id="inputStatus" name="adults" class="form-control custom-select">
+                        <select id="adults" name="adults" class="form-control custom-select">
                         <option selected>1</option>
                         @for ($a = 0; $a <= 300; $a++)
                         <option> {{ $a }}</option>
@@ -70,12 +71,12 @@
                     </div>
               </div>
               <div class="form-group">
-                    <label for="inputStatus">Childs</label>                
+                    <label for="childs">Childs</label>                
                     <div class="input-group">
                         <div class="input-group-prepend">
                         <span class="input-group-text"><i class="far fa-user"></i></span>
                         </div>
-                        <select id="inputStatus" name="childs" class="form-control custom-select">
+                        <select id="childs" name="childs" class="form-control custom-select">
                         <option disabled>Select one</option>
                         @for ($c = 0; $c <= 100; $c++)
                         <option> {{ $c }}</option>
@@ -104,7 +105,7 @@
           </div>
           <!-- /.card -->
           
-          <div class="card card-primary collapsed-card">
+          <div class="card roomlistcard card-primary collapsed-card">
               <div class="card-header">
                 <h3 class="card-title">Room/s</h3>
 
@@ -116,7 +117,27 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                  Rooms List
+                  
+                  <div class="row">
+                  
+                    @foreach($rooms as $room)
+                                    
+                    <div class="col-sm-6">
+                      <!-- checkbox -->
+                      <div class="form-group clearfix">
+                        <div class="icheck-success d-inline">
+                          <input type="checkbox" id="roomname{{$room->id}}" class="rooms">
+                          <label for="roomname{{ $room->id}}">
+                            {{ $room->room_name }}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    @endforeach  
+
+                    
+                  </div>
+
               </div>
               <!-- /.card-body -->
             </div>
@@ -139,7 +160,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-user"></i></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Name">
+                  <input type="text" class="form-control" required id="fullname" name="fullname" placeholder="Name">
                 </div>
               </div>
               <div class="form-group">
@@ -173,6 +194,7 @@
                   <select class="form-control select2" style="width: 100%;">
                     <option selected="selected">Other</option>
                     <option value="1">Phone</option>
+                    <option>Walkin</option>
                     <option>Facebook/Messenger/FB Page</option>
                     <option>Tiktok</option>
                     <option>Instagram</option>                    
@@ -327,7 +349,7 @@
       </div> -->
     </section>
     <!-- /.content -->
-
+  </form>
 </div>
 
 
@@ -361,9 +383,79 @@
 <script src="{{ url('/') }}/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 <!-- date-range-picker -->
 <script src="{{ url('/') }}/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- jquery-validation -->
+<script src="{{ url('/') }}/plugins/jquery-validation/jquery.validate.min.js"></script>
+<script src="{{ url('/') }}/plugins/jquery-validation/additional-methods.min.js"></script>
+
 <script type="text/javascript" src="{{ url('/') }}/js/reservation.js"></script>
+
 <script>
   $(function () {
+
+    $.validator.setDefaults({
+    submitHandler: function () {
+      if($('#reservationForm input:checked').length <= 0){
+        $('.roomlistcard').removeClass('card-primary');
+        $('.roomlistcard').addClass('card-danger');
+        $('.roomlistcard div h3').text('Room/s: This field is required');
+          alert("rooms required");
+      }else{
+        $('.roomlistcard').removeClass('card-danger');
+        $('.roomlistcard').addClass('card-primary');
+        $('.roomlistcard div h3').text('Room/s');
+        alert( "Form successful submitted!" );
+      }
+      
+    }
+  });
+  $('#reservationForm').validate({
+    rules: {
+      checkin: {
+        required: true,        
+      },
+      checkout: {
+        required: true        
+      },
+      adults: {
+        required: true,
+        range: [1, 300],
+        number: true       
+      },
+      fullname:{
+        required: true,
+        minlength: 4
+      },      
+      
+    },
+    messages: {
+      checkin: {
+        required: "This field is required"        
+      },
+      checkout: {
+        required: "This field is required"        
+      },
+      adults: {
+        required: "This field is required"        
+      },
+      fullname: {
+        required: "This field is required"        
+      }
+      
+    },
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass('is-invalid');
+    }
+  });
+
+    
       //Date picker
     $('#reservationdate').datetimepicker({
         format: 'L'

@@ -54,7 +54,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ url('/') }}/employees" class="nav-link treeview-rooms">              
+            <a href="{{ url('/') }}/employees" class="nav-link treeview-employees">              
               <i class="nav-icon fas fa-address-book"></i>
               <p>Employees</p>
             </a>
