@@ -24,7 +24,7 @@ return new class extends Migration
             $table->index('hosts_id','hosts_id');
             $table->index('room_name','room_name');
             
-            
+            $table->unique(['room_name', 'hosts_id']);
            
         });
     }

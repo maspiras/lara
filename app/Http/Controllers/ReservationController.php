@@ -13,6 +13,10 @@ use App\Repositories\ReservedRoomRepository;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Http\Requests\ReservationRequest;
 
+use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\DB;
+use Exception;
+
 class ReservationController extends Controller
 {
     use ValidatesRequests;
@@ -53,6 +57,10 @@ class ReservationController extends Controller
      */    
     public function store(ReservationRequest $request)#: RedirectResponse
     {
+        $checkin = date('Y-m-d H:i:s', strtotime($request->checkin.' 2pm'));
+        $checkout = date('Y-m-d H:i:s', strtotime($request->checkout.' 12pm'));
+
+       // return $checkin.' - '.$checkout;
         /* request()->validate([
             #'prepayment' => 'required',
             'checkin' => 'required',
@@ -73,10 +81,10 @@ class ReservationController extends Controller
 
             
         $validated = $request->validated();
-        /*
+        
         $reservationdata = array(
-                        'checkin' => date('Y-m-d H:i:s', strtotime($request->checkin)),
-                        'checkout' => date('Y-m-d H:i:s', strtotime($request->checkout)),
+                        'checkin' => $checkin,
+                        'checkout' => $checkout,
                         'adults' => $request->input('adults'),
                         'childs' => $request->input('childs'),
                         'pets' => $request->input('pets'),
@@ -104,20 +112,30 @@ class ReservationController extends Controller
                         #'booking_status_id' => $request->booking_status_id,
                         
                 );
-        $this->reservationRepository->store($reservationdata);
-        $reservedroomsdata = array();
-        $this->reservedRoomRepository->store($reservedroomsdata);
-        */
+        DB::beginTransaction();
+        try {            
+            $reservation = $this->reservationRepository->store($reservationdata);
+                            
+            $reservedroomsdata = [];
+            $period = CarbonPeriod::create($checkin, '1 hour', $checkout);
+            $reserved_dates = [];
+            foreach ($period as $date) {            
+                $reserved_dates[] = $date->format('Y-m-d H:i');
+                foreach($request->roomname as $bookedrooms){
+                    $reservedroomsdata[] = ['reservation_id' => $reservation->id, 'room_id' => $bookedrooms, 'reserved_dates' =>$date->format('Y-m-d H:i') ];
+                }                
+            }
+            
+            $this->reservedRoomRepository->insert($reservedroomsdata);
+            DB::commit(); 
+        } catch(\Exception $e) {
+                DB::rollBack();
+                return redirect()->route('reservations.create')->with('error', 'Room occupied');
 
-        $reservedroomsdata = [];
-        foreach($request->roomname as $bookedrooms){
-            $reservedroomsdata[] = ['room_id' => $bookedrooms, 'reservation_id' => 100];
-        }
-        #print_r($reservedroomsdata);
-        #$reservedroomsdata[] = ['room_id' => $bookedrooms];
-        $this->reservedRoomRepository->insert($reservedroomsdata);
-        #return redirect()->route('reservations.index')->with('success','Reservation created successfully!'.print_r($request->roomname));
-       //return redirect()->route('reservations.index')->with('success',date('Y-m-d H:i:s', strtotime($request->checkin)));
+        }  
+
+        return redirect()->route('reservations.index')->with('success','Reservation created successfully!');
+        
 
     }
 

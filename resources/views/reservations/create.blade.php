@@ -40,8 +40,56 @@
           </div>
         </div>
       @endif
+      @session('error')          
+          <div class="row">
+          <div class="col-md-12">
+            <div class="alert alert-danger">
+                <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                {{ $value }}
+            </div>
+          </div>
+        </div>
+      @endsession
       <div class="row">
         <div class="col-md-6">
+        <div class="card roomlistcard card-primary collapsed-card">
+              <div class="card-header">
+                <h3 class="card-title">Room/s</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                  
+                  <div class="row">
+                  
+                    @foreach($rooms as $room)
+                                    
+                    <div class="col-sm-6">
+                      <!-- checkbox -->
+                      <div class="form-group clearfix">
+                        <div class="icheck-success d-inline">
+                          <input type="checkbox" id="roomname{{$room->id}}" name="roomname[]" class="rooms" value="{{$room->id}}">
+                          <label for="roomname{{ $room->id}}">
+                            {{ $room->room_name }}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    @endforeach  
+
+                    
+                  </div>
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+             
           <div class="card card-primary">
             <div class="card-header">
               <h3 class="card-title">Details</h3>
@@ -121,43 +169,7 @@
           </div>
           <!-- /.card -->
           
-          <div class="card roomlistcard card-primary collapsed-card">
-              <div class="card-header">
-                <h3 class="card-title">Room/s</h3>
-
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
-                  </button>
-                </div>
-                <!-- /.card-tools -->
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                  
-                  <div class="row">
-                  
-                    @foreach($rooms as $room)
-                                    
-                    <div class="col-sm-6">
-                      <!-- checkbox -->
-                      <div class="form-group clearfix">
-                        <div class="icheck-success d-inline">
-                          <input type="checkbox" id="roomname{{$room->id}}" name="roomname[]" class="rooms" value="{{$room->id}}">
-                          <label for="roomname{{ $room->id}}">
-                            {{ $room->room_name }}
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    @endforeach  
-
-                    
-                  </div>
-
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
+          
 
 
             <div class="card card-warning">
@@ -248,7 +260,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="text" id="ratesperday" name="ratesperday" class="form-control" placeholder="0.00">
+                  <input type="number"step=".01" id="ratesperday" name="ratesperday" class="form-control" placeholder="0.00">
                 </div>
               </div>
               <div class="form-group">
@@ -419,12 +431,15 @@
         if($('#daystay').val() == 0){
           $('#ratesperstay').val($('#ratesperday').val());
         }else{
-          $('#ratesperstay').val($('#ratesperday').val() * $('#daystay').val());
+          //(Math.round(num * 100) / 100).toFixed(2)
+          //$('#ratesperstay').val($('#ratesperday').val() * $('#daystay').val());
+          $('#ratesperstay').val((Math.round($('#ratesperday').val() * $('#daystay').val() * 100) / 100).toFixed(2));
         }
         
       },
       RatesPerStay: function(frm, e){        
-        $('#ratesperday').val($('#ratesperstay').val() / $('#daystay').val());
+        //$('#ratesperday').val($('#ratesperstay').val() / $('#daystay').val());
+        $('#ratesperday').val((Math.round($('#ratesperstay').val() / $('#daystay').val() * 100) / 100).toFixed(2));
       }
     }
 

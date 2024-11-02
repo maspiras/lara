@@ -15,7 +15,7 @@
                 <div class="alert alert-success" role="alert"> 
                     {{ $value }}
                 </div>
-            @endsession
+            @endsession            
           </div>  
           <div class="col-sm-4">
             <ol class="breadcrumb float-sm-right">

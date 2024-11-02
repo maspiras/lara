@@ -22,6 +22,7 @@ return new class extends Migration
             $table->index('reservation_id', 'reservation_id');
             $table->index('room_id', 'room_id');
             $table->index('reserved_dates', 'reserved_dates');
+            $table->unique(['room_id', 'reserved_dates']);
         });
     }
 
