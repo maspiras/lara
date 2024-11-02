@@ -101,12 +101,12 @@
                     </div>
               </div>
               <div class="form-group">
-                <label for="inputStatus">Pets</label>
+                <label for="pets">Pets</label>
                 <div class="input-group">
                         <div class="input-group-prepend">
                         <span class="input-group-text"><i class="far fa-cat"></i></span>
                         </div>
-                        <select id="inputStatus" name="pets" class="form-control custom-select">
+                        <select id="pets" name="pets" class="form-control custom-select">
                         <option disabled>Select one</option>
                         @for ($p = 0; $p <= 50; $p++)
                         <option> {{ $p }}</option>
@@ -142,7 +142,7 @@
                       <!-- checkbox -->
                       <div class="form-group clearfix">
                         <div class="icheck-success d-inline">
-                          <input type="checkbox" id="roomname{{$room->id}}" class="rooms">
+                          <input type="checkbox" id="roomname{{$room->id}}" name="roomname[]" class="rooms">
                           <label for="roomname{{ $room->id}}">
                             {{ $room->room_name }}
                           </label>
@@ -171,7 +171,7 @@
             </div>
             <div class="card-body">
               <div class="form-group">
-                <label for="inputEstimatedBudget">Name</label>
+                <label for="fullname">Name</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-user"></i></span>
@@ -180,44 +180,44 @@
                 </div>
               </div>
               <div class="form-group">
-                <label for="inputSpentBudget">Phone</label>
+                <label for="phone">Phone</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-phone"></i></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Phone">
+                  <input type="text" class="form-control" placeholder="Phone" id="phone" name="phone">
                 </div>
 
               </div>
               <div class="form-group">
-                <label for="inputEstimatedDuration">Email</label>
+                <label for="email">Email</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                   </div>
-                  <input type="email" class="form-control" placeholder="Email">
+                  <input type="email" class="form-control" placeholder="Email" id="email" name="email">
                 </div>
 
               </div>
               
               <div class="form-group">
-                <label for="inputDescription">Project Description</label>
-                <textarea id="inputDescription" class="form-control" rows="4" placeholder="Additional information"></textarea>
+                <label for="additionalinformation">Additional information</label>
+                <textarea id="additionalinformation" name="additionalinformation" class="form-control" rows="4" placeholder="Additional information"></textarea>
               </div>
 
               <div class="form-group">
                   <label>Booking Source</label>
-                  <select class="form-control select2" style="width: 100%;">
-                    <option selected="selected">Other</option>
+                  <select class="form-control select2" style="width: 100%;" id="bookingsource" name="bookingsource_id">
+                    <option selected="selected" value="10">Other</option>
                     <option value="1">Phone</option>
-                    <option>Walkin</option>
-                    <option>Facebook/Messenger/FB Page</option>
-                    <option>Tiktok</option>
-                    <option>Instagram</option>                    
-                    <option>Email</option>
-                    <option>Booking.com</option>
-                    <option>Airbnb</option>
-                    <option>Website</option>                    
+                    <option value="2">Walkin</option>
+                    <option value="3">Facebook/Messenger/FB Page</option>
+                    <option value="4">Tiktok</option>
+                    <option value="5">Instagram</option>                    
+                    <option value="6">Email</option>
+                    <option value="7">Booking.com</option>
+                    <option value="8">Airbnb</option>
+                    <option value="9">Website</option>                    
                   </select>
               </div>
             </div>
@@ -294,29 +294,29 @@
 
               <div class="form-group">
                   <label>Currency</label>
-                  <select class="form-control select2" style="width: 100%;">
-                    <option selected="selected">PHP</option>
-                    <option value="1">PHP</option>
-                    <option value="2">USD</option>
-                    <option value="3">EUR</option>                    
-                    <option value="3">CAD</option>
-                    <option value="3">AUD</option>
-                    <option value="3">GBP</option>
+                  <select class="form-control select2" style="width: 100%;" id="currency" name="currency">
+                    <option selected="selected" value="1">PHP</option>
+                    <option value="2">PHP</option>
+                    <option value="3">USD</option>
+                    <option value="4">EUR</option>                    
+                    <option value="5">CAD</option>
+                    <option value="6">AUD</option>
+                    <option value="7">GBP</option>
                   </select>
               </div>
               <div class="form-group">
                   <label>Payment status</label>
-                  <select class="form-control select2" style="width: 100%;">
-                    <option selected="selected">No payment</option>
-                    <option value="1">Prepayment paid</option>
-                    <option>Fully paid</option>                 
+                  <select class="form-control select2" style="width: 100%;" id="paymentstatus" name="paymentstatus">
+                    <option selected="selected" value="1">No payment</option>
+                    <option value="2">Prepayment paid</option>
+                    <option value="3">Fully paid</option>                 
                   </select>
               </div>  
 
               <div class="form-group">
                   <label>Type of payment</label>
-                  <select class="form-control select2" style="width: 100%;">
-                    <option selected="selected">Select</option>
+                  <select class="form-control select2" style="width: 100%;" id="typeofpayment" name="typeofpayment">
+                    <option selected="selected" value="0">Select</option>
                     <option value="1">Pay with cash</option>
                     <option value="2">Pay via online money transfer</option>
                     <option value="3">Pay via debit/credit card</option>

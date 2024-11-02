@@ -10,6 +10,7 @@ use App\Repositories\ReservationRepository;
 use App\Repositories\RoomRepository;
 
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use App\Http\Requests\ReservationRequest;
 
 class ReservationController extends Controller
 {
@@ -47,11 +48,64 @@ class ReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      */    
-    public function store(Request $request): RedirectResponse
+    public function store(ReservationRequest $request): RedirectResponse
     {
-        request()->validate([
-            'prepayment' => 'required',
-        ]);
+        /* request()->validate([
+            #'prepayment' => 'required',
+            'checkin' => 'required',
+            'checkout' => 'required',
+            'fullname' => 'required',
+
+        ]); */
+
+        /* $validated = $request->validate([
+            //'title' => 'required|unique:posts|max:255',
+            #'prepayment' => 'required',
+            'checkin' => 'required',
+            'checkout' => 'required',
+            'fullname' => 'required|max:200',
+            'roomname' => 'array|min:1|required',
+            'roomname.*' => 'required|string'
+        ]); */
+
+            
+        $validated = $request->validated();
+        
+        $data = array(
+                        'checkin' => date('Y-m-d H:i:s', strtotime($request->checkin)),
+                        'checkout' => date('Y-m-d H:i:s', strtotime($request->checkout)),
+                        'adults' => $request->input('adults'),
+                        'childs' => $request->input('childs'),
+                        'pets' => $request->input('pets'),
+                        'fullname' => $request->input('fullname'),
+                        'phone' => $request->input('phone'),
+                        'email' => $request->input('email'),
+                        'additional_info' => $request->input('additionalinformation'),
+                        'booking_source_id' => $request->input('bookingsource_id'),
+                        'doorcode' => 0,
+                        'rateperday' => $request->ratesperday,
+                        'daystay' => $request->daystay,
+                        #'meals_total' => 0,
+                        #'additional_services_total' => 0,
+                        'subtotal' => $request->ratesperstay,
+                        #'discount' => $request->discount,
+                        #'tax' => $request->tax,
+                        'grandtotal' => $request->ratesperstay,
+                        'currency_id' => $request->currency,
+                        'payment_type_id' => $request->typeofpayment,
+                        'prepayment' => $request->prepayment,
+                        'payment_status_id' => $request->paymentstatus,
+                        'balancepayment' => ($request->ratesperstay-$request->prepayment),
+                        'user_id' => $request->user()->id,
+                        'host_id' => 1,
+                        #'booking_status_id' => $request->booking_status_id,
+                        
+                );
+        $this->reservationRepository->store($data);
+
+        return redirect()->route('reservations.index')->with('success','Reservation created successfully!');
+       //return redirect()->route('reservations.index')->with('success',date('Y-m-d H:i:s', strtotime($request->checkin)));
+
     }
 
     /**
