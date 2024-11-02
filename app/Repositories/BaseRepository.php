@@ -41,6 +41,11 @@ class BaseRepository
         return $this->model->create($inputs);
     }
 
+    public function insert(array $inputs)
+    {
+        return $this->model->insert($inputs);
+    }
+
     /**
      * FindOrFail Model and return the instance.
      *

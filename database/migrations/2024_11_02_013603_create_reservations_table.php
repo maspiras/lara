@@ -56,6 +56,7 @@ return new class extends Migration
             $table->index('user_id', 'user_id');
             $table->index('booking_source_id', 'booking_source_id');
             $table->index('currency_id', 'currency_id');
+            //$table->unique(['order_id', 'prod_id']);
         });
     }
 

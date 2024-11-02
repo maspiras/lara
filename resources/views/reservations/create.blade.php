@@ -142,7 +142,7 @@
                       <!-- checkbox -->
                       <div class="form-group clearfix">
                         <div class="icheck-success d-inline">
-                          <input type="checkbox" id="roomname{{$room->id}}" name="roomname[]" class="rooms">
+                          <input type="checkbox" id="roomname{{$room->id}}" name="roomname[]" class="rooms" value="{{$room->id}}">
                           <label for="roomname{{ $room->id}}">
                             {{ $room->room_name }}
                           </label>

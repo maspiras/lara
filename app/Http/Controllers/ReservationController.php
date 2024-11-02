@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 
 use App\Repositories\ReservationRepository;
 use App\Repositories\RoomRepository;
+use App\Repositories\ReservedRoomRepository;
 
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Http\Requests\ReservationRequest;
@@ -15,12 +16,14 @@ use App\Http\Requests\ReservationRequest;
 class ReservationController extends Controller
 {
     use ValidatesRequests;
-    private $reservationRepository;
+    private $reservationRepository, $reservedRoomRepository;
     private $roomRepository;
-    public function __construct(ReservationRepository $reservationRepository, RoomRepository $roomRepository)
+    
+    public function __construct(ReservedRoomRepository $reservedRoomRepository, ReservationRepository $reservationRepository, RoomRepository $roomRepository)
     {
         $this->reservationRepository = $reservationRepository;
         $this->roomRepository = $roomRepository;
+        $this->reservedRoomRepository = $reservedRoomRepository;
     }
 
     /**
@@ -48,7 +51,7 @@ class ReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      */    
-    public function store(ReservationRequest $request): RedirectResponse
+    public function store(ReservationRequest $request)#: RedirectResponse
     {
         /* request()->validate([
             #'prepayment' => 'required',
@@ -70,8 +73,8 @@ class ReservationController extends Controller
 
             
         $validated = $request->validated();
-        
-        $data = array(
+        /*
+        $reservationdata = array(
                         'checkin' => date('Y-m-d H:i:s', strtotime($request->checkin)),
                         'checkout' => date('Y-m-d H:i:s', strtotime($request->checkout)),
                         'adults' => $request->input('adults'),
@@ -101,9 +104,19 @@ class ReservationController extends Controller
                         #'booking_status_id' => $request->booking_status_id,
                         
                 );
-        $this->reservationRepository->store($data);
+        $this->reservationRepository->store($reservationdata);
+        $reservedroomsdata = array();
+        $this->reservedRoomRepository->store($reservedroomsdata);
+        */
 
-        return redirect()->route('reservations.index')->with('success','Reservation created successfully!');
+        $reservedroomsdata = [];
+        foreach($request->roomname as $bookedrooms){
+            $reservedroomsdata[] = ['room_id' => $bookedrooms, 'reservation_id' => 100];
+        }
+        #print_r($reservedroomsdata);
+        #$reservedroomsdata[] = ['room_id' => $bookedrooms];
+        $this->reservedRoomRepository->insert($reservedroomsdata);
+        #return redirect()->route('reservations.index')->with('success','Reservation created successfully!'.print_r($request->roomname));
        //return redirect()->route('reservations.index')->with('success',date('Y-m-d H:i:s', strtotime($request->checkin)));
 
     }
