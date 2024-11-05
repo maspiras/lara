@@ -17,6 +17,8 @@ use Carbon\CarbonPeriod;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use DataTables;
+use App\DataTables\ReservationsDataTable;
 
 class ReservationController extends Controller
 {
@@ -34,10 +36,11 @@ class ReservationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    
+    public function index(ReservationsDataTable $dataTable)
     {
         $rooms =  $this->roomRepository->all();
-        $reservations = array();#$this->bookingRepository->getPaginate(5);  
+        #array();#$this->bookingRepository->getPaginate(5);  
     
         #$reservedrooms = $this->reservedRoomRepository->where(Carbon::now()->year, Carbon::now()->month);
         $reservedrooms = $this->reservedRoomRepository->where(Carbon::create(date('Y-m-d', strtotime("-1 month")))->startOfMonth(), Carbon::create(date('Y-m-d', strtotime("+13 months")))->endOfMonth());
@@ -69,10 +72,30 @@ class ReservationController extends Controller
         
 
         #echo $bookedrooms;
-         return view('reservations.index',compact('rooms', 'reservedrooms'))
-            ->with('i', (request()->input('page', 1) - 1) * 5); 
+
+        if(request()->ajax()){
+            $data = $this->reservationRepository->latest();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        
+        #return view('reservations.index');
+        return $dataTable->render('reservations.index');
+        #print_r($data);
+        
+
+        /* return view('reservations.index',compact('rooms', 'reservedrooms'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);  */
            
     }
+
+    
 
     /**
      * Show the form for creating a new resource.

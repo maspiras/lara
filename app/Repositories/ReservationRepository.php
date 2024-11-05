@@ -15,4 +15,6 @@ class ReservationRepository extends BaseRepository
     {
         $this->model = $model;
     }
+
+    
 }
