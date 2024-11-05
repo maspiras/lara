@@ -14,6 +14,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Http\Requests\ReservationRequest;
 
 use Carbon\CarbonPeriod;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
@@ -35,10 +36,42 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $reservations = array();#$this->bookingRepository->getPaginate(5);        
+        $rooms =  $this->roomRepository->all();
+        $reservations = array();#$this->bookingRepository->getPaginate(5);  
+    
+        #$reservedrooms = $this->reservedRoomRepository->where(Carbon::now()->year, Carbon::now()->month);
+        $reservedrooms = $this->reservedRoomRepository->where(Carbon::create(date('Y-m-d', strtotime("-1 month")))->startOfMonth(), Carbon::create(date('Y-m-d', strtotime("+13 months")))->endOfMonth());
         
-        return view('reservations.index',compact('reservations'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+
+        /* $show = '';
+        $dates = 0;        
+        
+        for($i=0; $i < 31; $i++){         
+            foreach($reservedrooms as $rr){
+                if($rr->reserved_dates == $i){
+                    if($dates == 0){
+                        $show .= '<td>'.$rr->fullname.'x'.$dates.'x'.$i;
+                        $dates = $i;
+                    }elseif($dates != $i){
+                        $show .= '</td><td>'.$rr->fullname.'xxx'.$dates.'x'.$i;
+                        $dates = $i; 
+                    }else{
+                        $show .= '<br>'.$rr->fullname.'xi'.$dates.'x'.$i.'</td>';
+                        $dates = 0;
+                    }            
+                }
+            }            
+        }        
+        $show .= '</td>';
+        $showreservations = $show; */
+        
+        #echo substr_replace($showrooms, '', -1);
+        
+
+        #echo $bookedrooms;
+         return view('reservations.index',compact('rooms', 'reservedrooms'))
+            ->with('i', (request()->input('page', 1) - 1) * 5); 
+           
     }
 
     /**
@@ -130,7 +163,7 @@ class ReservationController extends Controller
             DB::commit(); 
         } catch(\Exception $e) {
                 DB::rollBack();
-                return redirect()->route('reservations.create')->with('error', 'Room occupied');
+                return redirect()->route('reservations.create')->with('error', 'Room/s occupied');
 
         }  
 

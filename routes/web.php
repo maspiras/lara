@@ -7,6 +7,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Rooms\RoomsController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\ResponseCalendarController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,6 +27,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('rooms', RoomsController::class);
     Route::resource('reservations', ReservationController::class);
+
+    Route::resource('responsecalendar/3c2df05e/remote', ResponseCalendarController::class);    
+    Route::get('/responsecalendar/3c2df05e/error',[ResponseCalendarController::class, 'errorting'])->name('reservations.errorting');
+    Route::get('/responsecalendar/3c2df05e/log',[ResponseCalendarController::class, 'log'])->name('reservations.log');
 });
 
 /* Route::group(['middleware' => ['auth']], function() {
