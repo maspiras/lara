@@ -42,8 +42,14 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ url('/') }}/reservations" class="nav-link treeview-reservations">              
+            <a href="{{ url('/') }}/calendar" class="nav-link treeview-calendar">              
               <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>Calendar</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ url('/') }}/reservations" class="nav-link treeview-reservations">              
+              <i class="nav-icon fas fa-book"></i>
               <p>Reservations</p>
             </a>
           </li>
