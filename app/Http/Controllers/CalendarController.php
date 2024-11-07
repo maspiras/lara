@@ -25,8 +25,7 @@ class CalendarController extends Controller
      */        
     public function index()
     {        
-        $rooms =  $this->roomRepository->all();
-       
+        $rooms =  $this->roomRepository->all();       
         
         $reservedrooms = $this->reservedRoomRepository->where(Carbon::create(date('Y-m-d', strtotime("-1 month")))->startOfMonth(), Carbon::create(date('Y-m-d', strtotime("+13 months")))->endOfMonth());
         return view('calendar.index',compact('rooms', 'reservedrooms'))

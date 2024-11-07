@@ -77,6 +77,8 @@ class RoomsController extends Controller
         
         request()->validate([
             'room_name' => 'required',
+            'host_id' => auth()->user()->host_id,
+            'room_status_id' => 1
         ]);
         
         $this->roomRepository->store($request->all());

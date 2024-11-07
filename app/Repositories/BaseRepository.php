@@ -72,6 +72,11 @@ class BaseRepository
         return $this->model->paginate($n);
     }
 
+    public function simplePaginate($n)
+    {
+        return $this->model->simplePaginate($n);
+    }
+
     /**
      * Create a new model and return the instance.
      *

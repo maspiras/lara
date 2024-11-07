@@ -166,7 +166,7 @@ class ReservationController extends Controller
                         'payment_status_id' => $request->paymentstatus,
                         'balancepayment' => ($request->ratesperstay-$request->prepayment),
                         'user_id' => $request->user()->id,
-                        'host_id' => 1,
+                        'host_id' => auth()->user()->host_id,
                         #'booking_status_id' => $request->booking_status_id,
                         
                 );
@@ -208,9 +208,14 @@ class ReservationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $reservation = $this->reservationRepository->find($id);
+        $rooms = $this->roomRepository->all();
+        
+        return view('reservations.edit', compact('reservation', 'rooms'));
+        #print_r($reservation->id);
+
     }
 
     /**
@@ -218,7 +223,8 @@ class ReservationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        echo 'ass';
+        exit;
     }
 
     /**

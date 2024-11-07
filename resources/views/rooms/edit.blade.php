@@ -49,10 +49,8 @@
 
 <form action="{{ route('rooms.update',$product->id) }}" method="POST">
     @csrf
-    @method('PUT')
-
-    <input type="hidden" id="hosts_id" name="hosts_id" value="7">
-    <input type="hidden" id="room_status_id" name="room_status_id" value="1">
+    @method('PUT')    
+    
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">

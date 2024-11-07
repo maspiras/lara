@@ -66,10 +66,11 @@ class ReservationsDataTable extends DataTable
      */
     public function query(Reservation $model): QueryBuilder
     {
-        #$last_month = Carbon::create(date('Y-m-d', strtotime("-1 month")))->startOfMonth();
+        $last_month = Carbon::create(date('Y-m-d', strtotime("-1 month")))->startOfMonth();
         #$last_month = Carbon::today()->subDays(30);
         return $model->newQuery()
         ->where('host_id', auth()->user()->host_id);
+        #->where('created_at', '>=', $last_month );
         #->whereDate('created_at','>=', $last_month);
         #return $model->newQuery();
         /*return $model->newQuery()
