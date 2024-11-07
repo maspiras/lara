@@ -13,7 +13,7 @@
           <div class="col-sm-3">                
                     <div class="pull-right">
                         @can('room-create')                        
-                        <a class="btn btn-success" href="{{ route('reservations.create') }}"><i class="fa fa-plus"></i> Create New Reservation</a>&nbsp;                                                
+                        <a class="btn btn-success" href="#"><i class="fa fa-plus"></i> Create New Reservation</a>&nbsp;                                                
                         @endcan
                     </div>    
                 </div>
@@ -42,7 +42,7 @@
                 <div class="col-lg-12 margin-tb">                
                     <div class="pull-right">
                         @can('room-create')                        
-                        <a class="btn btn-success" href="{{ route('reservations.create') }}"><i class="fa fa-plus"></i> Create New Reservation</a>&nbsp;                                                
+                        <a class="btn btn-success" href="#"><i class="fa fa-plus"></i> Create New Reservation</a>&nbsp;                                                
                         @endcan
                     </div>    
                 </div>
@@ -55,7 +55,9 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-          {{ $dataTable->table(['class' => 'table table-bordered table-hover']) }}
+          {{ $dataTable->table(['class' => 'table table-bordered table-hover', 'width' => "100%"]) }}
+
+          
           
           <!-- <table id="example1" class="table table-bordered table-hover">
                   <thead>

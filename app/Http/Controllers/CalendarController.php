@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 use App\Repositories\ReservedRoomRepository;
 use App\Repositories\RoomRepository;
 use Carbon\Carbon;
-
+#use Illuminate\Database\Eloquent\Collection;
+#use App\Models\Room;
 class CalendarController extends Controller
 {
     
@@ -23,8 +24,10 @@ class CalendarController extends Controller
      * Display a listing of the resource.
      */        
     public function index()
-    {
+    {        
         $rooms =  $this->roomRepository->all();
+       
+        
         $reservedrooms = $this->reservedRoomRepository->where(Carbon::create(date('Y-m-d', strtotime("-1 month")))->startOfMonth(), Carbon::create(date('Y-m-d', strtotime("+13 months")))->endOfMonth());
         return view('calendar.index',compact('rooms', 'reservedrooms'))
             ->with('i', (request()->input('page', 1) - 1) * 5); 

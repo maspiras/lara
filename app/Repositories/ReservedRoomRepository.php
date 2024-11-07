@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 use App\Models\ReservedRooms;
-
+use Illuminate\Support\LazyCollection;
 class ReservedRoomRepository extends BaseRepository
 {
     /*public $model = ReservedRooms::class;
@@ -50,8 +50,10 @@ ON rr.reservation_id=r.id */
             $from,
             $to
         ])
-        ->orderBy('reserved_dates', 'asc')
-        ->get();
+        ->cursor()
+        #->orderBy('reserved_dates', 'asc')
+        ->sortByDesc('reserved_dates');
+        
         
      /*    ->whereBetween('creation_date',
         [

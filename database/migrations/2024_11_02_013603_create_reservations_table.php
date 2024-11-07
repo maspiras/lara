@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id')->unsigned();
             $table->dateTime('checkin');
             $table->dateTime('checkout');
+            
             $table->tinyInteger('adults')->nullable();
             $table->tinyInteger('childs')->nullable();
             $table->tinyInteger('pets')->nullable();
@@ -40,9 +41,12 @@ return new class extends Migration
             $table->decimal('balancepayment', 9, 2)->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('host_id');
+            $table->string('ref_number');
             $table->tinyInteger('booking_status_id')->nullable();
             $table->tinyInteger('currency_id')->nullable();
+            $table->softDeletes('deleted_at', precision: 0);
             $table->timestamps();
+
 
             $table->index('host_id', 'host_id');
             $table->index('checkin', 'checkin');
@@ -56,6 +60,7 @@ return new class extends Migration
             $table->index('user_id', 'user_id');
             $table->index('booking_source_id', 'booking_source_id');
             $table->index('currency_id', 'currency_id');
+            $table->unique(['ref_number']);
             //$table->unique(['order_id', 'prod_id']);
         });
     }

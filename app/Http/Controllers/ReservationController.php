@@ -20,6 +20,7 @@ use Exception;
 use DataTables;
 use App\DataTables\ReservationsDataTable;
 
+
 class ReservationController extends Controller
 {
     use ValidatesRequests;
@@ -39,11 +40,12 @@ class ReservationController extends Controller
     
     public function index(ReservationsDataTable $dataTable)
     {
-        $rooms =  $this->roomRepository->all();
+        
+        #$rooms =  $this->roomRepository->all();
         #array();#$this->bookingRepository->getPaginate(5);  
     
         #$reservedrooms = $this->reservedRoomRepository->where(Carbon::now()->year, Carbon::now()->month);
-        $reservedrooms = $this->reservedRoomRepository->where(Carbon::create(date('Y-m-d', strtotime("-1 month")))->startOfMonth(), Carbon::create(date('Y-m-d', strtotime("+13 months")))->endOfMonth());
+        #$reservedrooms = $this->reservedRoomRepository->where(Carbon::create(date('Y-m-d', strtotime("-1 month")))->startOfMonth(), Carbon::create(date('Y-m-d', strtotime("+13 months")))->endOfMonth());
         
 
         /* $show = '';
@@ -73,17 +75,17 @@ class ReservationController extends Controller
 
         #echo $bookedrooms;
 
-        if(request()->ajax()){
+        /* if(request()->ajax()){
             $data = $this->reservationRepository->latest();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+                    $actionBtn = '<a href="'.$row['id'].'" class="edit btn btn-success btn-sm">Edit</a> <a href="'.$row['id'].'" class="delete btn btn-danger btn-sm">Delete</a>';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
-        }
+        } */
         
         #return view('reservations.index');
         return $dataTable->render('reservations.index');
