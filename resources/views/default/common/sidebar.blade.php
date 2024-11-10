@@ -67,7 +67,8 @@
           </li>
           <li class="nav-item">
             <a href="{{ url('/') }}/reports" class="nav-link treeview-reports">              
-              <i class="nav-icon fas fa-address-book"></i>
+              <i class="nav-icon fas fa-chart-pie"></i>
+              
               <p>Reports</p>
             </a>
           </li>            

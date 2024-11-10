@@ -44,7 +44,13 @@ class ReservedRoomRepository extends BaseRepository
     }
 
     public function updateMyReservedRoom($reservation_id, $data){     
-        $this->model->where('reservation_id', '=', $reservation_id)->delete();        
+        //$this->model->where('reservation_id', '=', $reservation_id)->delete();        
+        $this->model->where('reservation_id', $reservation_id)->chunkById(1000, function ($reservedrooms) {
+            //go through the collection and delete every post.
+            foreach($reservedrooms as $r) {
+                $r->delete();
+            }
+        });
         $this->model->insert($data);
     }
 

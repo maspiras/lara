@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('rooms', RoomsController::class);
     Route::resource('reservations', ReservationController::class);
     Route::resource('calendar', CalendarController::class);
+    Route::resource('reports', CalendarController::class);
     //Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
 
     Route::resource('responsecalendar/3c2df05e/remote', ResponseCalendarController::class);    

@@ -9,6 +9,7 @@
         <div class="row mb-2">
           <div class="col-sm-2">
             <h1 class="m-0">Reservations</h1>
+            
           </div><!-- /.col -->
           <div class="col-sm-3">                
                     <div class="pull-right">
@@ -28,6 +29,8 @@
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
               <li class="breadcrumb-item active">Reservations</li>
+              
+              
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
