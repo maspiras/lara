@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 use App\Models\Reservation;
+use Illuminate\Support\Facades\DB;
 
 class ReservationRepository extends BaseRepository
 {

@@ -31,7 +31,7 @@ class ReservationController extends Controller
     {
         $this->reservationRepository = $reservationRepository;
         $this->roomRepository = $roomRepository;
-        $this->reservedRoomRepository = $reservedRoomRepository;
+        $this->reservedRoomRepository =  $reservedRoomRepository;
     }
 
     /**
@@ -110,11 +110,52 @@ class ReservationController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
+    public function reservationData($request){
+        $checkin = date('Y-m-d H:i:s', strtotime($request->checkin.' 2pm'));
+        $checkout = date('Y-m-d H:i:s', strtotime($request->checkout.' 12pm'));
+
+        $data['reservation'] = array(
+            'checkin' => $checkin,
+            'checkout' => $checkout,
+            'adults' => $request->input('adults'),
+            'childs' => $request->input('childs'),
+            'pets' => $request->input('pets'),
+            'fullname' => $request->input('fullname'),
+            'phone' => $request->input('phone'),
+            'email' => $request->input('email'),
+            'additional_info' => $request->input('additionalinformation'),
+            'booking_source_id' => $request->input('bookingsource_id'),
+            'doorcode' => 0,
+            'rateperday' => $request->ratesperday,
+            'daystay' => $request->daystay,
+            #'meals_total' => 0,
+            #'additional_services_total' => 0,
+            'subtotal' => $request->ratesperstay,
+            #'discount' => $request->discount,
+            #'tax' => $request->tax,
+            'grandtotal' => $request->ratesperstay,
+            'currency_id' => $request->currency,
+            'payment_type_id' => $request->typeofpayment,
+            'prepayment' => $request->prepayment,
+            'payment_status_id' => $request->paymentstatus,
+            'balancepayment' => ($request->ratesperstay-$request->prepayment),
+            'user_id' => $request->user()->id,
+            'host_id' => auth()->user()->host_id,
+            
+            #'booking_status_id' => $request->booking_status_id,            
+        );
+
+        $data['roomname'] = $request->roomname;
+
+        return $data;
+    }
+
     /**
      * Store a newly created resource in storage.
      */    
     public function store(ReservationRequest $request)#: RedirectResponse
     {
+        $validated = $request->validated();
         $checkin = date('Y-m-d H:i:s', strtotime($request->checkin.' 2pm'));
         $checkout = date('Y-m-d H:i:s', strtotime($request->checkout.' 12pm'));
 
@@ -138,7 +179,7 @@ class ReservationController extends Controller
         ]); */
 
             
-        $validated = $request->validated();
+        
         
         $reservationdata = array(
                         'checkin' => $checkin,
@@ -210,10 +251,29 @@ class ReservationController extends Controller
      */
     public function edit($id)
     {
+       
         $reservation = $this->reservationRepository->find($id);
         $rooms = $this->roomRepository->all();
+        #$bookedrooms = [];
+        /* foreach($reservation->reservedRooms() as $r){
+            $bookedrooms[]= $r->room_id.'<br>';
+        } */
+        #print_r($reservation->with('reservedRooms')->get());
+        #$reservedRooms = $reservation->reservedRooms()->groupBy('room_id')->get();
+        #$reservedRooms = $reservation->reservedRooms;                       
         
-        return view('reservations.edit', compact('reservation', 'rooms'));
+        $reservedRooms = $this->reservedRoomRepository->getMyReservedRooms($id);
+        
+        
+        $myReservedRooms = [];
+        foreach($reservedRooms as $r){
+            $myReservedRooms[] = $r->room_id;
+        }
+        $myReservedRooms = array_unique($myReservedRooms);
+        #print_r($myReservedRooms);
+
+        #exit;
+        return view('reservations.edit', compact('reservation', 'rooms', 'myReservedRooms'));
         #print_r($reservation->id);
 
     }
@@ -223,8 +283,46 @@ class ReservationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        echo 'ass';
-        exit;
+        $reservation_id = last(request()->segments());
+        $data = $this->reservationData($request);
+
+        #dd($data['reservation']['checkin']);
+        #exit;
+       
+        DB::beginTransaction();
+        try {   
+            
+            
+            $this->reservationRepository->update($reservation_id, $data['reservation']);
+            #dd($data['reservation']);
+            
+            
+            #$checkin = date('Y-m-d H:i:s', strtotime($request->checkin.' 2pm'));
+            #$checkout = date('Y-m-d H:i:s', strtotime($request->checkout.' 12pm'));                
+            $reservedroomsdata = [];
+            $period = CarbonPeriod::create($data['reservation']['checkin'], '1 hour', $data['reservation']['checkout']);
+            
+            $reserved_dates = [];
+            foreach ($period as $date) {            
+                $reserved_dates[] = $date->format('Y-m-d H:i');
+                foreach($request->roomname as $bookedrooms){
+                    $reservedroomsdata[] = ['reservation_id' => $reservation_id, 'room_id' => $bookedrooms, 'reserved_dates' =>$date->format('Y-m-d H:i') ];
+                }                
+            }   
+            
+            $this->reservedRoomRepository->updateMyReservedRoom($reservation_id, $reservedroomsdata);
+            #$this->reservedRoomRepository->update($reservation_id, $reservedroomsdata );
+            
+            DB::commit(); 
+         } catch(\Exception $e) {
+                DB::rollBack();
+                return redirect()->route('reservations.edit', $reservation_id)->with('error', 'Room/s occupied');
+                //return $reservation_id;
+
+        } 
+
+        
+        return redirect()->route('reservations.edit', $reservation_id)->with('success','Reservation updated successfully!');
     }
 
     /**

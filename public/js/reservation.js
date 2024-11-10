@@ -2,7 +2,7 @@ $(document).ready(function(){
     /* For Active Menu */
     $('.treeview-reservations').addClass('active');    
 
-    $('.reservations').on('click', '.editreservation', function(e){        
+    /* $('.reservations').on('click', '.editreservation', function(e){        
         
         result= $(this).attr('href').split('/');
         reservation_id = result[result.length-2];
@@ -23,5 +23,5 @@ $(document).ready(function(){
         alert(reservation_id);
         
         e.preventDefault();
-    });
+    }); */
 });

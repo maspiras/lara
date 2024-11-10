@@ -269,7 +269,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-moon"></i></span>
                   </div>
-                  <input type="text" disabled class="form-control" placeholder="1" value="1" name="daystay" id="daystay">
+                  <input readonly type="text" class="form-control" placeholder="1" value="" name="daystay" id="daystay">
                 </div>
 
               </div>

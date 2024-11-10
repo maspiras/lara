@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Repositories;
-use App\Models\ReservedRooms;
+use App\Models\ReservedRoom;
 use Illuminate\Support\LazyCollection;
+use Illuminate\Support\Facades\DB;
 class ReservedRoomRepository extends BaseRepository
 {
     /*public $model = ReservedRooms::class;
@@ -11,40 +12,25 @@ class ReservedRoomRepository extends BaseRepository
         $this->model = $model;
     } */
     protected $model;
-    public function __construct(ReservedRooms $model)
+    public function __construct()
     {
-        $this->model = $model;
+        $this->model = DB::table('reserved_rooms');
     }
 
-    public function where($from, $to){
+    public function getMyReservedRooms($id){       
+        return $this->model->distinct()->where('reservation_id', '=', $id)->get();
         
-        /* $reservedrooms = $this->model->distinct()
-        ->selectRaw('DAY(reserved_dates) AS reserved_dates , room_id, reservation_id, fullname, checkin, checkout')
-        //->select('room_id', 'reservation_id')
-        ->join('reservations', 'reserved_rooms.reservation_id', '=', 'reservations.id')
-        ->whereYear('reserved_dates', $year)
-        ->whereMonth('reserved_dates', $month)   
-        ->orderBy('reserved_dates', 'asc')
-        ->get(); */
+    }
 
-        /* SELECT  
- DISTINCT 
- room_id, rr.room_id, r.fullname,
-r.checkin, 	
- DATE(r.checkout) AS checkout 
-FROM reserved_rooms rr
-JOIN reservations r
-ON rr.reservation_id=r.id */
-        /* $reservedrooms = $this->model->distinct()
-        ->selectRaw('room_id, fullname, checkin, DATE(checkout) AS checkout')
-        ->join('reservations', 'reserved_rooms.reservation_id', '=', 'reservations.id')
-        ->whereYear('reserved_dates', $year)
-        ->whereMonth('reserved_dates', $month)   
-        ->orderBy('reserved_dates', 'asc')
-        ->get(); */
+
+
+     public function getHostReservedRooms($from, $to){
+        
+       
         $reservedrooms = $this->model->distinct()
         ->selectRaw('room_id, fullname, checkin, checkout, prepayment, DATE(checkout) AS checkoutday')
         ->join('reservations', 'reserved_rooms.reservation_id', '=', 'reservations.id')
+        ->where('host_id', auth()->user()->host_id)
         ->whereBetween('reserved_dates',
         [
             $from,
@@ -53,15 +39,14 @@ ON rr.reservation_id=r.id */
         ->cursor()
         #->orderBy('reserved_dates', 'asc')
         ->sortByDesc('reserved_dates');
-        
-        
-     /*    ->whereBetween('creation_date',
-        [
-            Carbon::now()->startOfMonth()->format('Y-m-d'),
-            Carbon::now()->endOfMonth()->format('Y-m-d')
-        ]
-    ) */
 
         return $reservedrooms;
     }
+
+    public function updateMyReservedRoom($reservation_id, $data){     
+        $this->model->where('reservation_id', '=', $reservation_id)->delete();        
+        $this->model->insert($data);
+    }
+
+    
 }

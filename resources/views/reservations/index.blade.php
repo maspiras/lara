@@ -16,7 +16,7 @@
                         <a class="btn btn-success" href="{{ route('reservations.create') }}"><i class="fa fa-plus"></i> Create New Reservation</a>&nbsp;                                                
                         @endcan
                     </div>    
-                </div>
+          </div>
           <div class="col-sm-3">
             @session('success')
                 <div class="alert alert-success" role="alert"> 
