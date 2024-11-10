@@ -45,7 +45,7 @@ class ReservationsDataTable extends DataTable
                 } else          if($row->booking_status_id == 1){
                     $d = 'Confirmed';
                 }else{
-                    $d = 'Cancelled';
+                    $d = ' Cancelled';
                 }
                 return $d;
             })

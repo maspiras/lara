@@ -64,7 +64,13 @@
               <i class="nav-icon fas fa-address-book"></i>
               <p>Employees</p>
             </a>
-          </li>           
+          </li>
+          <li class="nav-item">
+            <a href="{{ url('/') }}/reports" class="nav-link treeview-reports">              
+              <i class="nav-icon fas fa-address-book"></i>
+              <p>Reports</p>
+            </a>
+          </li>            
           <li class="nav-item">          
             <!-- Authentication -->
             <form method="POST" action="{{ route('logout') }}">
