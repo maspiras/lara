@@ -178,7 +178,8 @@ class ReservationController extends Controller
             'roomname.*' => 'required|string'
         ]); */
 
-            
+        //dd($request->prepayment);
+        $r = empty($request->prepayment) ? 'Pencil' : 'Confirmed';
         
         
         $reservationdata = array(
@@ -208,7 +209,7 @@ class ReservationController extends Controller
                         'balancepayment' => ($request->ratesperstay-$request->prepayment),
                         'user_id' => $request->user()->id,
                         'host_id' => auth()->user()->host_id,
-                        #'booking_status_id' => $request->booking_status_id,
+                        'booking_status_id' => empty($request->prepayment) ? 0 : 1,
                         
                 );
         DB::beginTransaction();

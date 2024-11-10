@@ -73,14 +73,9 @@
   $(function () {
    
     $('.treeview-calendar').addClass('active');
-    $("#example1").DataTable({
-      //scrollX: 400,
-      scrollX: true,
-      "ordering": false,
-      paging: false, /* set to true will show entries and pagination*/
-      "responsive": false, "lengthChange": true, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');    
+      
+
+    
   });
 </script>
 <script>
@@ -137,7 +132,8 @@
           ],
         });
     });
-      
+
+   
     </script>
 @endpush
 

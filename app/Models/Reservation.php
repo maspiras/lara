@@ -20,7 +20,7 @@ class Reservation extends Model
         'phone', 'email', 'additional_info', 'booking_source_id', 'doorcode',
         'rateperday', 'daystay', 'subtotal', 'grandtotal', 'currency_id',
         'payment_type_id', 'prepayment', 'payment_status_id', 'balancepayment',
-        'user_id', 'host_id'
+        'user_id', 'host_id', 'booking_status_id'
     ];
 
     

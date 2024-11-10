@@ -38,11 +38,27 @@ class ReservationsDataTable extends DataTable
             ->editColumn('checkout', function($row){                
                 return date('M d, Y h:i a', strtotime($row->checkout));
             })
-            ->editColumn('booking_status_id', function($row){                
-                return 'Confirmed';
+            ->editColumn('booking_status_id', function($row){  
+                $d = '';
+                if(empty($row->booking_status_id) || $row->booking_status_id == ''){
+                    $d = 'Pencil';
+                } else          if($row->booking_status_id == 1){
+                    $d = 'Confirmed';
+                }else{
+                    $d = 'Cancelled';
+                }
+                return $d;
             })
             ->editColumn('payment_status_id', function($row){                
-                return 'Fully Paid';
+                $p = '';
+                if(empty($row->payment_status_id) || $row->payment_status_id == '' || $row->payment_status_id == 1){
+                    $p = 'No payment';
+                }elseif($row->payment_status_id == 2){
+                    $p = 'Prepayment paid';
+                }else{
+                    $p = 'Fully paid';
+                }
+                return $p;
             })
             /* ->editColumn('action', function($row){
                 $actionBtn = '<a href="'.$row['id'].'" class="edit btn btn-success btn-sm">Edit</a> <a href="'.$row['id'].'" class="delete btn btn-danger btn-sm">Delete</a>';

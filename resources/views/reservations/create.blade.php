@@ -477,7 +477,7 @@
           $('.roomlistcard').removeClass('card-danger');
           $('.roomlistcard').addClass('card-primary');
           $('.roomlistcard div h3').text('Room/s');
-          alert( "Form successful submitted!" );
+          
         }
         //e.preventDefault();
         
