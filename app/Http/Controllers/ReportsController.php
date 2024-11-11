@@ -5,14 +5,25 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Repositories\ReportsRepository;
+
 class ReportsController extends Controller
 {
+    private $r, $reportsRepository;
+    public function __construct(ReportsRepository $reportsRepository,Request $r){
+        $this->r = $r;
+        $this->reportsRepository = $reportsRepository;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $thismonth = $this->reportsRepository->getDailySales();
+        $lastmonth = $this->reportsRepository->getMonthlySales();
+        
+        
+        return view('reports.index', compact('thismonth', 'lastmonth'));
     }
 
     /**

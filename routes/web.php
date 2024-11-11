@@ -9,6 +9,7 @@ use App\Http\Controllers\Rooms\RoomsController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ResponseCalendarController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\ReportsController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,7 +30,18 @@ Route::middleware('auth')->group(function () {
     Route::resource('rooms', RoomsController::class);
     Route::resource('reservations', ReservationController::class);
     Route::resource('calendar', CalendarController::class);
-    Route::resource('reports', CalendarController::class);
+    #Route::get('reports/', ReportsController::class);
+
+    ######### Reports ########
+    Route::group(['prefix' => 'reports'], function () {
+        Route::get('/', [ReportsController::class, 'index'])->name('reports.index');
+        Route::get('/{option}', [ReportsController::class, 'index'])->name('reports.index');
+        Route::get('/{option}/{id}', [ReportsController::class, 'index'])->name('reports.index');
+        
+/*        Route::post('/', ReportsController::class);
+        Route::post('/{option}', ReportsController::class);
+        Route::post('/{option}/{id}', ReportsController::class); */
+    });
     //Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
 
     Route::resource('responsecalendar/3c2df05e/remote', ResponseCalendarController::class);    
