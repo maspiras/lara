@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use App\Repositories\ReservationRepository;
 use App\Repositories\RoomRepository;
 use App\Repositories\ReservedRoomRepository;
+use App\Repositories\PaymentRepository;
 
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Http\Requests\ReservationRequest;
@@ -24,14 +25,15 @@ use App\DataTables\ReservationsDataTable;
 class ReservationController extends Controller
 {
     use ValidatesRequests;
-    private $reservationRepository, $reservedRoomRepository;
+    private $reservationRepository, $reservedRoomRepository, $paymentRepository;
     private $roomRepository;
     
-    public function __construct(ReservedRoomRepository $reservedRoomRepository, ReservationRepository $reservationRepository, RoomRepository $roomRepository)
+    public function __construct(PaymentRepository $paymentRepository, ReservedRoomRepository $reservedRoomRepository, ReservationRepository $reservationRepository, RoomRepository $roomRepository)
     {
         $this->reservationRepository = $reservationRepository;
         $this->roomRepository = $roomRepository;
         $this->reservedRoomRepository =  $reservedRoomRepository;
+        $this->paymentRepository = $paymentRepository;
     }
 
     /**
@@ -179,7 +181,18 @@ class ReservationController extends Controller
         ]); */
 
         //dd($request->prepayment);
-        $r = empty($request->prepayment) ? 'Pencil' : 'Confirmed';
+        #$r = empty($request->prepayment) ? 'Pencil' : 'Confirmed';
+        $payment_status = 1;
+        $balance = 0;
+        if(!empty($request->prepayment)){
+           if($request->prepayment >= $request->ratesperstay){
+                $payment_status = 3;
+                $balance = 0;
+           }else{
+                $balance = $request->ratesperstay - $request->prepayment;
+                $payment_status = 2;
+           }
+        }
         
         
         $reservationdata = array(
@@ -205,13 +218,15 @@ class ReservationController extends Controller
                         'currency_id' => $request->currency,
                         'payment_type_id' => $request->typeofpayment,
                         'prepayment' => $request->prepayment,
-                        'payment_status_id' => $request->paymentstatus,
-                        'balancepayment' => ($request->ratesperstay-$request->prepayment),
+                        'payment_status_id' => $payment_status,
+                        'balancepayment' => $balance,
                         'user_id' => $request->user()->id,
                         'host_id' => auth()->user()->host_id,
                         'booking_status_id' => empty($request->prepayment) ? 0 : 1,
                         
                 );
+        
+                      
         DB::beginTransaction();
         try {            
             $reservation = $this->reservationRepository->store($reservationdata);
@@ -227,6 +242,19 @@ class ReservationController extends Controller
             }
             
             $this->reservedRoomRepository->insert($reservedroomsdata);
+            
+            
+            $paymentData = array(
+                'host_id' => auth()->user()->host_id,
+                'user_id' => $request->user()->id,
+                'reservation_id' => $reservation->id,
+                'amount' => $request->prepayment,
+                'balance' => $balance                
+            );  
+            if(!empty($request->prepayment)){
+                $this->paymentRepository->insert($paymentData);
+            }
+            
             DB::commit(); 
         } catch(\Exception $e) {
                 DB::rollBack();

@@ -47,12 +47,12 @@
                   <div class="card-body">
                     <div class="d-flex">
                       <p class="d-flex flex-column">
-                        <span class="text-bold text-lg">P18,230.00</span>
+                        <span class="text-bold text-lg">P{{ number_format($thismonthtotalsales, 2, ".", ",")}}</span>
                         <span>Sales Over Time</span>
                       </p>
                       <p class="ml-auto d-flex flex-column text-right">
                         <span class="text-success">
-                          <i class="fas fa-arrow-up"></i> 33.1%
+                          <i class="fas fa-arrow-up"></i>{{ number_format($salespercent['thismonthtotalsalespercent'], 2, ".", ",")}}%
                         </span>
                         <span class="text-muted">Since last month</span>
                       </p>
@@ -88,12 +88,12 @@
                   <div class="card-body">
                     <div class="d-flex">
                       <p class="d-flex flex-column">
-                        <span class="text-bold text-lg">P18,230.00</span>
+                        <span class="text-bold text-lg">P{{ number_format($thisyeartotalsales, 2, ".", ",")}}</span>
                         <span>Sales Over Time</span>
                       </p>
                       <p class="ml-auto d-flex flex-column text-right">
                         <span class="text-success">
-                          <i class="fas fa-arrow-up"></i> 33.1%
+                          <i class="fas fa-arrow-up"></i> {{ number_format($salespercent['thisyeartotalsalespercent'], 2, ".", ",")}}%
                         </span>
                         <span class="text-muted">Since last month</span>
                       </p>
@@ -147,23 +147,54 @@
     data: {
       labels: [
         @php
-                $period = '';
-                foreach($thismonth as $date){
+            $period = '';
+            /* This Month Data */    
+                $salesthismonth = '';
+                $salesthismonthdata = json_decode(json_encode($thismonth['data']), true);                
+                foreach($thismonth['dates'] as $date){
                   $period .= "'".$date->format('M d')."',";
+                  $i = array_search($date->format('Y-m-d'), array_column($salesthismonthdata, 'new_date'));
+
+                    if(isset($i)){
+                      if($i === '0' || $i === 0 ||
+                        $i === 0.0 || $i) {
+                          $salesthismonth .= $salesthismonthdata[$i]['amount'].',';
+                      } else {
+                        $salesthismonth .= '0,';
+                      }
+                    }                    
                 }
+
+            /* Last Month Data */
+            $saleslastmonth = '';
+                $saleslastmonthdata = json_decode(json_encode($lastmonth['data']), true);                
+                foreach($lastmonth['dates'] as $date){                  
+                  $i = array_search($date->format('Y-m-d'), array_column($saleslastmonthdata, 'new_date'));
+                  
+                    if(isset($i)){
+                      if($i === '0' || $i === 0 ||
+                        $i === 0.0 || $i) {
+                          $saleslastmonth .= $saleslastmonthdata[$i]['amount'].',';
+                      } else {
+                        $saleslastmonth .= '0,';
+                      }
+                    }                    
+                }
+
+
             @endphp
-            {!! $period !!}
+            {!! $period !!}           
       ],
       datasets: [
         {
           backgroundColor: '#007bff',
           borderColor: '#007bff',
-          data: [1000, 2000, 3000, 2500, 1000, 4000, 1000, 3000, 2500, 2700, 2500, 3000]
+          data: [{{ $salesthismonth }}]
         },
         {
           backgroundColor: '#ced4da',
           borderColor: '#ced4da',
-          data: [700, 1700, 2700, 2000, 1800, 700, 1700, 2700, 2000, 1800, 1500, 2000]
+          data: [{{ $saleslastmonth }}]
         }
       ]
     },
@@ -226,20 +257,56 @@
   var salesChartDaily = new Chart($salesChartDaily, {
     type: 'bar',
     data: {
-      labels: [
-        
-        'JAN','FEB','MAR','APR','MAY','JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
+      labels: [        
+        @php
+            $period = '';
+            /* This Year Data */    
+                $salesthisyear = '';
+                $salesthisyeardata = json_decode(json_encode($thisyear['data']), true);                
+                foreach($thisyear['dates'] as $date){
+                  $period .= "'".$date->format('M')."',";
+                  $i = array_search($date->format('Y-m'), array_column($salesthisyeardata, 'new_date'));
+
+                    if(isset($i)){
+                      if($i === '0' || $i === 0 ||
+                        $i === 0.0 || $i) {
+                          $salesthisyear .= $salesthisyeardata[$i]['amount'].',';
+                      } else {
+                        $salesthisyear .= '0,';
+                      }
+                    }                    
+                }
+
+            /* Last Year Data */
+            $saleslastyear = '';
+                $saleslastyeardata = json_decode(json_encode($lastyear['data']), true);                
+                foreach($lastyear['dates'] as $date){                  
+                  $i = array_search($date->format('Y-m'), array_column($saleslastyeardata, 'new_date'));
+                  
+                    if(isset($i)){
+                      if($i === '0' || $i === 0 ||
+                        $i === 0.0 || $i) {
+                          $saleslastyear .= $saleslastyeardata[$i]['amount'].',';
+                      } else {
+                        $saleslastyear .= '0,';
+                      }
+                    }                    
+                }
+
+                
+            @endphp
+            {!! $period !!} 
       ],
       datasets: [
         {
           backgroundColor: '#007bff',
           borderColor: '#007bff',
-          data: [1000, 2000, 3000, 2500, 2700, 1000, 2000, 3000, 2500, 2700, 2500, 3000]
+          data: [{{$salesthisyear}}]
         },
         {
           backgroundColor: '#ced4da',
           borderColor: '#ced4da',
-          data: [700, 1700, 2700, 2000, 1800, 700, 1700, 2700, 2000, 1800, 1500, 2000]
+          data: [{{$saleslastyear}}]
         }
       ]
     },

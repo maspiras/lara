@@ -260,7 +260,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="number"step=".01" id="ratesperday" name="ratesperday" class="form-control" placeholder="0.00">
+                  <input type="number" step=".01" id="ratesperday" name="ratesperday" class="form-control" placeholder="0.00" required >
                 </div>
               </div>
               <div class="form-group">
@@ -279,7 +279,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="number" step="any" id="ratesperstay" name="ratesperstay" class="form-control" placeholder="0.00">
+                  <input type="number"step="any" id="ratesperstay" name="ratesperstay" class="form-control" placeholder="0.00"   required>
                 </div>
 
               </div>
@@ -316,20 +316,20 @@
                     <option value="7">GBP</option>
                   </select>
               </div>
-              <div class="form-group">
+              <!-- <div class="form-group">
                   <label>Payment status</label>
                   <select class="form-control select2" style="width: 100%;" id="paymentstatus" name="paymentstatus">
                     <option selected="selected" value="1">No payment</option>
                     <option value="2">Prepayment paid</option>
                     <option value="3">Fully paid</option>                 
                   </select>
-              </div>  
+              </div> -->  
 
               <div class="form-group">
                   <label>Type of payment</label>
                   <select class="form-control select2" style="width: 100%;" id="typeofpayment" name="typeofpayment">
-                    <option selected="selected" value="0">Select</option>
-                    <option value="1">Pay with cash</option>
+                    
+                    <option selected="selected" value="1">Pay with cash</option>
                     <option value="2">Pay via online money transfer</option>
                     <option value="3">Pay via debit/credit card</option>
                     <option value="4">Pay via Cheque</option>
@@ -345,6 +345,18 @@
                   <input type="text" class="form-control" id="prepayment" name="prepayment" placeholder="0.00">
                 </div>
               </div>
+
+              <div class="form-group">
+                <label for="inputEstimatedDuration">Balanace</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
+                  </div>
+                  <input disabled type="text" class="form-control" placeholder="0.00" value="0" name="balance" id="balance">
+                </div>
+              </div>
+             
+              
 
               
 
@@ -425,23 +437,41 @@
         var d2 = new Date($('#checkout').val());       
         var diff = ( d2.getTime() - d1.getTime() ) / (1000 * 60 * 60 * 24);              
         $('#daystay').val(diff);
+        
         //e.preventDefault();
       },
       RatesPerDay: function(frm, e){        
+        var ratesperstay = (Math.round($('#ratesperday').val() * $('#daystay').val() * 100) / 100).toFixed(2);
         if($('#daystay').val() == 0){
           $('#ratesperstay').val($('#ratesperday').val());
         }else{
           //(Math.round(num * 100) / 100).toFixed(2)
-          //$('#ratesperstay').val($('#ratesperday').val() * $('#daystay').val());
-          $('#ratesperstay').val((Math.round($('#ratesperday').val() * $('#daystay').val() * 100) / 100).toFixed(2));
+          //$('#ratesperstay').val($('#ratesperday').val() * $('#daystay').val());          
+          $('#ratesperstay').val(ratesperstay);
+          $('#balance').val(ratesperstay);
         }
         
       },
       RatesPerStay: function(frm, e){        
         //$('#ratesperday').val($('#ratesperstay').val() / $('#daystay').val());
-        $('#ratesperday').val((Math.round($('#ratesperstay').val() / $('#daystay').val() * 100) / 100).toFixed(2));
+        var ratesperstay = (Math.round($('#ratesperstay').val() / $('#daystay').val() * 100) / 100).toFixed(2);
+        $('#ratesperday').val(ratesperstay);
+        $('#balance').val(ratesperstay);
+      },
+      GetBalance: function(){
+        var balance = $('#ratesperstay').val() - $('#prepayment').val()
+        if($('#ratesperstay').val() > $('#prepayment').val()){
+          $('#balance').val(balance);
+        }
+        if($('#prepayment').val() > $('#ratesperstay').val()) {
+          $('#balance').val(0);
+        }/* else{
+          $('#balance').val($('#ratesperstay').val() - $('#prepayment').val());
+        }  */  
+          
       }
     }
+    
 
     $('#ratesperday').on('change keyup', function() {
       Reservation.RatesPerDay();
@@ -601,6 +631,12 @@
       $(this).bootstrapSwitch('state', $(this).prop('checked'));
     });
 
+    $('#prepayment').on('change keyup', function() {
+        if($(this).val().length > 0){
+          Reservation.GetBalance();
+        }  
+    });
+    //
     
   })
 </script>

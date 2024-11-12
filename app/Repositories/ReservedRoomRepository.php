@@ -4,6 +4,8 @@ namespace App\Repositories;
 use App\Models\ReservedRoom;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\Builder;
+
 class ReservedRoomRepository extends BaseRepository
 {
     /*public $model = ReservedRooms::class;

@@ -4,26 +4,90 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Carbon\CarbonPeriod;
+use Carbon\Carbon;
 use App\Repositories\ReportsRepository;
 
 class ReportsController extends Controller
 {
-    private $r, $reportsRepository;
+    private $reportsRepository;
     public function __construct(ReportsRepository $reportsRepository,Request $r){
-        $this->r = $r;
         $this->reportsRepository = $reportsRepository;
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $thismonth = $this->reportsRepository->getDailySales();
+    {        
+        
+        #$lastmonth = CarbonPeriod::create(Carbon::now()->startOfMonth()->subMonthsNoOverflow(), '1 day', Carbon::now()->subMonthsNoOverflow()->endOfDay());
+
+        /* $start = Carbon::now()->startOfMonth();
+        $end = Carbon::now();
+
+        $thismonth = $this->reportsRepository->getDailySales($start, $end);
         $lastmonth = $this->reportsRepository->getMonthlySales();
         
+        $period = '';
+                foreach($thismonth as $date){
+                  $period .= "'".$date->format('M d')."',";
+                }
+                echo $period;
+                exit;
+        $period = CarbonPeriod::create($start, '1 day', $end); */
         
-        return view('reports.index', compact('thismonth', 'lastmonth'));
+        $thismonth = $this->reportsRepository->getSales(Carbon::now()->startOfMonth(),  Carbon::now());
+        $lastmonth = $this->reportsRepository->getSales(Carbon::now()->startOfMonth()->subMonthsNoOverflow(), Carbon::now()->subMonthsNoOverflow()->endOfDay());
+        $thisyear = $this->reportsRepository->getSales(Carbon::now()->startOfYear(),  Carbon::now(), '1 month', '');
+        $lastyear = $this->reportsRepository->getSales(Carbon::now()->startOfYear()->subYearsNoOverflow(),  Carbon::now()->subYearsNoOverflow()->endOfDay(), '1 month', '');             
+        
+        #((present-previous)/previous)*100
+        #$thismonth = json_decode(json_encode($thismonth), true);
+        #$thismonthtotalsales = json_decode(json_encode($thismonth['data']), true);
+        $thismonthtotalsales = 0;
+        foreach($thismonth['data'] as $v){
+            $thismonthtotalsales += $v->amount;
+        }
+
+        $lastmonthtotalsales = 0;
+        foreach($lastmonth['data'] as $v){
+            $lastmonthtotalsales += $v->amount;
+        }
+        
+        $thismonthtotalsalespercent = 0;
+        if($lastmonthtotalsales >= 1){
+            $thismonthtotalsalespercent = (($thismonthtotalsales-$lastmonthtotalsales) / $lastmonthtotalsales)*100;        
+        }else{
+            $thismonthtotalsalespercent = $thismonthtotalsales;
+        }
+
+        $thisyeartotalsales = 0;
+        foreach($thisyear['data'] as $v){
+            $thisyeartotalsales += $v->amount;
+        }
+
+        $lastyeartotalsales = 0;
+        foreach($lastyear['data'] as $v){
+            $lastyeartotalsales += $v->amount;
+        }
+
+        $thisyeartotalsalespercent = 0;
+        if($lastyeartotalsales >= 1){
+            $thisyeartotalsalespercent = (($thisyeartotalsales-$lastyeartotalsales) / $lastyeartotalsales)*100;
+        }else{
+            $thisyeartotalsalespercent = $thisyeartotalsales;
+        }
+        
+        
+        //dd($thisyeartotalsalespercent);
+        
+        $salespercent = [
+                            'thismonthtotalsalespercent' => $thismonthtotalsalespercent,
+                            'thisyeartotalsalespercent' => $thisyeartotalsalespercent
+                        ];
+       
+        
+        return view('reports.index', compact('thismonth', 'lastmonth', 'thisyear', 'lastyear', 'salespercent', 'thismonthtotalsales', 'thisyeartotalsales'));
     }
 
     /**
