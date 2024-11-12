@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'reports'], function () {
         Route::get('/', [ReportsController::class, 'index'])->name('reports.index');
         Route::get('/{option}', [ReportsController::class, 'index'])->name('reports.index');
-        Route::get('/{option}/{id}', [ReportsController::class, 'index'])->name('reports.index');
+        Route::get('/{option}/{oid}', [ReportsController::class, 'index'])->name('reports.index');
         
 /*        Route::post('/', ReportsController::class);
         Route::post('/{option}', ReportsController::class);

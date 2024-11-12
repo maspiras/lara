@@ -34,21 +34,33 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <div class="row">          
-            
-            <div class="col-lg-6">
-                <div class="card">
-                  
-                </div>
-                <!-- /.card -->
+        <div class="row">        
+            <div class="col-lg-12">
+              <table class="table table-bordered border-primary table-hover">
+                  <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Amount</th>                  
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Mark</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td colspan="2">Larry the Bird</td>                  
+                </tr>
+              </tbody>
 
-            </div><!-- /.Ccol -->    
-            <div class="col-lg-6">
-                <div class="card">
-                  
-                </div>
-                <!-- /.card -->
+              </table>
 
+                
             </div><!-- /.Ccol -->     
         </div><!-- /.row -->        
       </div><!-- /.container-fluid -->      

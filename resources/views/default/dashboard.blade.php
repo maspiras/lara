@@ -34,7 +34,7 @@
                   <div class="card-header border-0">
                     <div class="d-flex justify-content-between">
                       <h3 class="card-title">Daily Sales</h3>
-                      <a href="{{ url('/') }}/reports/dailysales">View Report</a>
+                      <a href="{{ url('/') }}/reports/sales/daily">View Report</a>
                     </div>
                   </div>
                   <div class="card-body">
@@ -75,7 +75,7 @@
                   <div class="card-header border-0">
                     <div class="d-flex justify-content-between">
                       <h3 class="card-title">Monthly Sales</h3>
-                      <a href="{{ url('/') }}/reports/monthlysales">View Report</a>
+                      <a href="{{ url('/') }}/reports/sales/monthly">View Report</a>
                     </div>
                   </div>
                   <div class="card-body">
