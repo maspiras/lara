@@ -158,8 +158,13 @@ class ReservationController extends Controller
     public function store(ReservationRequest $request)#: RedirectResponse
     {
         $validated = $request->validated();
-        $checkin = date('Y-m-d H:i:s', strtotime($request->checkin.' 2pm'));
-        $checkout = date('Y-m-d H:i:s', strtotime($request->checkout.' 12pm'));
+       /*  $checkin = date('Y-m-d H:i:s', strtotime($request->checkin.' 2pm'));
+        $checkout = date('Y-m-d H:i:s', strtotime($request->checkout.' 12pm')); */
+        
+        $checkin = Carbon::parse($request->checkin.' 2pm');
+        $checkout = Carbon::parse($request->checkout.' 12pm');
+        $diff = $checkin->diffInDays($checkout);
+        
 
        // return $checkin.' - '.$checkout;
         /* request()->validate([
@@ -208,7 +213,7 @@ class ReservationController extends Controller
                         'booking_source_id' => $request->input('bookingsource_id'),
                         'doorcode' => 0,
                         'rateperday' => $request->ratesperday,
-                        'daystay' => $request->daystay,
+                        'daystay' => $diff,
                         #'meals_total' => 0,
                         #'additional_services_total' => 0,
                         'subtotal' => $request->ratesperstay,
