@@ -44,6 +44,7 @@ class DailySalesReportDataTable extends DataTable
     {
         #return $model->newQuery();
         return $model->select(DB::raw("DATE_FORMAT(added_on, '%Y-%m-%d') as newdate"), DB::raw("SUM(amount) as amount")  )
+                ->where('host_id', auth()->user()->host_id)
         ->groupBy('newdate');
     }
 

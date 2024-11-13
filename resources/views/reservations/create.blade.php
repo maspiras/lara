@@ -342,7 +342,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="text" class="form-control" id="prepayment" name="prepayment" placeholder="0.00">
+                  <input type="number" class="form-control" id="prepayment" name="prepayment" placeholder="0.00">
                 </div>
               </div>
 
@@ -468,16 +468,20 @@
         
       },
       GetBalance: function(){
-        var balance = $('#ratesperstay').val() - $('#prepayment').val()
-        if($('#ratesperstay').val() > $('#prepayment').val()){
+        var balance = Number($('#ratesperstay').val()) - Number($('#prepayment').val());
+        if(Number($('#ratesperstay').val()) > Number($('#prepayment').val())){
           $('#balance').val(balance);
-        }
-        if($('#prepayment').val() > $('#ratesperstay').val()) {
+        }else{
           $('#balance').val(0);
-        }/* else{
+        }
+        
+        /* if(Number($('#ratesperstay').val()) <= Number($('#prepayment').val())) {
+          $('#balance').val(0);
+        } *//* else{
           $('#balance').val($('#ratesperstay').val() - $('#prepayment').val());
-        }  */  
-          
+        } */  
+        
+        //alert('payment ' + $('#prepayment').val() + ' rate ' + $('#ratesperstay').val() + ' balance ' +  $('#balance').val());
       }
     }
     
@@ -490,7 +494,8 @@
       }
     });   
 
-    $('#ratesperstay').on('input', function() {
+    //$('#ratesperstay').on('input', function() {
+    $('#ratesperstay').on('change keyup', function() {
       if($(this).val().length > 0){
         Reservation.RatesPerStay();
         Reservation.GetBalance();
@@ -648,9 +653,10 @@
     });
 
     $('#prepayment').on('change keyup', function() {
-        if($(this).val().length > 0){
+    //$('#prepayment').on('input', function() {
+        //if($(this).val().length > 0){
           Reservation.GetBalance();
-        }  
+        //}  
     });
     //
     

@@ -44,6 +44,7 @@ class MonthlySalesReportDataTable extends DataTable
     public function query(Payment $model): QueryBuilder
     {
         return $model->select(DB::raw("DATE_FORMAT(added_on, '%Y-%m') as newdate"), DB::raw("SUM(amount) as amount")  )
+        ->where('host_id', auth()->user()->host_id)
         ->groupBy('newdate');
     }
 
