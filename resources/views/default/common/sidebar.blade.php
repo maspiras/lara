@@ -65,13 +65,31 @@
               <p>Employees</p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="{{ url('/') }}/reports" class="nav-link treeview-reports">              
-              <i class="nav-icon fas fa-chart-pie"></i>
-              
-              <p>Reports</p>
+          
+          <li class="nav-item menu-open-reports">
+            <a href="#" class="nav-link treeview-reports">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Reports
+                <i class="fas fa-angle-left right"></i>
+              </p>
             </a>
-          </li>            
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ url('/') }}/reports/sales" class="nav-link reports-sales">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Sales</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('/') }}/reports/reservations" class="nav-link reports-reservations">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Reservations</p>
+                </a>
+              </li>
+              
+            </ul>
+          </li>      
           <li class="nav-item">          
             <!-- Authentication -->
             <form method="POST" action="{{ route('logout') }}">

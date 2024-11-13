@@ -9,7 +9,7 @@ use App\Http\Controllers\Rooms\RoomsController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ResponseCalendarController;
 use App\Http\Controllers\CalendarController;
-use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\Reports\SalesReportController;
 use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
@@ -36,9 +36,9 @@ Route::middleware('auth')->group(function () {
 
     ######### Reports ########
     Route::group(['prefix' => 'reports'], function () {
-        Route::get('/', [ReportsController::class, 'index'])->name('reports.index');
-        Route::get('/{option}', [ReportsController::class, 'index'])->name('reports.index');
-        Route::get('/{option}/{oid}', [ReportsController::class, 'index'])->name('reports.index');
+        Route::get('/', [SalesReportController::class, 'index'])->name('salesreport.dashboard');
+        Route::get('/sales', [SalesReportController::class, 'index'])->name('salesreport.index');
+        Route::get('/sales/{oid}', [SalesReportController::class, 'index'])->name('salesreport.index');
         
 /*        Route::post('/', ReportsController::class);
         Route::post('/{option}', ReportsController::class);
