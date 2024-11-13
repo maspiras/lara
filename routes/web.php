@@ -36,9 +36,10 @@ Route::middleware('auth')->group(function () {
 
     ######### Reports ########
     Route::group(['prefix' => 'reports'], function () {
-        Route::get('/', [SalesReportController::class, 'index'])->name('salesreport.dashboard');
-        Route::get('/sales', [SalesReportController::class, 'index'])->name('salesreport.index');
-        Route::get('/sales/{oid}', [SalesReportController::class, 'index'])->name('salesreport.index');
+        Route::get('/', [SalesReportController::class, 'index'])->name('reports.sales.index');
+        Route::get('/sales', [SalesReportController::class, 'index'])->name('reports.sales.index');
+        Route::get('/sales/daily', [SalesReportController::class, 'getDaily'])->name('reports.sales.daily');
+        Route::get('/sales/monthly', [SalesReportController::class, 'getMonthly'])->name('reports.sales.monthly');
         
 /*        Route::post('/', ReportsController::class);
         Route::post('/{option}', ReportsController::class);

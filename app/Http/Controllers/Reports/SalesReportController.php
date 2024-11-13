@@ -4,62 +4,38 @@ namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\DataTables\DailySalesReportDataTable;
+use App\DataTables\MonthlySalesReportDataTable;
 
 class SalesReportController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+    /* public function index(DailySalesReportDataTable $dataTable)
     {
-        return view('reports.sales.index');
+        return $dataTable->render('reports.sales.index');
+
+        #return view('reports.sales.index', compact('dataTable')); #$dataTable->render('reports.sales.index'));
+    } */
+
+    public function index(DailySalesReportDataTable $dailySalesReportDataTable, MonthlySalesReportDataTable $monthlySalesReportDataTable)
+    {
+        return view('reports.sales.index', [
+            'dailySalesReportDataTable' => $dailySalesReportDataTable->html(),
+            'monthlySalesReportDataTable' => $monthlySalesReportDataTable->html()
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function getDaily(DailySalesReportDataTable $dailySalesReportDataTable)
     {
-        //
+        return $dailySalesReportDataTable->render('reports.sales.index');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function getMonthly(MonthlySalesReportDataTable $monthlySalesReportDataTable)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return $monthlySalesReportDataTable->render('reports.sales.index');
     }
 }

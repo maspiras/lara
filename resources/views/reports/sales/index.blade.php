@@ -41,8 +41,12 @@
                   <h3 class="card-title">Daily Sales</h3>
                 </div>
                 <!-- /.card-header -->
-                <div class="card-body">
-                    <table id="dailysales" class="table table-bordered table-hover">                    
+                <div class="card-body">  
+                  <div class="table-responsive">                  
+                  {{ $dailySalesReportDataTable->table(['width' => '100%', 'id'=>'dailysales-table', 'class' => 'table table-bordered table-hover dataTable'])}}
+                  </div>                  
+                    
+                    <!-- <table id="dailysales" class="table table-bordered table-hover">                    
                       <thead>
                         <tr>
                           <th scope="col">Date</th>
@@ -63,7 +67,7 @@
                           <td colspan="2">Larry the Bird</td>                  
                         </tr>
                       </tbody>
-                    </table>    
+                    </table>   -->  
                 </div>
                 <!-- /.card-body -->
               </div>
@@ -77,7 +81,10 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <table id="monthlysales" class="table table-bordered table-hover">                    
+                  <div class="table-responsive">                  
+                  {{ $monthlySalesReportDataTable->table(['width' => '100%', 'id'=>'monthlysales-table', 'class' => 'table table-bordered table-hover dataTable'])}}
+                  </div> 
+                    <!-- <table id="monthlysales" class="table table-bordered table-hover">                    
                       <thead>
                         <tr>
                           <th scope="col">Date</th>
@@ -98,7 +105,7 @@
                           <td colspan="2">Larry the Bird</td>                  
                         </tr>
                       </tbody>
-                    </table>    
+                    </table>   -->  
                 </div>
                 <!-- /.card-body -->
               </div>
@@ -110,9 +117,41 @@
 </div><!-- /.content-wrapper -->
 @endsection
 @push('styles')  
+  <!-- DataTables -->
+  <link rel="stylesheet" href="{{ url('/') }}/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="{{ url('/') }}/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="{{ url('/') }}/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   
+  <style>
+
+    /* Ensure that the demo table scrolls */
+    th, td { white-space: nowrap; }
+    div.dataTables_wrapper {
+        margin: 0 auto;
+    }
+ 
+    div.container {
+        width: 80%;
+    }
+  </style>
 @endpush
 @push('scripts')
+<!-- DataTables  & Plugins -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="{{ url('/') }}/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="{{ url('/') }}/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="{{ url('/') }}/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="{{ url('/') }}/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="{{ url('/') }}/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="{{ url('/') }}/plugins/jszip/jszip.min.js"></script>
+<script src="{{ url('/') }}/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="{{ url('/') }}/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="{{ url('/') }}/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="{{ url('/') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="{{ url('/') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+{{ $dailySalesReportDataTable->scripts(attributes: ['type' => 'module']) }}
+{{ $monthlySalesReportDataTable->scripts(attributes: ['type' => 'module']) }}
 <script src="{{ url('/') }}/plugins/chart.js/Chart.min.js"></script>
 <script type="text/javascript">
   $(function () {
