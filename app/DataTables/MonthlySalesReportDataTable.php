@@ -28,7 +28,7 @@ class MonthlySalesReportDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             //->addColumn('action', 'monthlysalesreport.action')
-            ->editColumn('newdate', function($row){                
+            ->editColumn('added_on', function($row){                
                 return date('M Y', strtotime($row->newdate));
             })
             ->editColumn('amount', function($row){                
@@ -43,7 +43,7 @@ class MonthlySalesReportDataTable extends DataTable
      */
     public function query(Payment $model): QueryBuilder
     {
-        return $model->select(DB::raw("DATE_FORMAT(added_on, '%Y-%m') as newdate"), DB::raw("SUM(amount) as amount")  )
+        return $model->select('added_on', DB::raw("DATE_FORMAT(added_on, '%Y-%m') as newdate"), DB::raw("SUM(amount) as amount")  )
         ->where('host_id', auth()->user()->host_id)
         ->groupBy('newdate');
     }
@@ -82,7 +82,7 @@ class MonthlySalesReportDataTable extends DataTable
                   ->width(60)
                   ->addClass('text-center'), */
             //Column::make('id'),
-            Column::make('newdate')->title('Date'),
+            Column::make('added_on')->title('Date'),
             Column::make('amount'),
         ];
     }

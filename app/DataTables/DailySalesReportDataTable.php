@@ -13,7 +13,8 @@ use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Collection;
+use Illuminate\Database\Query\Builder;
 
 
 
@@ -27,14 +28,20 @@ class DailySalesReportDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))           
-           ->editColumn('newdate', function($row){                
-            return date('M d, Y', strtotime($row->newdate));
-            #return Carbon::parse($row->newdate)->format('M d, Y');            
+           ->editColumn('added_on', function($row){                
+                return date('M d, Y', strtotime($row->added_on));
+                #return Carbon::parse($row->newdate)->format('M d, Y');            
+            })
+            ->filterColumn('added_on', function($query, $keyword) {
+                $sql = "added_on  like ?";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+                return $query;
             })
             ->editColumn('amount', function($row){                
                 return number_format($row->amount, 2, '.', ',');
-            })
-            ->setRowId('id');
+            })            
+            ->setRowId('added_on');
+            
     }
 
     /**
@@ -43,8 +50,9 @@ class DailySalesReportDataTable extends DataTable
     public function query(Payment $model): QueryBuilder
     {
         #return $model->newQuery();
-        return $model->select(DB::raw("DATE_FORMAT(added_on, '%Y-%m-%d') as newdate"), DB::raw("SUM(amount) as amount")  )
-                ->where('host_id', auth()->user()->host_id)
+        
+        return $model->select('added_on', DB::raw("DATE_FORMAT(added_on, '%Y-%m-%d') as newdate"), DB::raw("SUM(amount) as amount")  )                
+        ->where('host_id', auth()->user()->host_id)
         ->groupBy('newdate');
     }
 
@@ -76,13 +84,9 @@ class DailySalesReportDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            /* Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'), 
-            Column::make('id'),*/
-            Column::make('newdate')->title('Date'),            
+            
+            Column::make("added_on")->title('Date'),   
+            //['title'=>'Date','data'=>"added_on"],         
             Column::make('amount'),
         ];
     }
