@@ -12,7 +12,7 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Reports\SalesReportController;
 use App\Http\Controllers\Reports\ReservationsReportController;
-
+use App\Http\Controllers\Reports\PaymentsReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -42,7 +42,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/sales', [SalesReportController::class, 'index'])->name('reports.sales.index');
         Route::get('/sales/daily', [SalesReportController::class, 'getDaily'])->name('reports.sales.daily');
         Route::get('/sales/monthly', [SalesReportController::class, 'getMonthly'])->name('reports.sales.monthly');
-        Route::get('/reservations', [ReservationsReportController::class, 'index'])->name('reports.sales.index');
+        Route::get('/reservations', [ReservationsReportController::class, 'index'])->name('reports.reservations.index');
+        Route::get('/payments', [PaymentsReportController::class, 'index'])->name('reports.payments.index');
         
 /*        Route::post('/', ReportsController::class);
         Route::post('/{option}', ReportsController::class);

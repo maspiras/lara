@@ -88,7 +88,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ url('/') }}/reports/guest-payments" class="nav-link reports-guest-payments">
+                <a href="{{ url('/') }}/reports/payments" class="nav-link reports-guest-payments">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Guest Payments</p>
                 </a>
