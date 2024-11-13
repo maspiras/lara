@@ -11,6 +11,11 @@ use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use Illuminate\Support\Facades\DB;
+
+use Carbon\CarbonPeriod;
+use Carbon\Carbon;
+
 
 class MonthlySalesReportDataTable extends DataTable
 {
@@ -23,9 +28,13 @@ class MonthlySalesReportDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             //->addColumn('action', 'monthlysalesreport.action')
-            ->editColumn('added_on', function($row){                
-                return date('M d, Y h:i a', strtotime($row->added_on));
+            ->editColumn('newdate', function($row){                
+                return date('M Y', strtotime($row->newdate));
             })
+            ->editColumn('amount', function($row){                
+                return number_format($row->amount, 2, '.', ',');
+            })
+            
             ->setRowId('id');
     }
 
@@ -34,7 +43,8 @@ class MonthlySalesReportDataTable extends DataTable
      */
     public function query(Payment $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->select(DB::raw("DATE_FORMAT(added_on, '%Y-%m') as newdate"), DB::raw("SUM(amount) as amount")  )
+        ->groupBy('newdate');
     }
 
     /**
@@ -71,7 +81,7 @@ class MonthlySalesReportDataTable extends DataTable
                   ->width(60)
                   ->addClass('text-center'), */
             //Column::make('id'),
-            Column::make('added_on')->title('Date'),
+            Column::make('newdate')->title('Date'),
             Column::make('amount'),
         ];
     }

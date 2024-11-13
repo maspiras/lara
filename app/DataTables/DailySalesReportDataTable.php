@@ -12,6 +12,11 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
+use Illuminate\Support\Facades\DB;
+
+
+
+
 class DailySalesReportDataTable extends DataTable
 {
     /**
@@ -21,11 +26,14 @@ class DailySalesReportDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
-        return (new EloquentDataTable($query))
-           // ->addColumn('action', 'dailysalesreport.action')
-           ->editColumn('added_on', function($row){                
-            return date('M d, Y h:i a', strtotime($row->added_on));
-        })
+        return (new EloquentDataTable($query))           
+           ->editColumn('newdate', function($row){                
+            return date('M d, Y', strtotime($row->newdate));
+            #return Carbon::parse($row->newdate)->format('M d, Y');            
+            })
+            ->editColumn('amount', function($row){                
+                return number_format($row->amount, 2, '.', ',');
+            })
             ->setRowId('id');
     }
 
@@ -34,7 +42,9 @@ class DailySalesReportDataTable extends DataTable
      */
     public function query(Payment $model): QueryBuilder
     {
-        return $model->newQuery();
+        #return $model->newQuery();
+        return $model->select(DB::raw("DATE_FORMAT(added_on, '%Y-%m-%d') as newdate"), DB::raw("SUM(amount) as amount")  )
+        ->groupBy('newdate');
     }
 
     /**
@@ -71,7 +81,7 @@ class DailySalesReportDataTable extends DataTable
                   ->width(60)
                   ->addClass('text-center'), 
             Column::make('id'),*/
-            Column::make('added_on')->title('Date'),            
+            Column::make('newdate')->title('Date'),            
             Column::make('amount'),
         ];
     }
