@@ -189,14 +189,17 @@ class ReservationController extends Controller
         #$r = empty($request->prepayment) ? 'Pencil' : 'Confirmed';
         $payment_status = 1;
         $balance = 0;
+        $amount = 0;
 
         if(!empty($request->prepayment)){
            if($request->prepayment >= $request->ratesperstay){
                 $payment_status = 3;
                 $balance = 0;
+                $amount = $request->ratesperstay;
            }else{
                 $balance = $request->ratesperstay - $request->prepayment;
                 $payment_status = 2;
+                $amount = $request->prepayment;
            }
         }
             /*  Hard check for empty  */            
@@ -265,7 +268,7 @@ class ReservationController extends Controller
                 'host_id' => auth()->user()->host_id,
                 'user_id' => $request->user()->id,
                 'reservation_id' => $reservation->id,
-                'amount' => $request->prepayment,
+                'amount' => $amount,
                 'balance' => $balance                
             );  
             if(!empty($request->prepayment)){

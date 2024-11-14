@@ -1,16 +1,20 @@
-<div class="card roomlistcard card-primary collapsed-card">
-    <div class="card-header">
-        <h3 class="card-title">Meal/s</h3>
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
-            </button>
-        </div>
-    <!-- /.card-tools -->
-    </div>
-    <!-- /.card-header -->
-    <div class="card-body">        
-        <div class="row">        
-            <div class="col-sm-6">
+<!-- Modal -->
+<div class="modal mealsmodal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Meals for the whole stay</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card card-primary">    
+            <!-- /.card-header -->
+            <div class="card-body">        
+                <div class="row">   
+                    
+                <div class="col-sm-6">
                 <!-- checkbox -->
                 <div class="form-group clearfix">
                     
@@ -92,12 +96,72 @@
                     <div class="icheck-success d-inline">
                         <input type="radio" id="meals8" name="meals[]" class="meals" value="">
                         <label for="meals8">
-                        All inclusive
+                        All inclusive (Breakfast, Lunch & Dinner)
                         </label>
                     </div>
                 </div>
             </div>
 
+
+
+                </div><!-- /.row -->
+            </div><!-- /.card-body -->
+        </div><!-- /.card -->
+            
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+        <button type="button" class="btn btn-primary btn-meals-okay">OKAY</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card roomlistcard card-primary collapsed-card mealscard">
+<!-- <div class="card roomlistcard card-primary mealscard"> -->
+    <div class="card-header">
+        <h3 class="card-title">Meal/s</h3>
+        <div class="card-tools">
+            <!-- <button type="button" class="btn btn-tool btn-meals" data-card-widget="collapse"><i class="fas fa-plus"></i> -->
+            <button type="button" class="btn btn-tool btn-meals"><i class="fas fa-plus"></i>
+            </button>
+        </div>
+    <!-- /.card-tools -->
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body mealsbody">        
+        <div class="row">
+            <div class="col-lg">
+                <div class="input-group mb-3">                
+                    <div class="input-group-prepend">                    
+                        <span class="input-group-text"><i class="far fa-user"></i></span>
+                    </div>
+                    <input type="number" class="form-control" id="mealsadults"  min="0" max="300" name="mealsadults" placeholder="Adults">
+                </div>
+            </div>
+        </div><!-- /.row -->
+        <div class="row">
+            <div class="col-lg">
+                <div class="input-group mb-3">                
+                    <div class="input-group-prepend">                    
+                        <span class="input-group-text"><i class="far fa-user"></i></span>
+                    </div>
+                    <input type="number" class="form-control" id="mealschilds" min="0" max="300" name="mealschilds" placeholder="Childs">
+                </div>
+            </div>
+        </div><!-- /.row -->
+        <div class="row">
+            <div class="col-lg">
+                <div class="input-group mb-3">                
+                    <div class="input-group-prepend">                    
+                        <span class="input-group-text"><i class="far fa-user"></i></span>
+                    </div>
+                    <input type="number" class="form-control" id="mealsamount"  min="0" name="mealsamount" placeholder="0.00">
+                </div>
+            </div>
         </div><!-- /.row -->
     </div><!-- /.card-body -->
+<!-- <div class="overlay">
+  <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+</div>     -->
 </div><!-- /.card -->

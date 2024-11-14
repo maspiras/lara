@@ -75,7 +75,7 @@
         </td>
         <td>
              
-            <a class="btn btn-outline-primary btn-sm" href="{{ route('employees.edit',$user->id) }}"><i class="fa fa-pen-to-square"></i> Edit</a>
+            <a class="btn btn-outline-primary btn-sm" href="{{ route('employees.edit',$user->id) }}"><i class="fa-solid fa fa-pen"></i> Edit</a>
              <a class="btn btn-sm btn-outline-success" href="{{ route('employees.show',$user->id) }}"><i class="fa fa-list"></i> Show</a>             
              <form method="POST" action="{{ route('employees.destroy', $user->id) }}" style="display:inline">
                   @csrf

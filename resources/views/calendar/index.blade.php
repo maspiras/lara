@@ -42,13 +42,30 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-          
+
+          <div class="card card-info">
+              <div class="card-header">
+                <h3 class="card-title">Maximize</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
               <div mbsc-page class="demo-month-view">
                   <div style="height:100%">
                           <div id="demo-month-view"></div>
                 
                   </div>
               </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          
+              
                 
               
           </div>

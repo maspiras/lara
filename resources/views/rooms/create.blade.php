@@ -48,7 +48,7 @@
 
 <form action="{{ route('rooms.store') }}" method="POST">
     @csrf
-    <input type="hidden" id="hosts_id" name="hosts_id" value="7">
+    <input type="hidden" id="hosts_id" name="hosts_id" value="1">
     <input type="hidden" id="room_status_id" name="room_status_id" value="1">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">

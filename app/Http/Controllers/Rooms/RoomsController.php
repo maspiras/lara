@@ -75,12 +75,14 @@ class RoomsController extends Controller
     public function store(Request $request): RedirectResponse
     {
         
-        request()->validate([
-            'room_name' => 'required',
-            'host_id' => auth()->user()->host_id,
-            'room_status_id' => 1
-        ]);
         
+        /* request()->validate([
+            'room_name' => 'required',
+            //'host_id' => auth()->user()->host_id,
+            'room_status_id' => 1
+        ]); */
+        
+       
         $this->roomRepository->store($request->all());
         return redirect()->route('rooms.index')
                         ->with('success','Room created successfully.');
