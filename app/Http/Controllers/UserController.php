@@ -27,7 +27,7 @@ class UserController extends Controller
 
     public function index(Request $request): View
     {
-        $data = User::latest()->paginate(5);
+        $data = User::where('host_id', auth()->user()->host_id)->latest()->paginate(5);
   
         return view('users.index',compact('data'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
@@ -62,11 +62,12 @@ class UserController extends Controller
     
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
+        $input['host_id'] = auth()->user()->host_id;
     
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
     
-        return redirect()->route('users.index')
+        return redirect()->route('employees.index')
                         ->with('success','User created successfully');
     }
     
@@ -89,13 +90,23 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id): View
+    public function edit($id)#: View
     {
-        $user = User::find($id);
-        $roles = Role::pluck('name','name')->all();
-        $userRole = $user->roles->pluck('name','name')->all();
-    
-        return view('users.edit',compact('user','roles','userRole'));
+        
+        if($id == auth()->user()->host_id && auth()->user()->id != auth()->user()->host_id){
+           //return redirect()->route('employees.index'); 
+           //return redirect()->route('employees');
+           return redirect('/dashboard');
+           //return Redirect::to(url('/'));
+           exit;
+        }else{
+            $user = User::find($id);
+            $roles = Role::pluck('name','name')->all();
+            $userRole = $user->roles->pluck('name','name')->all();
+        
+            return view('users.edit',compact('user','roles','userRole'));
+        }
+        
     }
     
     /**
@@ -127,8 +138,8 @@ class UserController extends Controller
     
         $user->assignRole($request->input('roles'));
     
-        return redirect()->route('users.index')
-                        ->with('success','User updated successfully');
+        return redirect()->route('employees.index')
+                        ->with('success','Employee updated successfully');
     }
     
     /**
@@ -140,7 +151,7 @@ class UserController extends Controller
     public function destroy($id): RedirectResponse
     {
         User::find($id)->delete();
-        return redirect()->route('users.index')
-                        ->with('success','User deleted successfully');
+        return redirect()->route('employees.index')
+                        ->with('success','Employee deleted successfully');
     }
 }

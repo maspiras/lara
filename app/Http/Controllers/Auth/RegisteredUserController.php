@@ -41,6 +41,9 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        User::where('id', $user->id)
+              ->update(['host_id' => $user->id]);
+
         event(new Registered($user));
 
         Auth::login($user);

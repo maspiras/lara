@@ -1,29 +1,64 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="row">
-    <div class="col-lg-12 margin-tb">
-        <div class="pull-left">
-            <h2>Create New User</h2>
-        </div>
-        <div class="pull-right">
-            <a class="btn btn-primary btn-sm mb-2" href="{{ route('users.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
-        </div>
+    <!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-5">
+            <h1 class="m-0">Edit Employees</h1>
+          </div><!-- /.col -->
+          
+          <div class="col-sm-3">
+            @session('success')
+                <div class="alert alert-success" role="alert"> 
+                    {{ $value }}
+                </div>
+            @endsession            
+          </div>  
+          <div class="col-sm-4">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+              <li class="breadcrumb-item active">Employees</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
     </div>
-</div>
+    <!-- /.content-header -->
 
-@if (count($errors) > 0)
-    <div class="alert alert-danger">
-      <strong>Whoops!</strong> There were some problems with your input.<br><br>
-      <ul>
-         @foreach ($errors->all() as $error)
-           <li>{{ $error }}</li>
-         @endforeach
-      </ul>
-    </div>
-@endif
+    
 
-<form method="POST" action="{{ route('users.store') }}">
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 margin-tb">                
+                <div class="pull-right">
+                    <a class="btn btn-primary btn-sm mb-2" href="{{ route('employees.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">        
+            <div class="col-lg-12">
+              <div class="card">
+                
+                <!-- /.card-header -->
+                <div class="card-body">  
+                    @if (count($errors) > 0)
+                        <div class="alert alert-danger">
+                        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        </div>
+                    @endif  
+                                     
+                    <form method="POST" action="{{ route('employees.store') }}">
     @csrf
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -66,7 +101,21 @@
             <button type="submit" class="btn btn-primary btn-sm mt-2 mb-3"><i class="fa-solid fa-floppy-disk"></i> Submit</button>
         </div>
     </div>
-</form>
+</form>   
 
-<p class="text-center text-primary"><small>Tutorial by ItSolutionStuff.com</small></p>
+
+                    
+                </div><!-- /.card-body -->
+              </div><!-- /.card -->                
+            </div><!-- /.Ccol -->     
+        </div><!-- /.row -->        
+      </div><!-- /.container-fluid -->      
+    </section><!-- /.content -->
+</div><!-- /.content-wrapper -->
 @endsection
+@push('styles')  
+ 
+@endpush
+@push('scripts')
+
+@endpush

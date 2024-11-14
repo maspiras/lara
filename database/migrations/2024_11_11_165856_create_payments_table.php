@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id')->unsigned();
             $table->unsignedBigInteger('host_id');
             $table->unsignedBigInteger('user_id');
+            $table->string('ref_number');
             $table->unsignedBigInteger('reservation_id');
             $table->decimal('amount', 9, 2);
             $table->decimal('balance', 9, 2)->nullable();

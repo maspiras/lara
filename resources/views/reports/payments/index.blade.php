@@ -92,7 +92,7 @@
 <script src="{{ url('/') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 
-<script src="{{ url('/') }}/plugins/chart.js/Chart.min.js"></script>
+
 <script type="text/javascript">
   $(function () {
     'use strict'

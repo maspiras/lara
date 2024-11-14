@@ -13,7 +13,7 @@
           <img src="{{ url('/') }}/images/logo.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+          <a href="{{ url('/') }}/employees/{{ auth()->user()->id }}/edit" class="d-block">{{ Auth::user()->name }}</a>
         </div>
       </div>
 
@@ -90,7 +90,7 @@
               <li class="nav-item">
                 <a href="{{ url('/') }}/reports/payments" class="nav-link reports-guest-payments">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Guest Payments</p>
+                  <p>Transactions</p>
                 </a>
               </li>
               

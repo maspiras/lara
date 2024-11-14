@@ -24,8 +24,8 @@
     <!-- Main content -->    
     <form method="post" id="reservationForm" action="{{ route('reservations.store') }}">
     @csrf              
-    <section class="content">
-    
+    <section class="content"> 
+    <div class="container-fluid">   
       @if ($errors->any())
         <div class="row">
           <div class="col-md-12">
@@ -42,13 +42,13 @@
       @endif
       @session('error')          
           <div class="row">
-          <div class="col-md-12">
-            <div class="alert alert-danger">
-                <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                {{ $value }}
+            <div class="col-md-12">
+              <div class="alert alert-danger">
+                  <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                  {{ $value }}
+              </div>
             </div>
           </div>
-        </div>
       @endsession
       <div class="row">
         <div class="col-md-6">
@@ -291,6 +291,10 @@
           <!-- /.card -->
           <!-- End Rates -->
 
+          @include('reservations.meals')
+
+          @include('reservations.services')
+
           <!-- Start payment -->
           <div class="card card-info">
             <div class="card-header">
@@ -387,6 +391,7 @@
           <input type="submit" value="Save Changes" class="btn btn-success float-right">
         </div>
       </div> -->
+      </div>
     </section>
     <!-- /.content -->
   </form>

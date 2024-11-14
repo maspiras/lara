@@ -12,9 +12,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
-use Illuminate\Database\Query\Builder;
+
 
 class PaymentsReportDataTable extends DataTable
 {
@@ -49,9 +47,11 @@ class PaymentsReportDataTable extends DataTable
     #public function query(): QueryBuilder
     {
         return $model->newQuery()
-        ->select('reservations.fullname', 'reservations.checkin', 'reservations.checkout', 'payments.reservation_id', 'payments.amount', 'payments.added_on')
+        ->select('reservations.ref_number','reservations.fullname', 'reservations.checkin', 'reservations.checkout', 'payments.reservation_id', 'payments.amount', 'payments.added_on')
         ->join('reservations', 'reservations.id', '=', 'payments.reservation_id')
-        ->where('payments.host_id', auth()->user()->host_id);
+        ->where('payments.host_id', auth()->user()->host_id)
+        #->orderByDesc('payments.id');
+        ->latest('payments.id');
         
     }
 
@@ -68,6 +68,17 @@ class PaymentsReportDataTable extends DataTable
                     ->dom('lBfrtip')
                     ->orderBy(0)
                     ->selectStyleSingle()
+                    ->parameters([
+                        'processing' => true,
+                    'serverSide' => true,
+                    'deferRender' => true,
+                    #'searching' => false,
+                    //'responsive' => true,
+                    //'autoWidth' => false,
+                    //'stateSave' => true,
+                    "ordering" => true,
+                    
+                        ])
                     ->buttons([
                         Button::make('copy'),
                         Button::make('excel'),                        
@@ -87,12 +98,11 @@ class PaymentsReportDataTable extends DataTable
                   ->printable(false)
                   ->width(60)
                   ->addClass('text-center'), */
-            
-            Column::make("reservation_id")->title('Reservation ID'), 
+            Column::make("added_on")->title('Date'),
+            Column::make("ref_number")->title('Reservation ID'), 
             Column::make("fullname")->title('Full name'),                 
             Column::make("checkin")->title('Checkin'),    
-            Column::make("checkout")->title('Checkout'),    
-            Column::make("added_on")->title('Date'),                     
+            Column::make("checkout")->title('Checkout'),                                     
             Column::make('amount'),
         ];
     }

@@ -101,7 +101,7 @@ class ReservationsReportDataTable extends DataTable
         ]; */
 
         return [
-            ['title'=>'Ref #','data'=>"id"],
+            ['title'=>'Ref #','data'=>"ref_number"],
             ['title'=>'Full Name','data'=>"fullname"],
             ['title'=>'Checkin','data'=>"checkin"],
             ['title'=>'Checkout','data'=>"checkout"],

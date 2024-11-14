@@ -189,6 +189,7 @@ class ReservationController extends Controller
         #$r = empty($request->prepayment) ? 'Pencil' : 'Confirmed';
         $payment_status = 1;
         $balance = 0;
+
         if(!empty($request->prepayment)){
            if($request->prepayment >= $request->ratesperstay){
                 $payment_status = 3;
@@ -198,9 +199,19 @@ class ReservationController extends Controller
                 $payment_status = 2;
            }
         }
+            /*  Hard check for empty  */            
+        /* if(isset($web['status'])){
+            if($web['status'] === '0' || $web['status'] === 0 ||
+               $web['status'] === 0.0 || $web['status']) {
+              // not empty: use the value
+            } else {
+              // consider it as empty, since status may be FALSE, null or an empty string
+            }
+          } */
         
-        
+        $ref_number = time().'-'.$request->user()->id;
         $reservationdata = array(
+                        'ref_number' => $ref_number,
                         'checkin' => $checkin,
                         'checkout' => $checkout,
                         'adults' => $request->input('adults'),
@@ -250,6 +261,7 @@ class ReservationController extends Controller
             
             
             $paymentData = array(
+                'ref_number' => $ref_number,
                 'host_id' => auth()->user()->host_id,
                 'user_id' => $request->user()->id,
                 'reservation_id' => $reservation->id,

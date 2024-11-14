@@ -33,10 +33,10 @@ class ReservationsDataTable extends DataTable
                 return view('reservations.datatables_actions', compact('reservation'));
             })
             ->editColumn('checkin', function($row){                
-                return date('M d, Y h:i a', strtotime($row->checkin));
+                return date('M d, Y', strtotime($row->checkin));
             })
             ->editColumn('checkout', function($row){                
-                return date('M d, Y h:i a', strtotime($row->checkout));
+                return date('M d, Y', strtotime($row->checkout));
             })
             ->editColumn('booking_status_id', function($row){  
                 $d = '';
@@ -84,8 +84,13 @@ class ReservationsDataTable extends DataTable
     {
         $last_month = Carbon::create(date('Y-m-d', strtotime("-1 month")))->startOfMonth();
         #$last_month = Carbon::today()->subDays(30);
-        return $model->newQuery()
-        ->where('host_id', auth()->user()->host_id);
+        #return $model->newQuery()
+        
+        
+        return $model
+        ->where('checkin', '>=', now()->subDays(7))
+        ->where('host_id', auth()->user()->host_id)
+        ->orderBy('checkin');
         #->where('created_at', '>=', $last_month );
         #->whereDate('created_at','>=', $last_month);
         #return $model->newQuery();
@@ -145,6 +150,7 @@ class ReservationsDataTable extends DataTable
                     'processing' => true,
                 'serverSide' => true,
                 'deferRender' => true,
+                
                 //'responsive' => true,
                 //'autoWidth' => false,
                 //'stateSave' => true,
@@ -207,7 +213,7 @@ class ReservationsDataTable extends DataTable
             ['id' => 'Ref #', 'fullname' => 'Full Name', 'checkin' => 'Checkin', 'checkout' => 'Checkout', 'booking_status_id' => 'Status']
         ]; */
         return [
-            ['title'=>'Ref #','data'=>"id"],
+            ['title'=>'Ref #','data'=>"ref_number"],
             ['title'=>'Full Name','data'=>"fullname"],
             ['title'=>'Checkin','data'=>"checkin"],
             ['title'=>'Checkout','data'=>"checkout"],

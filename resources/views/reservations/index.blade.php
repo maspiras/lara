@@ -39,15 +39,16 @@
     <section class="content">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-12">
-          
+          <div class="col-12">          
               <div class="card">
                 <div class="card-header">
                   <h3 class="card-title">All Reservations</h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                {{ $dataTable->table(['class' => 'table table-bordered reservations table-hover', 'width' => "100%"]) }}   
+                  <div class="table-responsive">
+                    {{ $dataTable->table(['class' => 'table table-bordered reservations table-hover', 'width' => "100%"]) }}   
+                  </div>
                 </div>
                 <!-- /.card-body -->
               </div>
