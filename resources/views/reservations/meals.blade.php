@@ -117,8 +117,8 @@
   </div>
 </div>
 
-<div class="card roomlistcard card-primary collapsed-card mealscard">
-<!-- <div class="card roomlistcard card-primary mealscard"> -->
+<div class="card card-primary collapsed-card mealscard">
+<!-- <div class="card card-primary mealscard"> -->
     <div class="card-header">
         <h3 class="card-title">Meal/s</h3>
         <div class="card-tools">
@@ -129,7 +129,7 @@
     <!-- /.card-tools -->
     </div>
     <!-- /.card-header -->
-    <div class="card-body mealsbody">        
+    <div class="card-body">        
         <div class="row">
             <div class="col-lg">
                 <div class="input-group mb-3">                
@@ -144,7 +144,7 @@
             <div class="col-lg">
                 <div class="input-group mb-3">                
                     <div class="input-group-prepend">                    
-                        <span class="input-group-text"><i class="far fa-user"></i></span>
+                        <span class="input-group-text"><i class="fa fa-child"></i></span>                        
                     </div>
                     <input type="number" class="form-control" id="mealschilds" min="0" max="300" name="mealschilds" placeholder="Childs">
                 </div>
@@ -152,12 +152,18 @@
         </div><!-- /.row -->
         <div class="row">
             <div class="col-lg">
-                <div class="input-group mb-3">                
-                    <div class="input-group-prepend">                    
-                        <span class="input-group-text"><i class="far fa-user"></i></span>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-4 col-form-label">Amount</label>
+                    <div class="col-sm-8">
+                        <div class="input-group mb-3">                
+                            <div class="input-group-prepend">                    
+                                <span class="input-group-text"><i class="fa fa-money-bill"></i></span>
+                            </div>
+                            <input type="number" class="form-control" id="mealsamount"  min="0" name="mealsamount" placeholder="0.00">
+                        </div>
                     </div>
-                    <input type="number" class="form-control" id="mealsamount"  min="0" name="mealsamount" placeholder="0.00">
                 </div>
+                
             </div>
         </div><!-- /.row -->
     </div><!-- /.card-body -->

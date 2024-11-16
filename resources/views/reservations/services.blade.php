@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal servicesmodal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="staticBackdropLabel">Additional services</h5>
@@ -11,14 +11,13 @@
       <div class="modal-body">
         <div class="card card-primary">    
             <!-- /.card-header -->
-            <div class="card-body">        
+            <div class="card-body">
                 <div class="row">   
-                    
-                    <div class="col-sm-6">
+                    <div class="col-xs-6 col-sm-6 col-lg-6 col-6">
                         <!-- checkbox -->
                         <div class="form-group clearfix">
                         <div class="icheck-success d-inline">
-                            <input type="checkbox" id="services1" name="services[]" class="rooms" value="">
+                            <input type="checkbox" id="services1" name="services[]" class="rooms" value="1" title="Free Parking">
                             <label for="services1">
                                     Free Parking
                             </label>
@@ -26,39 +25,41 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-6">
+                    <div class="col-xs-6 col-sm-6 col-lg-6 col-6">
                         <!-- checkbox -->
                         <div class="form-group clearfix">
                         <div class="icheck-success d-inline">
-                            <input type="checkbox" id="services2" name="services[]" class="rooms" value="">
+                            <input type="checkbox" id="services2" name="services[]" class="rooms" value="2" title="Pay Parking">
                             <label for="services2">
                                     Pay Parking
                             </label>
                         </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-xs-6 col-sm-6 col-lg-6 col-6">
                         <!-- checkbox -->
                         <div class="form-group clearfix">
                         <div class="icheck-success d-inline">
-                            <input type="checkbox" id="services3" name="services[]" class="rooms" value="">
+                            <input type="checkbox" id="services3" name="services[]" class="rooms" value="3" title="Massage">
                             <label for="services3">
                                     Massage
                             </label>
                         </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-xs-6 col-sm-6 col-lg-6 col-6">
                         <!-- checkbox -->
                         <div class="form-group clearfix">
                         <div class="icheck-success d-inline">
-                            <input type="checkbox" id="services4" name="services[]" class="rooms" value="">
+                            <input type="checkbox" id="services4" name="services[]" class="rooms" value="4" title="Nail Spa">
                             <label for="services4">
                                     Nail Spa
                             </label>
                         </div>
                         </div>
                     </div>
+                    
+
 
 
 
@@ -67,36 +68,117 @@
         </div><!-- /.card -->
             
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
-        <button type="button" class="btn btn-primary btn-services-okay">OKAY</button>
+      <div class="modal-footer ">
+        
+        
+            <a class="btn btn-primary addnew float:left" href="#"><i class="fa-solid fa"></i>ADD NEW</a>             
+            <button type="button" class="btn btn-secondary float:right" data-dismiss="modal">CANCEL</button>
+            <button type="button" class="btn btn-success  float:right btn-services-okay">OKAY</button>    
+        
+        
+        
       </div>
     </div>
   </div>
 </div>
 
+
+
+<!-- <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel2">Modal 2</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Hide this modal and show the first with the button below.
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">Back to first</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+
 <div class="card card-primary collapsed-card servicescard">
 <!-- <div class="card card-primary servicescard"> -->
     <div class="card-header">
         <h3 class="card-title">Additional Services</h3>
-        <div class="card-tools">
-            <!-- <button type="button" class="btn btn-tool btn-meals" data-card-widget="collapse"><i class="fas fa-plus"></i> -->
+        <div class="card-tools">            
+            <!-- <button type="button" class="btn btn-tool btn-services" data-card-widget="collapse"><i class="fas fa-plus"></i> -->
             <button type="button" class="btn btn-tool btn-services"><i class="fas fa-plus"></i>
             </button>
         </div>
     <!-- /.card-tools -->
     </div>
     <!-- /.card-header -->
-    <div class="card-body mealsbody">        
+    <div class="card-body">        
         <div class="row">
-                <div class="table-responsive">
-                    <table class="table">
-                        <tr><td>Wholebody Massage</td><td>0.00</td><td><a href="#" class='btn-sm btn-danger'><i class="fa fa-trash"></i></a></td></tr>
-                        <tr><td>Foot Massage</td><td>0.00</td><td><a href="#" class='btn-sm btn-danger'><i class="fa fa-trash"></i></a></td></tr>
-                        <tr><td>Parking</td><td>0.00</td><td><a href="#" class='btn-sm btn-danger'><i class="fa fa-trash"></i></a></td></tr>
-                        <tr><td>Nail Spa</td><td>0.00</td><td><a href="#" class='btn-sm btn-danger'><i class="fa fa-trash"></i></a></td></tr>
-                    </table>
-                </div>
+            <div class="col-lg">
+                <!-- <div class="card">
+                    <div class="card-body"> -->
+                        <hr class="hr" />
+                    <div class="serviceschosen">
+                        
+                        <!-- <div class="service">
+                            <div class="form-group row">
+                                <p for="inputEmail3" class="col-lg-7 col-md-7 col-7 col-form-label">Foot Massage</p>
+                                <div class="col-lg-4 col-md-4 col-4">
+                                    <input type="number" class="form-control col servicesamount" id="services-1" name="servicesamount[]" placeholder="0.00">
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-1">
+                                    <a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                </div>
+                                
+                            </div>
+                            <div class="form-group row">
+                                <p for="inputPassword3" class="col-lg-7 col-7 col-form-label">Status</p>
+                                <div class="col-lg-5 col-5">
+                                    <select class="form-control" id="services-status1" name="services-status[]">
+                                    <option value="0">No payment</option>
+                                    <option value="1">Paid</option>                               
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service">
+                            <div class="form-group row">
+                                <p for="inputEmail3" class="col-lg-7 col-md-7 col-7 col-form-label">Foot Massage</p>
+                                <div class="col-lg-4 col-md-4 col-4">
+                                    <input type="number" class="form-control col  servicesamount" id="services-2" name="servicesamount[]" placeholder="0.00">
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-1">
+                                    <a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                </div>
+                                
+                            </div>
+                            <div class="form-group row">
+                                <p for="inputPassword3" class="col-lg-7 col-7 col-form-label">Status</p>
+                                <div class="col-lg-5 col-5">
+                                    <select class="form-control" id="services-status2" name="services-status[]">
+                                    <option value="0">No payment</option>
+                                    <option value="1">Paid</option>                               
+                                    </select>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div> <!-- div /.services chosen -->
+                        
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-4 col-form-label">Amount</label>
+                            <div class="col-sm-8">                                
+                                <h2 class="text-right servicestotalamount">0.00</h2>                                
+                            </div>
+                        </div>
+                    
+                    <!-- </div>
+                </div> -->
+
+            </div><!-- /.col -->        
+                
         </div><!-- /.row -->        
     </div><!-- /.card-body -->
 <!-- <div class="overlay">

@@ -374,13 +374,17 @@
           <!-- End payment -->
 
           <div class="col-12">
+              <div class="form-group justify-content-md-center row">
                   
-                  <button type="submit" class="btn btn-success btn-lg float-right"><i class="far fa-credit-card"></i> Save Reservation
-                  </button>
-                  <button type="cancel" class="btn btn-secondary btn-lg float-right" style="margin-right: 5px;">
-                    <i class="fas fa-download"></i> Cancel Reservation
-                  </button>
-                </div>
+                  <div class="col col-6 text-center">
+                      <button type="cancel" class="btn btn-secondary btn-lg"><i class="fas fa-download"></i> Cancel Reservation</button>
+                  </div>
+                  
+                  <div class="col col-6 text-center">
+                      <button type="submit" class="btn btn-success btn-lg"><i class="far fa-credit-card"></i> Save Reservation</button>
+                  </div>
+              </div>
+          </div>
 
           <!-- /.card -->
         </div>
@@ -436,59 +440,7 @@
 
 <script>
   $(function () {
-    var Reservation = {
-      DayStay: function(frm, e){
-        if($('#checkin').val() != '' && $('#checkout').val() != ''){
-          var d1 = new Date($('#checkin').val());   
-          var d2 = new Date($('#checkout').val());       
-          var diff = ( d2.getTime() - d1.getTime() ) / (1000 * 60 * 60 * 24);              
-          $('#daystay').val(diff);
-        }
-        //e.preventDefault();
-      },
-      RatesPerDay: function(frm, e){        
-        var ratesperstay = (Math.round($('#ratesperday').val() * $('#daystay').val() * 100) / 100).toFixed(2);
-        if($('#daystay').val() == 0){
-          $('#ratesperstay').val($('#ratesperday').val());
-        }else{
-          //(Math.round(num * 100) / 100).toFixed(2)
-          //$('#ratesperstay').val($('#ratesperday').val() * $('#daystay').val());          
-          $('#ratesperstay').val(ratesperstay);
-          $('#balance').val(ratesperstay);
-        }
-        
-      },
-      RatesPerStay: function(frm, e){        
-        //$('#ratesperday').val($('#ratesperstay').val() / $('#daystay').val());
-        var ratesperstay = (Math.round($('#ratesperstay').val() / $('#daystay').val() * 100) / 100).toFixed(2);
-        //ratesperstay = $('#ratesperstay').val() / $('#daystay').val();
-       // var val = $( "input[name='daystay']" ).val();
-        
-       if($('#daystay').val() == 0){
-          $('#ratesperday').val($('#ratesperstay').val());
-       }else{
-          $('#ratesperday').val(ratesperstay);
-          $('#balance').val(ratesperstay);
-       }
-        
-      },
-      GetBalance: function(){
-        var balance = Number($('#ratesperstay').val()) - Number($('#prepayment').val());
-        if(Number($('#ratesperstay').val()) > Number($('#prepayment').val())){
-          $('#balance').val(balance);
-        }else{
-          $('#balance').val(0);
-        }
-        
-        /* if(Number($('#ratesperstay').val()) <= Number($('#prepayment').val())) {
-          $('#balance').val(0);
-        } *//* else{
-          $('#balance').val($('#ratesperstay').val() - $('#prepayment').val());
-        } */  
-        
-        //alert('payment ' + $('#prepayment').val() + ' rate ' + $('#ratesperstay').val() + ' balance ' +  $('#balance').val());
-      }
-    }
+    
     
     
 
