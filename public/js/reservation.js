@@ -105,10 +105,8 @@ $(document).ready(function(){
     $( ".btn-services-okay" ).on( "click", function(e) {      
         var checkboxes = $('input[name="services[]"]:checked');        
         if(checkboxes.length > 0){
-            
             $('.serviceschosen').children().remove();            
             $('.servicestotalamount').text('0.00');
-
             checkboxes.each(function(i){
                 $('.serviceschosen').prepend('<div class="service"><div class="form-group row"><p for="inputEmail3" class="col-lg-7 col-md-7 col-7 col-form-label">'+$(this).prop('title')+'</p><div class="col-lg-4 col-md-4 col-4"><input type="hidden" id="service_id'+i+'" name="service_id[]" value="'+$(this).val()+'"><input type="number" class="form-control col servicesamount" id="serviceamount'+i+'" name="servicesamount[]" placeholder="0.00"></div><div class="col-lg-1 col-md-1 col-1"><a href="'+config.SitePath+'/services/'+$(this).val()+'" class="btn btn-danger services_delete"><i class="fa fa-trash"></i></a></div></div><div class="form-group row"><p for="inputPassword3" class="col-lg-7 col-7 col-form-label">Status</p><div class="col-lg-5 col-5"><select class="form-control" id="services-status'+i+'" name="servicepaymentstatus"><option value="0">No payment</option><option value="1">Paid</option></select></div></div><hr class="hr" /></div>');  
             });
