@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Repositories;
+use App\Models\Payment;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\LazyCollection;
+use Illuminate\Support\Collection;
+
+class ServiceRepository extends BaseRepository
+{
+    protected $model;
+    
+    public function __construct()
+    {
+        $this->model = DB::table('services');
+    }
+
+    public function getServices(){
+       
+        $services =  $this->model->where('host_id', auth()->user()->host_id)            
+                ->orderByDesc('service_name')
+                ->get();#->chunk(2);
+        return $this->toArr($services);
+        
+              
+    }
+
+    
+}

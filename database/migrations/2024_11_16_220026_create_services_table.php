@@ -19,8 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('service_name');
             $table->string('service_desc')->nullable();
-            $table->tinyInteger('period');
-            $table->tinyInteger('payment');
+            $table->tinyInteger('period'); /* 1= per night, 2= per stay */
+            $table->tinyInteger('payment'); /* 1= per person, 2=per service */
             $table->decimal('amount', 9, 2);
             $table->timestamp('added_on');
 

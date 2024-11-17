@@ -10,6 +10,7 @@ use App\Repositories\ReservationRepository;
 use App\Repositories\RoomRepository;
 use App\Repositories\ReservedRoomRepository;
 use App\Repositories\PaymentRepository;
+use App\Repositories\ServiceRepository;
 
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Http\Requests\ReservationRequest;
@@ -20,20 +21,22 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 use DataTables;
 use App\DataTables\ReservationsDataTable;
+use Illuminate\Database\Query\Builder;
 
 
 class ReservationController extends Controller
 {
     use ValidatesRequests;
-    private $reservationRepository, $reservedRoomRepository, $paymentRepository;
+    private $reservationRepository, $reservedRoomRepository, $paymentRepository, $serviceRepository;
     private $roomRepository;
     
-    public function __construct(PaymentRepository $paymentRepository, ReservedRoomRepository $reservedRoomRepository, ReservationRepository $reservationRepository, RoomRepository $roomRepository)
+    public function __construct(ServiceRepository $serviceRepository, PaymentRepository $paymentRepository, ReservedRoomRepository $reservedRoomRepository, ReservationRepository $reservationRepository, RoomRepository $roomRepository)
     {
         $this->reservationRepository = $reservationRepository;
         $this->roomRepository = $roomRepository;
         $this->reservedRoomRepository =  $reservedRoomRepository;
         $this->paymentRepository = $paymentRepository;
+        $this->serviceRepository = $serviceRepository;
     }
 
     /**
@@ -106,9 +109,16 @@ class ReservationController extends Controller
      */
     public function create()
     {
+        $services = $this->serviceRepository->getServices();       
+        /* //foreach($services as $service => $v){
+        foreach($services as $service => $v){            
+            echo $v['service_name'].'<br>';
+            #echo $service->service_name.'<br>';
+        } 
+        exit; */
         $rooms = $this->roomRepository->all();
         #$rooms = $this->roomRepository->getPaginate(2);   
-        return view('reservations.create',compact('rooms'))
+        return view('reservations.create',compact('rooms', 'services'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 

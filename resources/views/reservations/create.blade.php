@@ -339,6 +339,15 @@
                     <option value="4">Pay via Cheque</option>
                   </select>
               </div>  
+              <div class="form-group">
+                <label for="inputEstimatedDuration">Grand Total</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
+                  </div>
+                  <input disabled type="text" class="form-control" placeholder="0.00" value="0" name="grandtotal" id="grandtotal">
+                </div>
+              </div>
 
               <div class="form-group">
                 <label for="inputEstimatedDuration">Prepayment</label>
@@ -351,7 +360,7 @@
               </div>
 
               <div class="form-group">
-                <label for="inputEstimatedDuration">Balanace</label>
+                <label for="inputEstimatedDuration">Balance</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
@@ -444,20 +453,7 @@
     
     
 
-    $('#ratesperday').on('change keyup', function() {
-      if($(this).val().length > 0){
-          Reservation.RatesPerDay();
-          Reservation.GetBalance();
-      }
-    });   
-
-    //$('#ratesperstay').on('input', function() {
-    $('#ratesperstay').on('change keyup', function() {
-      if($(this).val().length > 0){
-        Reservation.RatesPerStay();
-        Reservation.GetBalance();
-      }
-    });
+    
 
     /* $.validator.setDefaults({
       submitHandler: function () {
@@ -475,33 +471,7 @@
       }
     }); */
 
-    $('#reservationForm').submit(function(e){
-      if($('#reservationForm input:checked').length <= 0){
-          $('.roomlistcard').removeClass('card-primary');
-          $('.roomlistcard').addClass('card-danger');
-          $('.roomlistcard div h3').text('Room/s: This field is required');    
-          e.preventDefault();        
-        }else{
-          $('.roomlistcard').removeClass('card-danger');
-          $('.roomlistcard').addClass('card-primary');
-          $('.roomlistcard div h3').text('Room/s');
-          
-        }
-        //e.preventDefault();
-        
-    });
-
-    $('#checkin').on('input', function() {
-      Reservation.DayStay($(this)); 
-      Reservation.RatesPerDay();       
-    });
-
-    $('#checkout').on('input', function() {
-      Reservation.DayStay($(this));      
-      //Reservation.RatesPerStay();  
-      Reservation.RatesPerDay();
-    });
-
+    
     /* $('#ratesperday').on('input', function() {
       Reservation.Rates($(this));        
     });  
@@ -609,12 +579,7 @@
       $(this).bootstrapSwitch('state', $(this).prop('checked'));
     });
 
-    $('#prepayment').on('change keyup', function() {
-    //$('#prepayment').on('input', function() {
-        //if($(this).val().length > 0){
-          Reservation.GetBalance();
-        //}  
-    });
+   
     //
     
   })

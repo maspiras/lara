@@ -12,21 +12,23 @@
         <div class="card card-primary">    
             <!-- /.card-header -->
             <div class="card-body">
-                <div class="row">   
+                <div class="row">
+
+                    @foreach($services as $service => $v )   
                     <div class="col-xs-6 col-sm-6 col-lg-6 col-6">
-                        <!-- checkbox -->
                         <div class="form-group clearfix">
                         <div class="icheck-success d-inline">
-                            <input type="checkbox" id="services1" name="services[]" class="rooms" value="1" title="Free Parking">
-                            <label for="services1">
-                                    Free Parking
+                            <input type="checkbox" id="services{{$v['id']}}" name="services[]" class="rooms" value="{{$v['id'].'/'.$v['period'].'/'.$v['payment'].'/'.$v['amount']}}" title="{{$v['service_name']}}">
+                            <label for="services{{$v['id']}}">
+                                    {{$v['service_name']}}
                             </label>
                         </div>
                         </div>
                     </div>
+                    @endforeach
 
-                    <div class="col-xs-6 col-sm-6 col-lg-6 col-6">
-                        <!-- checkbox -->
+                    <!-- <div class="col-xs-6 col-sm-6 col-lg-6 col-6">
+                        
                         <div class="form-group clearfix">
                         <div class="icheck-success d-inline">
                             <input type="checkbox" id="services2" name="services[]" class="rooms" value="2" title="Pay Parking">
@@ -37,7 +39,7 @@
                         </div>
                     </div>
                     <div class="col-xs-6 col-sm-6 col-lg-6 col-6">
-                        <!-- checkbox -->
+                        
                         <div class="form-group clearfix">
                         <div class="icheck-success d-inline">
                             <input type="checkbox" id="services3" name="services[]" class="rooms" value="3" title="Massage">
@@ -48,7 +50,7 @@
                         </div>
                     </div>
                     <div class="col-xs-6 col-sm-6 col-lg-6 col-6">
-                        <!-- checkbox -->
+                        
                         <div class="form-group clearfix">
                         <div class="icheck-success d-inline">
                             <input type="checkbox" id="services4" name="services[]" class="rooms" value="4" title="Nail Spa">
@@ -57,7 +59,7 @@
                             </label>
                         </div>
                         </div>
-                    </div>
+                    </div> -->
                     
 
 
