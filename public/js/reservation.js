@@ -143,7 +143,43 @@ $(document).ready(function(){
 
     } /* End of class Reservation */
 
+    var Services = {
 
+        Save: function(frm, e){
+            var formData = $( frm ).serialize();
+            var saving = AjaxLib.postAjaxData( config.SitePath + '/services', formData );
+            saving.done(function(data){  
+                if(data.status ==1){
+                    $('.servicessavestatus').removeClass('alert-danger alert');
+                    $('.servicessavestatus').addClass('alert-success alert');
+                    $('.servicessavestatus').text(data.msg);
+                    $("#serviceForm")[0].reset();
+                    $('.servicesmodal').modal('show');
+                    $('.addservicesmodal').modal('hide');
+                }else{
+                    $('.servicessavestatus').removeClass('alert-success alert');
+                    $('.servicessavestatus').addClass('alert-danger alert');
+                    $('.servicessavestatus').text(data.msg);
+                }                             
+            });
+            saving.fail(function(jqXHR, textStatus, errorThrown) {             
+                $('.servicessavestatus').removeClass('alert-danger alert');   	                
+                $('.servicessavestatus').addClass('alert-success alert');
+                $('.servicessavestatus').text(data.msg + ' '+textStatus + ': ' + errorThrown);
+            });
+            e.preventDefault();
+        }
+
+    };
+
+    $('.btnservicesave').on( "click", function(e) {
+        Services.Save($('#serviceForm'), e)
+        e.preventDefault();   
+    });
+    $('#serviceForm').submit(function(e){
+        Services.Save($('#serviceForm'), e)
+        e.preventDefault();   
+    });
     
     
     $( ".btn-meals" ).on( "click", function(e) {       
@@ -185,6 +221,16 @@ $(document).ready(function(){
         
         e.preventDefault();
     } );
+
+    $('.addnewservices').on('click', function(e){
+        $('.servicesmodal').modal('hide');
+        $('.addservicesmodal').modal('show');
+        e.preventDefault();
+    });
+
+    $('.addservicesmodal').on('hidden.bs.modal', function () {
+        $('.servicesmodal').modal('show');
+    });
 
 
     $('.serviceschosen').on('input', '.servicesamount', function(e) {               

@@ -29,7 +29,7 @@ return new class extends Migration
             $table->index('service_name', 'service_name');            
             $table->index('period', 'period');
             $table->index('added_on', 'added_on');
-
+            $table->unique(['host_id', 'service_name']);
             $table->foreign('user_id')->references('id')->on('users');            
             
         });

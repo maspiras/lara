@@ -7,6 +7,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Rooms\RoomsController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\Services\ServiceController;
 use App\Http\Controllers\ResponseCalendarController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DashboardController;
@@ -33,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('employees', UserController::class);
     Route::resource('rooms', RoomsController::class);
     Route::resource('reservations', ReservationController::class);
+    Route::resource('services', ServiceController::class);
     Route::resource('calendar', CalendarController::class);
     #Route::get('reports/', ReportsController::class);
 

@@ -408,7 +408,8 @@
     </section>
     <!-- /.content -->
   </form>
-</div>
+</div> <!-- /.content-wrapper -->
+@include('reservations.addservice')
 
 
 @endsection

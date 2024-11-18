@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Repositories;
-use App\Models\Payment;
+use App\Models\Service;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Collection;
@@ -18,12 +18,12 @@ class ServiceRepository extends BaseRepository
     public function getServices(){
        
         $services =  $this->model->where('host_id', auth()->user()->host_id)            
-                ->orderByDesc('service_name')
+                ->orderBy('service_name')
                 ->get();#->chunk(2);
         return $this->toArr($services);
-        
-              
     }
+
+    
 
     
 }
