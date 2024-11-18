@@ -109,7 +109,7 @@ class ReservationController extends Controller
      */
     public function create()
     {
-        $services = $this->serviceRepository->getServices();       
+        $services = $this->serviceRepository->getServices(auth()->user()->host_id);       
         /* //foreach($services as $service => $v){
         foreach($services as $service => $v){            
             echo $v['service_name'].'<br>';

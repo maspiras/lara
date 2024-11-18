@@ -15,9 +15,9 @@ class ServiceRepository extends BaseRepository
         $this->model = DB::table('services');
     }
 
-    public function getServices(){
+    public function getServices($host_id){
        
-        $services =  $this->model->where('host_id', auth()->user()->host_id)            
+        $services =  $this->model->where('host_id', $host_id)            
                 ->orderBy('service_name')
                 ->get();#->chunk(2);
         return $this->toArr($services);
