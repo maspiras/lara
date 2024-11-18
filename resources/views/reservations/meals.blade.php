@@ -19,7 +19,7 @@
                 <div class="form-group clearfix">
                     
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="meals1" name="meals[]" checked>
+                        <input type="radio" id="meals1" name="meals" checked value="">
                         <label for="meals1"> Without Meals</label>
                       </div>                      
                 </div>
@@ -28,7 +28,7 @@
                 <!-- checkbox -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="meals2" name="meals[]" class="meals" value="">
+                        <input type="radio" id="meals2" name="meals" class="meals" value="1">
                         <label for="meals2">
                         Breakfast
                         </label>
@@ -39,7 +39,7 @@
                 <!-- checkbox -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="meals3" name="meals[]" class="meals" value="">
+                        <input type="radio" id="meals3" name="meals" class="meals" value="2">
                         <label for="meals3">
                         Lunch
                         </label>
@@ -50,7 +50,7 @@
                 <!-- checkbox -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="meals4" name="meals[]" class="meals" value="">
+                        <input type="radio" id="meals4" name="meals" class="meals" value="3">
                         <label for="meals4">
                         Dinner
                         </label>
@@ -61,7 +61,7 @@
                 <!-- checkbox -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="meals5" name="meals[]" class="meals" value="">
+                        <input type="radio" id="meals5" name="meals" class="meals" value="4">
                         <label for="meals5">
                         Breakfast, Lunch
                         </label>
@@ -72,7 +72,7 @@
                 <!-- checkbox -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="meals6" name="meals[]" class="meals" value="">
+                        <input type="radio" id="meals6" name="meals" class="meals" value="5">
                         <label for="meals6">
                         Lunch, Dinner
                         </label>
@@ -83,7 +83,7 @@
                 <!-- checkbox -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="meals7" name="meals[]" class="meals" value="">
+                        <input type="radio" id="meals7" name="meals" class="meals" value="6">
                         <label for="meals7">
                         Breakfast, Dinner
                         </label>
@@ -94,7 +94,7 @@
                 <!-- checkbox -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="meals8" name="meals[]" class="meals" value="">
+                        <input type="radio" id="meals8" name="meals" class="meals" value="7">
                         <label for="meals8">
                         All inclusive (Breakfast, Lunch & Dinner)
                         </label>

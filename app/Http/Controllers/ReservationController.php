@@ -11,6 +11,7 @@ use App\Repositories\RoomRepository;
 use App\Repositories\ReservedRoomRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\ServiceRepository;
+use App\Repositories\ReservedMealRepository;
 
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Http\Requests\ReservationRequest;
@@ -27,16 +28,17 @@ use Illuminate\Database\Query\Builder;
 class ReservationController extends Controller
 {
     use ValidatesRequests;
-    private $reservationRepository, $reservedRoomRepository, $paymentRepository, $serviceRepository;
+    private $reservationRepository, $reservedRoomRepository, $paymentRepository, $serviceRepository, $reservedmealRepository;
     private $roomRepository;
     
-    public function __construct(ServiceRepository $serviceRepository, PaymentRepository $paymentRepository, ReservedRoomRepository $reservedRoomRepository, ReservationRepository $reservationRepository, RoomRepository $roomRepository)
+    public function __construct(ReservedMealRepository $reservedmealRepository, ServiceRepository $serviceRepository, PaymentRepository $paymentRepository, ReservedRoomRepository $reservedRoomRepository, ReservationRepository $reservationRepository, RoomRepository $roomRepository)
     {
         $this->reservationRepository = $reservationRepository;
         $this->roomRepository = $roomRepository;
         $this->reservedRoomRepository =  $reservedRoomRepository;
         $this->paymentRepository = $paymentRepository;
         $this->serviceRepository = $serviceRepository;
+        $this->reservedmealRepository = $reservedmealRepository;
     }
 
     /**
@@ -162,9 +164,24 @@ class ReservationController extends Controller
         return $data;
     }
 
+    public function mealsData($request, $reservation_id=null){
+        $mealData = array(
+            'host_id' => auth()->user()->host_id,
+            'user_id' => auth()->user()->id,
+            'reservation_id' => $reservation_id,
+            'meal_name' => $request->meals,
+            'meal_adults' => $request->mealsadults,
+            'meal_childs' => $request->mealschilds,
+            'amount' => $request->mealsamount,
+        );
+        return $mealData;
+    }
+
     /**
      * Store a newly created resource in storage.
      */    
+    
+    #public function store(Request $request)
     public function store(ReservationRequest $request)#: RedirectResponse
     {
         $validated = $request->validated();
@@ -251,8 +268,7 @@ class ReservationController extends Controller
                         'balancepayment' => $balance,
                         'user_id' => $request->user()->id,
                         'host_id' => auth()->user()->host_id,
-                        'booking_status_id' => empty($request->prepayment) ? 0 : 1,
-                        
+                        'booking_status_id' => empty($request->prepayment) ? 0 : 1,                        
                 );
         
                       
@@ -284,6 +300,10 @@ class ReservationController extends Controller
             if(!empty($request->prepayment)){
                 $this->paymentRepository->insert($paymentData);
             }
+
+            if(!empty($request->meals)){                
+                $this->reservedmealRepository->insert($this->mealsData($request, $reservation->id));
+            }            
             
             DB::commit(); 
         } catch(\Exception $e) {
