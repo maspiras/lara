@@ -1,25 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
+use App\Models\ReservedMeal;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Repositories\ServiceRepository;
 
-class APIServiceController extends Controller
+class ReservedMealController extends Controller
 {
-    private $r, $serviceRepository;
-    public function __construct(ServiceRepository $serviceRepository, Request $r)
-    {        
-        $this->r = $r;
-        $this->serviceRepository = $serviceRepository;
-    }
     /**
      * Display a listing of the resource.
      */
     public function index()
-    {   
-        return $this->serviceRepository->getServices($this->r->host_id);  
+    {
+        //
     }
 
     /**
@@ -41,7 +35,7 @@ class APIServiceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(ReservedMeal $reservedMeal)
     {
         //
     }
@@ -49,7 +43,7 @@ class APIServiceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(ReservedMeal $reservedMeal)
     {
         //
     }
@@ -57,7 +51,7 @@ class APIServiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, ReservedMeal $reservedMeal)
     {
         //
     }
@@ -65,7 +59,7 @@ class APIServiceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(ReservedMeal $reservedMeal)
     {
         //
     }

@@ -13,7 +13,8 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="row">
-
+                    <div class="serviceslist">
+                        <div class="row">
                     @foreach($services as $service => $v )   
                     <div class="col-xs-6 col-sm-6 col-lg-6 col-6">
                         <div class="form-group clearfix">
@@ -26,6 +27,8 @@
                         </div>
                     </div>
                     @endforeach
+                    </div>
+                    </div>
 
                     <!-- <div class="col-xs-6 col-sm-6 col-lg-6 col-6">
                         

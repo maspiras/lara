@@ -76,6 +76,7 @@
                 </div><!-- /.card -->
             </div>
             <div class="modal-footer justify-content-between">
+              <input type="hidden" id="host_id" name="host_id" value="{{auth()->user()->host_id}}">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               <button type="submit" class="btn btn-primary btnservicesave">Save changes</button>
             </div>

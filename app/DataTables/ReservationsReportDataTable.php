@@ -59,7 +59,8 @@ class ReservationsReportDataTable extends DataTable
     public function query(Reservation $model): QueryBuilder
     {
         #return $model->newQuery();
-        return $model->where('host_id', auth()->user()->host_id);
+        return $model->where('host_id', auth()->user()->host_id)
+        ->orderBy('checkin');
     }
 
     /**
@@ -72,7 +73,7 @@ class ReservationsReportDataTable extends DataTable
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('lBfrtip')
-                    ->orderBy(0)                    
+                    //->orderBy(0)                    
                     ->selectStyleSingle()
                     ->buttons([
                         Button::make('copy'),

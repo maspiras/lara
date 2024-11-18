@@ -108,7 +108,7 @@ $(document).ready(function(){
                         total = total;
                     }
                     
-                    $('.serviceschosen').prepend('<div class="service"><div class="form-group row"><p for="serviceamount'+i+'" class="col-lg-7 col-md-7 col-7 col-form-label">'+$(this).prop('title')+'</p><div class="col-lg-4 col-md-4 col-4"><input type="hidden" id="service_id'+i+'" name="service_id[]" value="'+id+'"><input type="number" class="form-control col servicesamount" id="serviceamount'+i+'" name="servicesamount[]" value="'+ total +'" placeholder="0.00"></div><div class="col-lg-1 col-md-1 col-1"><a href="'+config.SitePath+'/services/'+id+'" class="btn btn-danger services_delete"><i class="fa fa-trash"></i></a></div></div><div class="form-group row"><p for="inputPassword3" class="col-lg-7 col-7 col-form-label">Status</p><div class="col-lg-5 col-5"><select class="form-control" id="services-status'+i+'" name="servicepaymentstatus"><option value="0">No payment</option><option value="1">Paid</option></select></div></div><hr class="hr" /></div>');                  
+                    $('.serviceschosen').prepend('<div class="service"><div class="form-group row"><p for="serviceamount'+i+'" class="col-lg-7 col-md-7 col-7 col-form-label">'+$(this).prop('title')+'</p><div class="col-lg-4 col-md-4 col-4"><input type="hidden" id="service_id'+i+'" name="service_id[]" value="'+id+'"><input type="number" class="form-control col servicesamount" id="serviceamount'+i+'" name="servicesamount[]" value="'+ total +'" placeholder="0.00"></div><div class="col-lg-1 col-md-1 col-1"><a href="'+config.SitePath+'/services/'+id+'" class="btn btn-danger services_delete"><i class="fa fa-trash"></i></a></div></div><div class="form-group row"><p for="inputPassword3" class="col-lg-7 col-7 col-form-label">Status</p><div class="col-lg-5 col-5"><select class="form-control" id="services-status'+i+'" name="servicepaymentstatus"><option value="0">No payment</option><option value="1">Paid</option></select></div></div><hr class="hr" /></div>');
                 });
                 $('.servicestotalamount').text(CommonLib.MoneyFormat(Reservation.GetServicesTotal()));
                 $('.servicescard').CardWidget('expand');            
@@ -153,14 +153,16 @@ $(document).ready(function(){
                     $('.servicessavestatus').removeClass('alert-danger alert');
                     $('.servicessavestatus').addClass('alert-success alert');
                     $('.servicessavestatus').text(data.msg);
-                    $("#serviceForm")[0].reset();
+                    $("#serviceForm")[0].reset();                    
                     $('.servicesmodal').modal('show');
                     $('.addservicesmodal').modal('hide');
+
                 }else{
                     $('.servicessavestatus').removeClass('alert-success alert');
                     $('.servicessavestatus').addClass('alert-danger alert');
                     $('.servicessavestatus').text(data.msg);
                 }                             
+                Services.getList($('#host_id').val());
             });
             saving.fail(function(jqXHR, textStatus, errorThrown) {             
                 $('.servicessavestatus').removeClass('alert-danger alert');   	                
@@ -168,6 +170,34 @@ $(document).ready(function(){
                 $('.servicessavestatus').text(data.msg + ' '+textStatus + ': ' + errorThrown);
             });
             e.preventDefault();
+        },
+
+        getList: function(host_id){
+            var getData = AjaxLib.getAjaxDataJson(config.SitePath + '/api/services?host_id=' + host_id);
+            getData.done(function(data){                                
+                datalength = data.length;
+                if(datalength > 0){
+                    $('.serviceslist .row').children().remove(); 
+                    for (var i=0; i<datalength; i++) {
+                        $('.serviceslist .row').append('<div class="col-xs-6 col-sm-6 col-lg-6 col-6">'+
+                        '<div class="form-group clearfix">'+
+                        '<div class="icheck-success d-inline">'+
+                            '<input type="checkbox" id="services'+data[i]['id']+'" name="services[]" class="rooms" value="'+data[i]['id']+'/'+data[i]['period']+'/'+data[i]['payment']+'/'+data[i]['amount']+'" title="'+data[i]['service_name']+'">'+
+                            '<label for="services'+data[i]['id']+'">' +
+                            data[i]['service_name']+
+                            '</label>'+
+                        '</div>'+
+                        '</div>'+
+                    '</div>');                  
+                        //alert(data[i]['service_name']);
+                    }
+                } 
+
+            });    
+            getData.fail(function(jqXHR, textStatus, errorThrown) {
+                //console.log(textStatus + ': ' + errorThrown);
+                toastr.error('<h5>'+textStatus + ': ' + errorThrown+'</h5>'); 
+            });
         }
 
     };
