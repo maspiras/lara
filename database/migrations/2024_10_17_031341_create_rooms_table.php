@@ -17,14 +17,14 @@ return new class extends Migration
             $table->bigIncrements('id')->unsigned();
             $table->string('room_name');
             $table->integer('room_status_id')->nullable();
-            $table->unsignedBigInteger('hosts_id');
+            $table->unsignedBigInteger('host_id');
            
             //$table->foreign('hosts_id')->references('id')->on('hosts')->onUpdate('RESTRICT')->onDelete('RESTRICT');
            
             $table->index('hosts_id','hosts_id');
             $table->index('room_name','room_name');
             
-            $table->unique(['room_name', 'hosts_id']);
+            $table->unique(['room_name', 'host_id']);
            
         });
     }

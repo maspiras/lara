@@ -88,7 +88,7 @@
                       <!-- checkbox -->
                       <div class="form-group clearfix">
                         <div class="icheck-success d-inline">
-                          <input type="checkbox" id="roomname{{$room->id}}" name="roomname[]" class="rooms" value="{{$room->id}}" {{ (is_array($myReservedRooms) && in_array($room->id, $myReservedRooms)) ? ' checked' : '' }}>
+                          <input type="checkbox" id="roomname{{$room->id}}" name="roomname[]" class="rooms" value="{{$room->id}}" {{ (is_array($myReservedRooms) && in_array($room->id, $myReservedRooms)) ? ' checked' : '' }} />
                           <label for="roomname{{ $room->id}}">
                             {{ $room->room_name }}
                           </label>

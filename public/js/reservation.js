@@ -15,6 +15,7 @@ $(document).ready(function(){
             }
             //alert(checkin +' x ' + checkout);
             
+
             return diff;
           //e.preventDefault();
         },
@@ -82,33 +83,37 @@ $(document).ready(function(){
             }
             return parseFloat(amount);
         },
-        ShowAdditionalServices: function (){
+        ShowAdditionalServices: function (checkin, checkout){
             var checkboxes = $('input[name="services[]"]:checked');        
             if(checkboxes.length > 0){
                 $('.serviceschosen').children().remove();            
                 $('.servicestotalamount').text('0.00');
                 $('#servicestotalamount').val(0);
-                diff = Reservation.DayStay();
+                //var diff = Reservation.DayStay($('#checkin').val(), $('#checkout').val());
+                var diff = Reservation.DayStay(checkin, checkout);
+                
                 checkboxes.each(function(i){
                     const service = $(this).val().split("/");                
                     id = service[0];
-                    period = service[1];
-                    payment = service[2];
+                    period = parseInt(service[1]);
+                    payment = parseInt(service[2]);
                     amount = parseFloat(service[3]);
                     total = 0;
                     pax = parseInt($('#adults').val()) + parseInt($('#childs').val());
                     
+                    total = amount;
+                    
                     if(period == 1){
-                        total = amount * diff; 
-                    }else{
-                        total = amount;
+                        if(diff != 0){
+                            total = (amount * diff); 
+                        }
                     }
 
                     if(payment == 1){
-                        total = total * pax;
+                        total = (total * pax);
                     }else{
                         total = total;
-                    }
+                    } 
                     
                     $('.serviceschosen').prepend('<div class="service"><div class="form-group row"><p for="serviceamount'+i+'" class="col-lg-7 col-md-7 col-7 col-form-label">'+$(this).prop('title')+'</p><div class="col-lg-4 col-md-4 col-4"><input type="hidden" id="service_id'+i+'" name="service_id[]" value="'+id+'"><input type="number" class="form-control col servicesamount" id="serviceamount'+i+'" name="servicesamount[]" value="'+ total +'" placeholder="0.00"></div><div class="col-lg-1 col-md-1 col-1"><a href="'+config.SitePath+'/services/'+id+'" class="btn btn-danger services_delete"><i class="fa fa-trash"></i></a></div></div><div class="form-group row"><p for="servicestatus'+i+'" class="col-lg-7 col-7 col-form-label">Status</p><div class="col-lg-5 col-5"><select class="form-control" id="services-status'+i+'" name="servicepaymentstatus[]"><option value="0">No payment</option><option value="1">Paid</option></select></div></div><hr class="hr" /></div>');
                 }); 
@@ -155,9 +160,11 @@ $(document).ready(function(){
                 Reservation.RatesPerDay();  */
                 $('#daystay').val(Reservation.DayStay($('#checkin').val(), moment(checkout).format('MM/DD/YYYY') ));
                 Reservation.ShowRatesPerStay(); //replaced
-                Reservation.ShowAdditionalServices();
+                //Reservation.ShowAdditionalServices();
+                Reservation.ShowAdditionalServices($('#checkin').val(), moment(checkout).format('MM/DD/YYYY'));
                 Reservation.ShowGrandTotal();
                 Reservation.GetBalance();
+                //alert('checkin '+$('#checkin').val() + ' checkout '+ moment(checkout).format('MM/DD/YYYY') );
               }
             );
         }
@@ -263,7 +270,8 @@ $(document).ready(function(){
 
     /* add or remove services chosen entirely */
     $( ".btn-services-okay" ).on( "click", function(e) {      
-        Reservation.ShowAdditionalServices();
+        //Reservation.ShowAdditionalServices();
+        Reservation.ShowAdditionalServices($('#checkin').val(),$('#checkout').val() );
         Reservation.ShowGrandTotal();
         Reservation.GetBalance();
         //alert(Reservation.RatesPerStay());
@@ -316,7 +324,8 @@ $(document).ready(function(){
     $('#ratesperday').on('input', function() {        
         if($(this).val().length > 0){
             Reservation.ShowRatesPerStay();
-            Reservation.ShowAdditionalServices();
+            //Reservation.ShowAdditionalServices();
+            Reservation.ShowAdditionalServices($('#checkin').val(),$('#checkout').val() );
             Reservation.ShowGrandTotal();
             Reservation.GetBalance();            
         }
@@ -325,7 +334,8 @@ $(document).ready(function(){
       $('#ratesperstay').on('input', function() {      
         if($(this).val().length > 0){         
             Reservation.ShowRatesPerDay();
-            Reservation.ShowAdditionalServices();
+            //Reservation.ShowAdditionalServices();
+            Reservation.ShowAdditionalServices($('#checkin').val(),$('#checkout').val() );
             Reservation.ShowGrandTotal();
             Reservation.GetBalance();
         }        
@@ -387,11 +397,13 @@ $(document).ready(function(){
             /* Reservation.DayStay(moment(checkin).format('MM/DD/YYYY'), $('#checkout').val());        
             Reservation.RatesPerDay();  */
             $('#daystay').val(Reservation.DayStay(moment(checkin).format('MM/DD/YYYY'), $('#checkout').val()));        
-            Reservation.DateRangePicker($('#checkout'), checkin); 
-            Reservation.ShowRatesPerStay(); //replaced
-            Reservation.ShowAdditionalServices();
+            //Reservation.DateRangePicker(moment(checkin).format('MM/DD/YYYY'), $('#checkout').val()); 
+            //alert(checkin);
+            //alert(moment(checkin).format('MM/DD/YYYY'));
+            Reservation.ShowAdditionalServices(moment(checkin).format('MM/DD/YYYY'), $('#checkout').val());
             Reservation.ShowGrandTotal();
-            Reservation.GetBalance(); 
+            Reservation.GetBalance();
+            
         }
     );
   
@@ -404,12 +416,14 @@ $(document).ready(function(){
       }); */
 
       $('#adults').on('input', function() {
-            Reservation.ShowAdditionalServices();
+            //Reservation.ShowAdditionalServices();
+            Reservation.ShowAdditionalServices($('#checkin').val(),$('#checkout').val() );
             Reservation.ShowGrandTotal();
             Reservation.GetBalance();
       });
       $('#childs').on('input', function() {
-            Reservation.ShowAdditionalServices();
+            //Reservation.ShowAdditionalServices();
+            Reservation.ShowAdditionalServices($('#checkin').val(),$('#checkout').val() );
             Reservation.ShowGrandTotal();
             Reservation.GetBalance();
         });

@@ -46,7 +46,7 @@ class ReportsRepository extends BaseRepository
                                 DAY(added_on) AS day,
                                 sum(amount) as amount
                                 from payments
-                                where (added_on between '".$start."' and '".$end."')
+                                where (added_on between '".$start."' and '".$end."') AND (host_id = '".auth()->user()->host_id."')
                                 group by new_date"
                             );
         

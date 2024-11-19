@@ -122,7 +122,8 @@ class ReservationController extends Controller
         exit; */
         $rooms = $this->roomRepository->all();
         #$rooms = $this->roomRepository->getPaginate(2);   
-        return view('reservations.create',compact('rooms', 'services'))
+        $myReservedServices = [];
+        return view('reservations.create',compact('rooms', 'services', 'myReservedServices'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -402,6 +403,7 @@ class ReservationController extends Controller
        
         $reservation = $this->reservationRepository->find($id);
         $rooms = $this->roomRepository->all();
+        
         #$bookedrooms = [];
         /* foreach($reservation->reservedRooms() as $r){
             $bookedrooms[]= $r->room_id.'<br>';
@@ -410,10 +412,14 @@ class ReservationController extends Controller
         #$reservedRooms = $reservation->reservedRooms()->groupBy('room_id')->get();
         #$reservedRooms = $reservation->reservedRooms;  
         $services = $this->serviceRepository->getServices(auth()->user()->host_id);                            
-        
+        $reservedServices = $this->reservedservicesRepository->getMyReservedServices($id);
+        $myReservedServices = [];
+        foreach($reservedServices as $r){
+            $myReservedServices[] = $r->service_id;
+        }
+        $myReservedServices = array_unique($myReservedServices);        
+
         $reservedRooms = $this->reservedRoomRepository->getMyReservedRooms($id);
-        
-        
         $myReservedRooms = [];
         foreach($reservedRooms as $r){
             $myReservedRooms[] = $r->room_id;
@@ -422,7 +428,7 @@ class ReservationController extends Controller
         #print_r($myReservedRooms);
 
         #exit;
-        return view('reservations.edit', compact('reservation', 'rooms', 'myReservedRooms', 'services'));
+        return view('reservations.edit', compact('reservation', 'rooms', 'myReservedRooms', 'services', 'myReservedServices'));
         #print_r($reservation->id);
 
     }

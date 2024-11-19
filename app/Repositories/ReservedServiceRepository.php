@@ -14,4 +14,9 @@ class ReservedServiceRepository extends BaseRepository
     {
         $this->model = DB::table('reserved_services');
     }
+
+    public function getMyReservedServices($id){       
+        return $this->model->distinct()->where('reservation_id', '=', $id)->get();
+        
+    }
 }

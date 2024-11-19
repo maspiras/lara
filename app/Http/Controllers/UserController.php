@@ -40,7 +40,7 @@ class UserController extends Controller
      */
     public function create(): View
     {
-        $roles = Role::pluck('name','name')->all();
+        $roles = Role::where('host_id', auth()->user()->host_id)->pluck('name','name')->all();
 
         return view('users.create',compact('roles'));
     }
@@ -79,7 +79,7 @@ class UserController extends Controller
      */
     public function show($id): View
     {
-        $user = User::find($id);
+        $user = User::where('host_id', auth()->user()->host_id)->find($id);
 
         return view('users.show',compact('user'));
     }
@@ -101,7 +101,7 @@ class UserController extends Controller
            exit;
         }else{
             $user = User::find($id);
-            $roles = Role::pluck('name','name')->all();
+            $roles = Role::where('host_id', auth()->user()->host_id)->pluck('name','name')->all();
             $userRole = $user->roles->pluck('name','name')->all();
         
             return view('users.edit',compact('user','roles','userRole'));
@@ -150,7 +150,7 @@ class UserController extends Controller
      */
     public function destroy($id): RedirectResponse
     {
-        User::find($id)->delete();
+        User::where('host_id', auth()->user()->host_id)->find($id)->delete();
         return redirect()->route('employees.index')
                         ->with('success','Employee deleted successfully');
     }

@@ -53,7 +53,7 @@ class BaseRepository
         $data = collect();
         #$this->roomRepository->all()
         #$rooms = collect();
-        $this->model->chunkById(100, function($mydata) use($data) {
+        $this->model->where('host_id', auth()->user()->host_id)->chunkById(100, function($mydata) use($data) {
             foreach($mydata as $r)
                 $data->push($r);	
         }, column: 'id');
@@ -69,7 +69,7 @@ class BaseRepository
      */
     public function getPaginate($n)
     {
-        return $this->model->paginate($n);
+        return $this->model->where('host_id', auth()->user()->host_id)->paginate($n);
     }
 
     public function simplePaginate($n)

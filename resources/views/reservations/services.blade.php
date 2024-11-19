@@ -19,7 +19,7 @@
                     <div class="col-xs-6 col-sm-6 col-lg-6 col-6">
                         <div class="form-group clearfix">
                         <div class="icheck-success d-inline">
-                            <input type="checkbox" id="services{{$v['id']}}" name="services[]" class="rooms" value="{{$v['id'].'/'.$v['period'].'/'.$v['payment'].'/'.$v['amount']}}" title="{{$v['service_name']}}">
+                            <input type="checkbox" id="services{{$v['id']}}" name="services[]" class="rooms" value="{{$v['id'].'/'.$v['period'].'/'.$v['payment'].'/'.$v['amount']}}" title="{{$v['service_name']}}" {{ (is_array($myReservedServices) && in_array($v['id'], $myReservedServices)) ? ' checked' : '' }} />
                             <label for="services{{$v['id']}}">
                                     {{$v['service_name']}}
                             </label>

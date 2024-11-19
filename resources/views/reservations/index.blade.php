@@ -99,7 +99,7 @@
 <script src="{{ url('/') }}/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="{{ url('/') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{ url('/') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-<script type="text/javascript" src="{{ url('/') }}/js/reservation.js"></script>
+
 
 {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 <script>

@@ -38,7 +38,7 @@ class RoleController extends Controller
      */
     public function index(Request $request): View
     {
-        $roles = Role::orderBy('id','DESC')->paginate(5);
+        $roles = Role::where('host_id', auth()->user()->host_id)->orderBy('id','DESC')->paginate(5);
         return view('roles.index',compact('roles'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
@@ -72,7 +72,7 @@ class RoleController extends Controller
             $request->input('permission')
         );
     
-        $role = Role::create(['name' => $request->input('name')]);
+        $role = Role::create(['host_id' => auth()->user()->host_id, 'name' => $request->input('name')]);
         $role->syncPermissions($permissionsID);
     
         return redirect()->route('roles.index')
