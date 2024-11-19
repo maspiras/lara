@@ -7,10 +7,24 @@
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
+                <div class="col-sm-2">
                     <h1 class="m-0">Reservations</h1>
                 </div><!-- /.col -->
-                <div class="col-sm-6">
+                <div class="col-sm-3">                
+                    <div class="pull-right">
+                        @can('room-create')                        
+                        <a class="btn btn-success" href="{{ route('reservations.create') }}"><i class="fa fa-plus"></i> Create New Reservation</a>&nbsp;                                                
+                        @endcan
+                    </div>    
+                </div>
+                <div class="col-sm-3">
+                  @session('success')
+                      <div class="alert alert-success" role="alert"> 
+                          {{ $value }}
+                      </div>
+                  @endsession            
+                </div> 
+                <div class="col-sm-4">
                     <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Reservations</li>
@@ -22,10 +36,11 @@
     <!-- /.content-header -->
 
     <!-- Main content -->    
-    <form method="post" id="reservationForm" action="{{ route('reservations.store') }}">
+    
+    <section class="content">
+    <form method="post" id="reservationForm" action="{{ route('reservations.update', $reservation->id) }}">
     @csrf              
-    <section class="content"> 
-    <div class="container-fluid">   
+    @method('PUT')
       @if ($errors->any())
         <div class="row">
           <div class="col-md-12">
@@ -42,13 +57,13 @@
       @endif
       @session('error')          
           <div class="row">
-            <div class="col-md-12">
-              <div class="alert alert-danger">
-                  <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                  {{ $value }}
-              </div>
+          <div class="col-md-12">
+            <div class="alert alert-danger">
+                <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                {{ $value }}
             </div>
           </div>
+        </div>
       @endsession
       <div class="row">
         <div class="col-md-6">
@@ -73,7 +88,7 @@
                       <!-- checkbox -->
                       <div class="form-group clearfix">
                         <div class="icheck-success d-inline">
-                          <input type="checkbox" id="roomname{{$room->id}}" name="roomname[]" class="rooms" value="{{$room->id}}">
+                          <input type="checkbox" id="roomname{{$room->id}}" name="roomname[]" class="rooms" value="{{$room->id}}" {{ (is_array($myReservedRooms) && in_array($room->id, $myReservedRooms)) ? ' checked' : '' }}>
                           <label for="roomname{{ $room->id}}">
                             {{ $room->room_name }}
                           </label>
@@ -92,7 +107,7 @@
              
           <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">Details</h3>
+              <h3 class="card-title">Details: {{ $reservation->fullname }}</h3>
 
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -101,40 +116,29 @@
               </div>
             </div>
             <div class="card-body">
-              <!-- <div class="form-group">
-                <label for="inputName">Checkin</label>
-                    <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                        <input type="text" required id="checkin" name="checkin" class="form-control datetimepicker-input" data-target="#reservationdate" placeholder="mm/dd/yyyy" />
-                        <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                    </div>                
-              </div> -->
               <div class="form-group">
                 <label for="inputName">Checkin</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend" data-target="#checkin" data-toggle="checkin">
                           <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                         </div> 
-                        <input type="text" required id="checkin" name="checkin" class="form-control" placeholder="mm/dd/yyyy" value="">                                           
+                        <input type="text" required id="checkin" name="checkin" class="form-control" placeholder="mm/dd/yyyy" value="{{ date('m/d/Y', strtotime($reservation->checkin)) }}">
+                                           
                     </div>                
               </div>
-              <!-- <div class="form-group">
+              <div class="form-group">
                 <label for="inputName">Checkout</label>
-                    <div class="input-group date" id="reservationcheckout" data-target-input="nearest">
-                        <input type="text" required id="checkout" name="checkout" class="form-control datetimepicker-input" data-target="#reservationcheckout"  placeholder="mm/dd/yyyy" />
+                    <!-- <div class="input-group date" id="reservationcheckout" data-target-input="nearest">
+                        <input type="text" required id="checkout" name="checkout" class="form-control datetimepicker-input" data-target="#reservationcheckout" placeholder="mm/dd/yyyy" value="{{ $reservation->checkout }}"  />
                         <div class="input-group-append" data-target="#reservationcheckout" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
-                    </div>                
-              </div> -->
-              <div class="form-group">
-                <label for="inputName">Checkout</label>                     
+                    </div> -->       
                     <div class="input-group mb-3">
                         <div class="input-group-prepend" data-target="#checkout" data-toggle="">
                           <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                         </div>
-                        <input type="text" required id="checkout" name="checkout" class="form-control" placeholder="mm/dd/yyyy" value="">                                            
+                        <input type="text" required id="checkout" name="checkout" class="form-control" placeholder="mm/dd/yyyy" value="{{ date('m/d/Y', strtotime($reservation->checkout)) }}">
                     </div>           
               </div>
               
@@ -145,9 +149,9 @@
                         <span class="input-group-text"><i class="far fa-user"></i></span>
                         </div>
                         <select id="adults" name="adults" class="form-control custom-select">
-                        <option selected>1</option>
+                        <option selected value="{{ $reservation->adults }}">{{ $reservation->adults }}</option>
                         @for ($a = 0; $a <= 300; $a++)
-                        <option> {{ $a }}</option>
+                        <option value="{{ $a }}"> {{ $a }}</option>
                         @endfor
                         </select>
                     </div>
@@ -159,9 +163,9 @@
                         <span class="input-group-text"><i class="far fa-user"></i></span>
                         </div>
                         <select id="childs" name="childs" class="form-control custom-select">
-                        <option disabled>Select one</option>
+                        <option selected value="{{ $reservation->childs }}">{{ $reservation->childs }}</option>
                         @for ($c = 0; $c <= 100; $c++)
-                        <option> {{ $c }}</option>
+                        <option value="{{ $c }}"> {{ $c }}</option>
                         @endfor
                         </select>
                     </div>
@@ -173,9 +177,9 @@
                         <span class="input-group-text"><i class="far fa-cat"></i></span>
                         </div>
                         <select id="pets" name="pets" class="form-control custom-select">
-                        <option disabled>Select one</option>
+                        <option selected value="{{ $reservation->pets }}">{{ $reservation->pets }}</option>
                         @for ($p = 0; $p <= 50; $p++)
-                        <option> {{ $p }}</option>
+                        <option value="{{ $p }}"> {{ $p }}</option>
                         @endfor
                         </select>
                     </div>
@@ -206,7 +210,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-user"></i></span>
                   </div>
-                  <input type="text" class="form-control" required id="fullname" name="fullname" placeholder="Name">
+                  <input type="text" class="form-control" required id="fullname" name="fullname" placeholder="Name" value="{{ $reservation->fullname }}" />
                 </div>
               </div>
               <div class="form-group">
@@ -215,7 +219,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-phone"></i></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Phone" id="phone" name="phone">
+                  <input type="text" class="form-control" placeholder="Phone" id="phone" name="phone" value="{{ $reservation->phone }}" />
                 </div>
 
               </div>
@@ -225,20 +229,21 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                   </div>
-                  <input type="email" class="form-control" placeholder="Email" id="email" name="email">
+                  <input type="email" class="form-control" placeholder="Email" id="email" name="email" value="{{ $reservation->email }}" />
                 </div>
 
               </div>
               
               <div class="form-group">
                 <label for="additionalinformation">Additional information</label>
-                <textarea id="additionalinformation" name="additionalinformation" class="form-control" rows="4" placeholder="Additional information"></textarea>
+                <textarea id="additionalinformation" name="additionalinformation" class="form-control" rows="4" placeholder="Additional information" >{{ $reservation->additional_info }}</textarea>
               </div>
 
               <div class="form-group">
                   <label>Booking Source</label>
                   <select class="form-control select2" style="width: 100%;" id="bookingsource" name="bookingsource_id">
-                    <option selected="selected" value="10">Other</option>
+                    <option selected value="{{ $reservation->booking_source_id }}">{{ $reservation->booking_source_id }}</option>
+                    <option value="10">Other</option>
                     <option value="1">Phone</option>
                     <option value="2">Walkin</option>
                     <option value="3">Facebook/Messenger/FB Page</option>
@@ -263,7 +268,7 @@
           <!-- Start Rates -->
           <div class="card card-info">
             <div class="card-header">
-              <h3 class="card-title">Room Rates</h3>
+              <h3 class="card-title">Rates</h3>
 
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -278,16 +283,16 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="number" step=".01" id="ratesperday" name="ratesperday" class="form-control" placeholder="0.00" required >
+                  <input type="number"step=".01" id="ratesperday" name="ratesperday" class="form-control" placeholder="0.00" value="{{ $reservation->rateperday }}">
                 </div>
               </div>
               <div class="form-group">
-                <label for="inputSpentBudget">Night/s stay</label>
+                <label for="inputSpentBudget">Days stay</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-moon"></i></span>
                   </div>
-                  <input disabled type="text" class="form-control" placeholder="1" value="0" name="daystay" id="daystay">
+                  <input readonly type="text" class="form-control" placeholder="1" value="{{ $reservation->daystay }}" name="daystay" id="daystay">
                 </div>
 
               </div>
@@ -297,7 +302,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="number"step="any" id="ratesperstay" name="ratesperstay" class="form-control" placeholder="0.00"   required>
+                  <input type="text" id="ratesperstay" name="ratesperstay" class="form-control" placeholder="0.00" value="{{ $reservation->grandtotal }}">
                 </div>
 
               </div>
@@ -308,10 +313,6 @@
           </div>
           <!-- /.card -->
           <!-- End Rates -->
-
-          @include('reservations.meals')
-
-          @include('reservations.services')
 
           <!-- Start payment -->
           <div class="card card-info">
@@ -329,7 +330,8 @@
               <div class="form-group">
                   <label>Currency</label>
                   <select class="form-control select2" style="width: 100%;" id="currency" name="currency">
-                    <option selected="selected" value="1">PHP</option>
+                    <option selected value="{{ $reservation->currency_id }}">{{ $reservation->currency_id }}</option>
+                    <option value="1">PHP</option>
                     <option value="2">PHP</option>
                     <option value="3">USD</option>
                     <option value="4">EUR</option>                    
@@ -338,34 +340,27 @@
                     <option value="7">GBP</option>
                   </select>
               </div>
-              <!-- <div class="form-group">
+              <div class="form-group">
                   <label>Payment status</label>
                   <select class="form-control select2" style="width: 100%;" id="paymentstatus" name="paymentstatus">
-                    <option selected="selected" value="1">No payment</option>
+                    <option selected value="{{ $reservation->payment_status_id }}">{{ $reservation->payment_status_id }}</option>
+                    <option value="1">No payment</option>
                     <option value="2">Prepayment paid</option>
                     <option value="3">Fully paid</option>                 
                   </select>
-              </div> -->  
+              </div>  
 
               <div class="form-group">
                   <label>Type of payment</label>
                   <select class="form-control select2" style="width: 100%;" id="typeofpayment" name="typeofpayment">
-                    
-                    <option selected="selected" value="1">Pay with cash</option>
+                    <option selected value="{{ $reservation->payment_type_id }}">{{ $reservation->payment_type_id }}</option>
+                    <option value="0">Select</option>
+                    <option value="1">Pay with cash</option>
                     <option value="2">Pay via online money transfer</option>
                     <option value="3">Pay via debit/credit card</option>
                     <option value="4">Pay via Cheque</option>
                   </select>
               </div>  
-              <div class="form-group">
-                <label for="inputEstimatedDuration">Grand Total</label>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
-                  </div>
-                  <input disabled type="text" class="form-control" placeholder="0.00" value="0" name="grandtotal" id="grandtotal">
-                </div>
-              </div>
 
               <div class="form-group">
                 <label for="inputEstimatedDuration">Prepayment</label>
@@ -373,21 +368,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="number" class="form-control" id="prepayment" name="prepayment" placeholder="0.00">
+                  <input type="text" class="form-control" id="prepayment" name="prepayment" placeholder="0.00" value="{{ $reservation->prepayment }}" />
                 </div>
               </div>
-
-              <div class="form-group">
-                <label for="inputEstimatedDuration">Balance</label>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
-                  </div>
-                  <input disabled type="text" class="form-control" placeholder="0.00" value="0" name="balance" id="balance">
-                </div>
-              </div>
-             
-              
 
               
 
@@ -401,17 +384,13 @@
           <!-- End payment -->
 
           <div class="col-12">
-              <div class="form-group justify-content-md-center row">
                   
-                  <div class="col col-6 text-center">
-                      <button type="cancel" class="btn btn-secondary btn-lg"><i class="fas fa-download"></i> Cancel Reservation</button>
-                  </div>
-                  
-                  <div class="col col-6 text-center">
-                      <button type="submit" class="btn btn-success btn-lg"><i class="far fa-credit-card"></i> Save Reservation</button>
-                  </div>
-              </div>
-          </div>
+                  <button type="submit" class="btn btn-success btn-lg float-right"><i class="far fa-credit-card"></i> Save Reservation
+                  </button>
+                  <button type="cancel" class="btn btn-secondary btn-lg float-right" style="margin-right: 5px;">
+                    <i class="fas fa-download"></i> Cancel Reservation
+                  </button>
+                </div>
 
           <!-- /.card -->
         </div>
@@ -422,12 +401,11 @@
           <input type="submit" value="Save Changes" class="btn btn-success float-right">
         </div>
       </div> -->
-      </div>
+      </form>
     </section>
     <!-- /.content -->
-  </form>
-</div> <!-- /.content-wrapper -->
-@include('reservations.addservice')
+  
+</div>
 
 
 @endsection
@@ -467,140 +445,127 @@
 <script type="text/javascript" src="{{ url('/') }}/js/reservation.js"></script>
 
 <script>
-  $(function () {
-    
-    
-    
+ $(function () {
+    var Reservation = {
+      DayStay: function(checkin, checkout){
+        var d1 = new Date(checkin);   
+        var d2 = new Date(checkout);       
+        var diff = ( d2.getTime() - d1.getTime() ) / (1000 * 60 * 60 * 24);              
+        $('#daystay').val(diff);
+        //e.preventDefault();
+      },
+      RatesPerDay: function(frm, e){        
+        if($('#daystay').val() == 0){
+          $('#ratesperstay').val($('#ratesperday').val());
+        }else{          
+          $('#ratesperstay').val((Math.round($('#ratesperday').val() * $('#daystay').val() * 100) / 100).toFixed(2));
+        }
+        
+      },
+      RatesPerStay: function(frm, e){                
+        $('#ratesperday').val((Math.round($('#ratesperstay').val() / $('#daystay').val() * 100) / 100).toFixed(2));
+      },
+      DateRangePicker: function(input, checkin){
+        input.daterangepicker({
+          singleDatePicker: true,
+          autoApply: true,
+          minDate: checkin
+        }, function(checkout, end1, label1) {                
+          Reservation.DayStay($('#checkin').val(), moment(checkout).format('MM/DD/YYYY') );
+            Reservation.RatesPerDay(); 
+          }
+        );
+      }
+    }
 
-    
+    $('#ratesperday').on('change keyup', function() {
+      Reservation.RatesPerDay();
+    });
 
-    /* $.validator.setDefaults({
-      submitHandler: function () {
-        if($('#reservationForm input:checked').length <= 0){
+    $('#ratesperstay').on('change keyup', function() {
+      Reservation.RatesPerStay();
+    });
+
+    $('#reservationForm').submit(function(e){
+      if($('#reservationForm input:checked').length <= 0){
           $('.roomlistcard').removeClass('card-primary');
           $('.roomlistcard').addClass('card-danger');
-          $('.roomlistcard div h3').text('Room/s: This field is required');            
+          $('.roomlistcard div h3').text('Room/s: This field is required');    
+          e.preventDefault();        
         }else{
           $('.roomlistcard').removeClass('card-danger');
           $('.roomlistcard').addClass('card-primary');
           $('.roomlistcard div h3').text('Room/s');
-          alert( "Form successful submitted!" );
+          
         }
+        //e.preventDefault();
         
-      }
-    }); */
-
-    
-    /* $('#ratesperday').on('input', function() {
-      Reservation.Rates($(this));        
-    });  
-    $('#ratesperdayy').on('input', function() {
-      Reservation.Rates($(this));        
-    });  */ 
-
-  /* $('#reservationForm').validate({
-    rules: {
-      checkin: {
-        required: true,        
-      },
-      checkout: {
-        required: true        
-      },
-      adults: {
-        required: true,
-        range: [1, 300],
-        number: true       
-      },
-      fullname:{
-        required: true,
-        minlength: 4
-      },      
-      
-    },
-    messages: {
-      checkin: {
-        required: "This field is required"        
-      },
-      checkout: {
-        required: "This field is required"        
-      },
-      adults: {
-        required: "This field is required"        
-      },
-      fullname: {
-        required: "This field is required"        
-      }
-      
-    },
-    errorElement: 'span',
-    errorPlacement: function (error, element) {
-      error.addClass('invalid-feedback');
-      element.closest('.form-group').append(error);
-    },
-    highlight: function (element, errorClass, validClass) {
-      $(element).addClass('is-invalid');
-    },
-    unhighlight: function (element, errorClass, validClass) {
-      $(element).removeClass('is-invalid');
-    }
-  }); */
-
-    
-      //Date picker
-    $('#reservationdate').datetimepicker({
-        format: 'L'
     });
 
-    $('#reservationcheckout').datetimepicker({
-        format: 'L'
-    });
-
-    //Date and time picker
-    $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
-
-    //Date range picker
-    $('#reservation').daterangepicker()
-    //Date range picker with time picker
-    $('#reservationtime').daterangepicker({
-      timePicker: true,
-      timePickerIncrement: 30,
-      locale: {
-        format: 'MM/DD/YYYY hh:mm A'
-      }
-    })
-    //Date range as a button
-    $('#daterange-btn').daterangepicker(
-      {
-        ranges   : {
-          'Today'       : [moment(), moment()],
-          'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month'  : [moment().startOf('month'), moment().endOf('month')],
-          'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        startDate: moment().subtract(29, 'days'),
-        endDate  : moment()
-      },
-      function (start, end) {
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-      }
-    )
-
-    //Timepicker
-    $('#timepicker').datetimepicker({
-      format: 'LT'
-    })
-
+  
  
    
     $("input[data-bootstrap-switch]").each(function(){
       $(this).bootstrapSwitch('state', $(this).prop('checked'));
     });
+  
+    //alert(moment().format('YYYY/MM/DD'));
+    $('input[name="checkin"]').daterangepicker({
+      singleDatePicker: true,
+      autoApply: true,
+      minDate: moment().add(0, 'days')
+      
+    }, function(checkin, end, label) {  
+      var a = moment(checkin);
+      var dateObj = new Date($('#checkout').val());
+      var b = moment(dateObj);
+      
+var days = b.diff(a, 'days'); 
+var checkout = $('#checkout').val();
+if(days <=0 ){
+  checkout = checkin;
+  days = 0;
+  $('#checkout').val(moment(checkin).format('MM/DD/YYYY'));
+}
+var newcheckoutObj = new Date($('#checkout').val());
+var newcheckout = moment(newcheckoutObj);
+var days = newcheckout.diff(a, 'days'); 
+if(days <=0 ){ 
+  days = 0; 
+}
+//alert(days + ' x checkin ' + moment(checkin).format('MM/DD/YYYY') + ' xcheckout' + $('#checkout').val());
+//alert(checkout);
+        Reservation.DayStay(moment(checkin).format('MM/DD/YYYY'), $('#checkout').val());        
+        Reservation.RatesPerDay();  
+        /*
+        $('#checkout').daterangepicker({
+          singleDatePicker: true,
+          autoApply: true,
+          minDate: checkin//moment().add(0, 'days')
+        }, function(checkout, end1, label1) {   
+                     
+            //Reservation.DayStay(moment(checkin).format('MM/DD/YYYY'), moment(checkout).format('MM/DD/YYYY') );
+            Reservation.DayStay($('#checkin').val(), moment(checkout).format('MM/DD/YYYY') );
+            Reservation.RatesPerDay(); 
+          }
+        );
+        */
 
-   
-    //
+        Reservation.DateRangePicker($('#checkout'), checkin); 
+      }
+    );
+
+    /* $('input[name="checkout"]').daterangepicker({
+      singleDatePicker: true,
+      autoApply: true,
+      minDate: $('#checkin').val()//moment().add(0, 'days')
+    }, function(start, end, label) {      
+      Reservation.DayStay($('#checkin').val(), start );
+      Reservation.RatesPerDay(); 
+      }
+    ); */
+    Reservation.DateRangePicker($('#checkout'),  $('#checkin').val()); 
     
-  })
+  }) 
 </script>
 @endpush

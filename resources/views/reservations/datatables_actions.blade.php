@@ -11,6 +11,9 @@
     <a href="{{ route('reservations.destroy', $reservation->id) }}" class='btn btn-danger cancelreservation'>
         <i class="fa fa-trash"></i> cancel
     </a>
+    <a href="{{ route('refunds.edit', $reservation->id) }}" class='btn btn-info refundreservation'>
+        <i class="fa fa-money-bill"></i> refund
+    </a>
     
 </div>
 </form>

@@ -14,6 +14,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Reports\SalesReportController;
 use App\Http\Controllers\Reports\ReservationsReportController;
 use App\Http\Controllers\Reports\PaymentsReportController;
+use App\Http\Controllers\Refunds\RefundController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('employees', UserController::class);
     Route::resource('rooms', RoomsController::class);
     Route::resource('reservations', ReservationController::class);
+    Route::resource('refunds', RefundController::class);
     Route::resource('services', ServiceController::class);
     Route::resource('calendar', CalendarController::class);
     #Route::get('reports/', ReportsController::class);

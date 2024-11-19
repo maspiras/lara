@@ -12,6 +12,7 @@ use App\Repositories\ReservedRoomRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\ServiceRepository;
 use App\Repositories\ReservedMealRepository;
+use App\Repositories\ReservedServiceRepository;
 
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Http\Requests\ReservationRequest;
@@ -29,9 +30,9 @@ class ReservationController extends Controller
 {
     use ValidatesRequests;
     private $reservationRepository, $reservedRoomRepository, $paymentRepository, $serviceRepository, $reservedmealRepository;
-    private $roomRepository;
+    private $roomRepository, $reservedserviceRepository;
     
-    public function __construct(ReservedMealRepository $reservedmealRepository, ServiceRepository $serviceRepository, PaymentRepository $paymentRepository, ReservedRoomRepository $reservedRoomRepository, ReservationRepository $reservationRepository, RoomRepository $roomRepository)
+    public function __construct(ReservedServiceRepository $reservedserviceRepository, ReservedMealRepository $reservedmealRepository, ServiceRepository $serviceRepository, PaymentRepository $paymentRepository, ReservedRoomRepository $reservedRoomRepository, ReservationRepository $reservationRepository, RoomRepository $roomRepository)
     {
         $this->reservationRepository = $reservationRepository;
         $this->roomRepository = $roomRepository;
@@ -39,6 +40,7 @@ class ReservationController extends Controller
         $this->paymentRepository = $paymentRepository;
         $this->serviceRepository = $serviceRepository;
         $this->reservedmealRepository = $reservedmealRepository;
+        $this->reservedservicesRepository = $reservedserviceRepository;
     }
 
     /**
@@ -164,7 +166,7 @@ class ReservationController extends Controller
         return $data;
     }
 
-    public function mealsData($request, $reservation_id=null){
+    public function mealsRequestData($request, $reservation_id=null){
         $mealData = array(
             'host_id' => auth()->user()->host_id,
             'user_id' => auth()->user()->id,
@@ -177,6 +179,53 @@ class ReservationController extends Controller
         return $mealData;
     }
 
+    public function servicesRequestData($request, $reservation_id=0){
+        $reservedservices = [];
+       # $reservedservicestotal = 0;
+        $i = 0;        
+        foreach($request->service_id as $id){
+            $reservedservices[] = ['host_id' => auth()->user()->host_id,
+            'user_id' => auth()->user()->id,
+            'reservation_id' => $reservation_id,
+            'service_id' => $id,
+            'amount' => $request->servicesamount[$i],
+            'paymentstatus' => $request->servicepaymentstatus[$i],
+            ];
+            #$reservedservicestotal += $request->servicesamount[$i];
+            $i++;
+        }
+        #$reservedservices['amount'] = $reservedservicestotal;
+        
+        return $reservedservices;
+    }
+
+    public function getReservationGrandTotal($rooms, $meals=0, $services=0){
+        if(!empty($services)){            
+            $services = str_replace(',','', $services);
+        }
+        if(!empty($meals)){
+            $meals = str_replace(',','', $meals);
+        } 
+        /* $services = empty($services) ? 0 : $services;        
+        $meals = empty($meals) ? 0 : $meals; */
+        return $rooms + $meals + $services;
+    }
+
+    public function isEmpty($data){
+        $result = true;
+        if(isset($data)){
+            if($data === '0' || $data === 0 ||
+               $data === 0.0 || $data) {
+              // not empty: use the value
+              $result = false;
+            } /* else {
+              // consider it as empty, since status may be FALSE, null or an empty string
+              return true;
+            } */
+        }
+        return $result;
+    }
+
     /**
      * Store a newly created resource in storage.
      */    
@@ -184,6 +233,18 @@ class ReservationController extends Controller
     #public function store(Request $request)
     public function store(ReservationRequest $request)#: RedirectResponse
     {
+        #echo $this->getReservationGrandTotal($request->ratesperstay, $request->mealsamount, $request->servicestotalamount);
+        
+        /* if($request->mealsamount){
+            echo 'meron';
+        }else{
+            echo 'wala';
+        } */
+
+    /*     $servicesRequestData = $this->servicesRequestData($request);
+        $this->reservedservicesRepository->insert($servicesRequestData);
+        exit; */
+        
         $validated = $request->validated();
        /*  $checkin = date('Y-m-d H:i:s', strtotime($request->checkin.' 2pm'));
         $checkout = date('Y-m-d H:i:s', strtotime($request->checkout.' 12pm')); */
@@ -213,18 +274,18 @@ class ReservationController extends Controller
         ]); */
 
         //dd($request->prepayment);
-        #$r = empty($request->prepayment) ? 'Pencil' : 'Confirmed';
+        $grandtotal = $this->getReservationGrandTotal($request->ratesperstay, $request->mealsamount, $request->servicestotalamount);
         $payment_status = 1;
         $balance = 0;
         $amount = 0;
 
         if(!empty($request->prepayment)){
-           if($request->prepayment >= $request->ratesperstay){
+           if($request->prepayment >= $grandtotal){
                 $payment_status = 3;
                 $balance = 0;
-                $amount = $request->ratesperstay;
+                $amount = $grandtotal;
            }else{
-                $balance = $request->ratesperstay - $request->prepayment;
+                $balance = $grandtotal - $request->prepayment;
                 $payment_status = 2;
                 $amount = $request->prepayment;
            }
@@ -255,12 +316,12 @@ class ReservationController extends Controller
                         'doorcode' => 0,
                         'rateperday' => $request->ratesperday,
                         'daystay' => $diff,
-                        #'meals_total' => 0,
-                        #'additional_services_total' => 0,
+                        'meals_total' => $request->mealsamount,
+                        'additional_services_total' => $request->servicestotalamount,
                         'subtotal' => $request->ratesperstay,
                         #'discount' => $request->discount,
                         #'tax' => $request->tax,
-                        'grandtotal' => $request->ratesperstay,
+                        'grandtotal' => $grandtotal, 
                         'currency_id' => $request->currency,
                         'payment_type_id' => $request->typeofpayment,
                         'prepayment' => $request->prepayment,
@@ -297,13 +358,21 @@ class ReservationController extends Controller
                 'amount' => $amount,
                 'balance' => $balance                
             );  
-            if(!empty($request->prepayment)){
+            #if(!empty($request->prepayment)){
+            if(!$this->isEmpty($request->prepayment)){
                 $this->paymentRepository->insert($paymentData);
             }
 
-            if(!empty($request->meals)){                
-                $this->reservedmealRepository->insert($this->mealsData($request, $reservation->id));
-            }            
+            #if(!empty($request->meals)){                
+            if(!$this->isEmpty($request->meals)){    
+                $this->reservedmealRepository->insert($this->mealsRequestData($request, $reservation->id));
+            }   
+                        
+            #if(!empty($request->service_id)){
+            if(!$this->isEmpty($request->service_id)){
+                $this->reservedservicesRepository->insert($this->servicesRequestData($request, $reservation->id));
+            }
+        
             
             DB::commit(); 
         } catch(\Exception $e) {
@@ -339,7 +408,8 @@ class ReservationController extends Controller
         } */
         #print_r($reservation->with('reservedRooms')->get());
         #$reservedRooms = $reservation->reservedRooms()->groupBy('room_id')->get();
-        #$reservedRooms = $reservation->reservedRooms;                       
+        #$reservedRooms = $reservation->reservedRooms;  
+        $services = $this->serviceRepository->getServices(auth()->user()->host_id);                            
         
         $reservedRooms = $this->reservedRoomRepository->getMyReservedRooms($id);
         
@@ -352,7 +422,7 @@ class ReservationController extends Controller
         #print_r($myReservedRooms);
 
         #exit;
-        return view('reservations.edit', compact('reservation', 'rooms', 'myReservedRooms'));
+        return view('reservations.edit', compact('reservation', 'rooms', 'myReservedRooms', 'services'));
         #print_r($reservation->id);
 
     }
@@ -411,4 +481,6 @@ class ReservationController extends Controller
     {
         //
     }
+
+    
 }

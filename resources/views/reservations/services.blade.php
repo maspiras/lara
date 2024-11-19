@@ -121,6 +121,7 @@
                     </div> <!-- div /.services chosen -->
                         
                         <div class="form-group row">
+                            <input type="hidden" id="servicestotalamount" name="servicestotalamount" value="0">
                             <label for="inputEmail3" class="col-sm-4 col-form-label">Amount</label>
                             <div class="col-sm-8">                                
                                 <h2 class="text-right servicestotalamount">0.00</h2>                                

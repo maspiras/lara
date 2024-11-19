@@ -38,6 +38,7 @@ class ReservationsDataTable extends DataTable
             ->editColumn('checkout', function($row){                
                 return date('M d, Y', strtotime($row->checkout));
             })
+            /*
             ->editColumn('booking_status_id', function($row){  
                 $d = '';
                 if(empty($row->booking_status_id) || $row->booking_status_id == ''){
@@ -48,13 +49,13 @@ class ReservationsDataTable extends DataTable
                     $d = 'Cancelled';
                 }
                 return $d;
-            })
+            }) */
             ->editColumn('payment_status_id', function($row){                
                 $p = '';
                 if(empty($row->payment_status_id) || $row->payment_status_id == '' || $row->payment_status_id == 1){
                     $p = 'No payment';
                 }elseif($row->payment_status_id == 2){
-                    $p = 'Prepayment paid';
+                    $p = 'Down payment';
                 }else{
                     $p = 'Fully paid';
                 }
@@ -218,7 +219,7 @@ class ReservationsDataTable extends DataTable
             ['title'=>'Full Name','data'=>"fullname"],
             ['title'=>'Checkin','data'=>"checkin"],
             ['title'=>'Checkout','data'=>"checkout"],
-            ['title'=>'Booking Status','data'=>"booking_status_id"],
+          #  ['title'=>'Booking Status','data'=>"booking_status_id"],
             ['title'=>'Payment Status','data'=>"payment_status_id"],
             #Column::computed('action')->addClass('text-center'),
             Column::computed('action')->exportable(false)->printable(false)->addClass('text-center'),

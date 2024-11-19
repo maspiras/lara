@@ -3,16 +3,17 @@ $(document).ready(function(){
     $('.treeview-reservations').addClass('active'); 
 
     var Reservation = {
-        DayStay: function(){
+        DayStay: function(checkin, checkout){
             var diff = 0;
-            checkin = $('#checkin').val();
-            checkout = $('#checkout').val();
+            /* checkin = $('#checkin').val();
+            checkout = $('#checkout').val(); */
             if(checkin != '' && checkout != ''){
               var d1 = new Date(checkin);   
               var d2 = new Date(checkout);       
               diff = ( d2.getTime() - d1.getTime() ) / (1000 * 60 * 60 * 24);              
               //$('#daystay').val(diff);              
             }
+            //alert(checkin +' x ' + checkout);
             
             return diff;
           //e.preventDefault();
@@ -86,6 +87,7 @@ $(document).ready(function(){
             if(checkboxes.length > 0){
                 $('.serviceschosen').children().remove();            
                 $('.servicestotalamount').text('0.00');
+                $('#servicestotalamount').val(0);
                 diff = Reservation.DayStay();
                 checkboxes.each(function(i){
                     const service = $(this).val().split("/");                
@@ -108,9 +110,11 @@ $(document).ready(function(){
                         total = total;
                     }
                     
-                    $('.serviceschosen').prepend('<div class="service"><div class="form-group row"><p for="serviceamount'+i+'" class="col-lg-7 col-md-7 col-7 col-form-label">'+$(this).prop('title')+'</p><div class="col-lg-4 col-md-4 col-4"><input type="hidden" id="service_id'+i+'" name="service_id[]" value="'+id+'"><input type="number" class="form-control col servicesamount" id="serviceamount'+i+'" name="servicesamount[]" value="'+ total +'" placeholder="0.00"></div><div class="col-lg-1 col-md-1 col-1"><a href="'+config.SitePath+'/services/'+id+'" class="btn btn-danger services_delete"><i class="fa fa-trash"></i></a></div></div><div class="form-group row"><p for="inputPassword3" class="col-lg-7 col-7 col-form-label">Status</p><div class="col-lg-5 col-5"><select class="form-control" id="services-status'+i+'" name="servicepaymentstatus"><option value="0">No payment</option><option value="1">Paid</option></select></div></div><hr class="hr" /></div>');
-                });
-                $('.servicestotalamount').text(CommonLib.MoneyFormat(Reservation.GetServicesTotal()));
+                    $('.serviceschosen').prepend('<div class="service"><div class="form-group row"><p for="serviceamount'+i+'" class="col-lg-7 col-md-7 col-7 col-form-label">'+$(this).prop('title')+'</p><div class="col-lg-4 col-md-4 col-4"><input type="hidden" id="service_id'+i+'" name="service_id[]" value="'+id+'"><input type="number" class="form-control col servicesamount" id="serviceamount'+i+'" name="servicesamount[]" value="'+ total +'" placeholder="0.00"></div><div class="col-lg-1 col-md-1 col-1"><a href="'+config.SitePath+'/services/'+id+'" class="btn btn-danger services_delete"><i class="fa fa-trash"></i></a></div></div><div class="form-group row"><p for="servicestatus'+i+'" class="col-lg-7 col-7 col-form-label">Status</p><div class="col-lg-5 col-5"><select class="form-control" id="services-status'+i+'" name="servicepaymentstatus[]"><option value="0">No payment</option><option value="1">Paid</option></select></div></div><hr class="hr" /></div>');
+                }); 
+                servicestotalamount =  CommonLib.MoneyFormat(Reservation.GetServicesTotal());              
+                $('.servicestotalamount').text(servicestotalamount);
+                $('#servicestotalamount').val(servicestotalamount);
                 $('.servicescard').CardWidget('expand');            
             }else{
                 Reservation.RemoveServicesCard();
@@ -121,6 +125,7 @@ $(document).ready(function(){
         },
         RemoveServicesCard: function(){
             $('.servicestotalamount').text('0.00');
+            $('#servicestotalamount').val(0);
             $('.serviceschosen').children().remove();
             $('.servicescard').CardWidget('collapse');
             
@@ -139,6 +144,22 @@ $(document).ready(function(){
         },
         ShowGrandTotal: function(){
             $('#grandtotal').val(Reservation.GetGrandTotal());
+        },
+        DateRangePicker: function(input, checkin){
+            input.daterangepicker({
+              singleDatePicker: true,
+              autoApply: true,
+              minDate: checkin
+            }, function(checkout, end1, label1) {                
+                /* Reservation.DayStay($('#checkin').val(), moment(checkout).format('MM/DD/YYYY') );
+                Reservation.RatesPerDay();  */
+                $('#daystay').val(Reservation.DayStay($('#checkin').val(), moment(checkout).format('MM/DD/YYYY') ));
+                Reservation.ShowRatesPerStay(); //replaced
+                Reservation.ShowAdditionalServices();
+                Reservation.ShowGrandTotal();
+                Reservation.GetBalance();
+              }
+            );
         }
 
     } /* End of class Reservation */
@@ -264,7 +285,9 @@ $(document).ready(function(){
 
 
     $('.serviceschosen').on('input', '.servicesamount', function(e) {               
-        $('.servicestotalamount').text(Reservation.GetServicesTotal());
+        servicestotalamount = Reservation.GetServicesTotal();
+        $('.servicestotalamount').text(servicestotalamount);
+        $('#servicestotalamount').val(servicestotalamount);
         Reservation.ShowGrandTotal();
         Reservation.GetBalance();
         e.preventDefault();
@@ -279,7 +302,9 @@ $(document).ready(function(){
         $('#services' + service_id).prop('checked', false); 
 
         Reservation.RemoveService($(this).closest('.service'));
-        $('.servicestotalamount').text(Reservation.GetServicesTotal());
+        servicestotalamount = Reservation.GetServicesTotal();
+        $('.servicestotalamount').text(servicestotalamount);
+        $('#servicestotalamount').val(servicestotalamount);
         Reservation.ShowGrandTotal();
         Reservation.GetBalance();
         //alert(Reservation.GetServicesTotal());
@@ -287,67 +312,96 @@ $(document).ready(function(){
     });
     
 
-    //$('#ratesperday').on('change keyup', function() {
+    
     $('#ratesperday').on('input', function() {        
         if($(this).val().length > 0){
             Reservation.ShowRatesPerStay();
             Reservation.ShowAdditionalServices();
             Reservation.ShowGrandTotal();
-            Reservation.GetBalance();
-            
+            Reservation.GetBalance();            
         }
       });   
   
-      $('#ratesperstay').on('input', function() {
-      //$('#ratesperstay').on('change keyup', function() {
-        if($(this).val().length > 0){
-         /*  rate = Reservation.RatesPerDay(); //replacement
-          if($('#daystay').val() == 0){
-            $('#ratesperday').val($('#ratesperstay').val());
-         }else{
-            $('#ratesperday').val(rate);
-            $('#balance').val(rate);
-         } */
+      $('#ratesperstay').on('input', function() {      
+        if($(this).val().length > 0){         
             Reservation.ShowRatesPerDay();
             Reservation.ShowAdditionalServices();
             Reservation.ShowGrandTotal();
             Reservation.GetBalance();
-        }
-        //alert($(this).val());
+        }        
       });
 
 
-      $('#reservationForm').submit(function(e){
-        if($('#reservationForm input:checked').length <= 0){
+    $('#reservationForm').submit(function(e){        
+
+           if($('#reservationForm .roomlistcard input:checked').length <= 0){
             $('.roomlistcard').removeClass('card-primary');
             $('.roomlistcard').addClass('card-danger');
             $('.roomlistcard div h3').text('Room/s: This field is required');    
+            $('.roomlistcard').CardWidget('expand');
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $(".roomlistcard").offset().top
+            }, 2000);
             e.preventDefault();        
           }else{
             $('.roomlistcard').removeClass('card-danger');
             $('.roomlistcard').addClass('card-primary');
             $('.roomlistcard div h3').text('Room/s');
             
-          }
-          //e.preventDefault();
-          
-      });
+          } 
+    });  
+      
   
-      $('#checkin').on('input', function() {
+    /* $('#checkin').on('input', function() {
         $('#daystay').val(Reservation.DayStay()); 
         Reservation.ShowRatesPerStay(); //replaced
         Reservation.ShowAdditionalServices();
         Reservation.ShowGrandTotal();
         Reservation.GetBalance();
-      });
+    }); */
+
+    $('input[name="checkin"]').daterangepicker({
+        singleDatePicker: true,
+        autoApply: true,
+        minDate: moment().add(0, 'days')
+        
+      }, function(checkin, end, label) {  
+            var a = moment(checkin);
+            var dateObj = new Date($('#checkout').val());
+            var b = moment(dateObj);
+            
+            var days = b.diff(a, 'days');             
+            var checkout = $('#checkout').val();
+            if(days <=0 ){
+                checkout = checkin;
+                days = 0;
+                $('#checkout').val(moment(checkin).format('MM/DD/YYYY'));
+            }
+            var newcheckoutObj = new Date($('#checkout').val());
+            var newcheckout = moment(newcheckoutObj);
+            var days = newcheckout.diff(a, 'days'); 
+            if(days <=0 ){ 
+                days = 0; 
+            }
+            
+            /* Reservation.DayStay(moment(checkin).format('MM/DD/YYYY'), $('#checkout').val());        
+            Reservation.RatesPerDay();  */
+            $('#daystay').val(Reservation.DayStay(moment(checkin).format('MM/DD/YYYY'), $('#checkout').val()));        
+            Reservation.DateRangePicker($('#checkout'), checkin); 
+            Reservation.ShowRatesPerStay(); //replaced
+            Reservation.ShowAdditionalServices();
+            Reservation.ShowGrandTotal();
+            Reservation.GetBalance(); 
+        }
+    );
   
-      $('#checkout').on('input', function() {
-        $('#daystay').val(Reservation.DayStay());              
+      /* $('#checkout').on('input', function() {
+        $('#daystay').val(Reservation.DayStay());
         Reservation.ShowRatesPerStay(); //replaced
         Reservation.ShowAdditionalServices();
         Reservation.ShowGrandTotal();
         Reservation.GetBalance();
-      });
+      }); */
 
       $('#adults').on('input', function() {
             Reservation.ShowAdditionalServices();
@@ -364,17 +418,9 @@ $(document).ready(function(){
             Reservation.ShowGrandTotal();
             Reservation.GetBalance();
         });
-        
 
-      //$('#prepayment').on('change keyup', function() {
         $('#prepayment').on('input', function() {
-        //$('#prepayment').on('input', function() {
-            //if($(this).val().length > 0){
               Reservation.GetBalance();
-              //alert(Reservation.GetGrandTotal());
-              //  alert(parseFloat($('#mealsamount').val()));
-            //}  
-          
         });
   
     /* $('.reservations').on('click', '.editreservation', function(e){        
@@ -399,4 +445,5 @@ $(document).ready(function(){
         
         e.preventDefault();
     }); */
+    Reservation.DateRangePicker($('#checkout'),  $('#checkin').val()); 
 });
