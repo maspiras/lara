@@ -21,7 +21,7 @@ return new class extends Migration
            
             //$table->foreign('hosts_id')->references('id')->on('hosts')->onUpdate('RESTRICT')->onDelete('RESTRICT');
            
-            $table->index('hosts_id','hosts_id');
+            $table->index('host_id','host_id');
             $table->index('room_name','room_name');
             
             $table->unique(['room_name', 'host_id']);
