@@ -238,16 +238,10 @@
               <div class="form-group">
                   <label>Booking Source</label>
                   <select class="form-control select2" style="width: 100%;" id="bookingsource" name="bookingsource_id">
-                    <option selected="selected" value="10">Other</option>
-                    <option value="1">Phone</option>
-                    <option value="2">Walkin</option>
-                    <option value="3">Facebook/Messenger/FB Page</option>
-                    <option value="4">Tiktok</option>
-                    <option value="5">Instagram</option>                    
-                    <option value="6">Email</option>
-                    <option value="7">Booking.com</option>
-                    <option value="8">Airbnb</option>
-                    <option value="9">Website</option>                    
+                    <option selected="selected" value="1">Other</option>
+                    @foreach($booking_sources as $bs)
+                      <option value="{{$bs->id}}">{{$bs->source_name}}</option>
+                    @endforeach                 
                   </select>
               </div>
             </div>

@@ -243,17 +243,10 @@
               <div class="form-group">
                   <label>Booking Source</label>
                   <select class="form-control select2" style="width: 100%;" id="bookingsource" name="bookingsource_id">
-                    <option selected value="{{ $reservation->booking_source_id }}">{{ $reservation->booking_source_id }}</option>
-                    <option value="10">Other</option>
-                    <option value="1">Phone</option>
-                    <option value="2">Walkin</option>
-                    <option value="3">Facebook/Messenger/FB Page</option>
-                    <option value="4">Tiktok</option>
-                    <option value="5">Instagram</option>                    
-                    <option value="6">Email</option>
-                    <option value="7">Booking.com</option>
-                    <option value="8">Airbnb</option>
-                    <option value="9">Website</option>                    
+                    <option selected value="{{ $reservation->booking_source_id }}">{{ $reservation->source_name }}</option>
+                    @foreach($booking_sources as $bs)
+                      <option value="{{$bs->id}}">{{$bs->source_name}}</option>
+                    @endforeach
                   </select>
               </div>
             </div>
@@ -388,7 +381,7 @@
                 </div>
               </div>
 
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label for="inputEstimatedDuration">Total Prepayment</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
@@ -396,15 +389,25 @@
                   </div>                  
                   <input disabled type="number" class="form-control" id="prepayment" name="prepayment" placeholder="0.00" value="{{ $reservation->prepayment }}" />
                 </div>
-              </div>
+              </div> -->
 
               <div class="form-group">
-                <label for="inputEstimatedDuration">Balance</label>
+                <label for="balance">Balance to pay</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
                   <input disabled type="text" class="form-control" placeholder="0.00" value="{{ $reservation->balancepayment }}" name="balance" id="balance">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="additionalpayment">Additional payment</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="0.00" value="" id="additionalpayment" name="additionalpayment">
                 </div>
               </div>
              
