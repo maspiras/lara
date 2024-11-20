@@ -16,7 +16,10 @@ class ReservedServiceRepository extends BaseRepository
     }
 
     public function getMyReservedServices($id){       
-        return $this->model->distinct()->where('reservation_id', '=', $id)->get();
+        return $this->model->distinct()->select(['reserved_services.reservation_id', 'reserved_services.host_id', 'reserved_services.user_id', 'reserved_services.service_id', 'services.service_name','reserved_services.amount', 'reserved_services.paymentstatus'])
+            ->leftJoin('services', 'reserved_services.service_id', '=', 'services.id')
+            ->where('reservation_id', '=', $id)
+            ->get();
         
     }
 }

@@ -329,13 +329,15 @@
               <div class="form-group">
                   <label>Currency</label>
                   <select class="form-control select2" style="width: 100%;" id="currency" name="currency">
-                    <option selected="selected" value="1">PHP</option>
-                    <option value="2">PHP</option>
-                    <option value="3">USD</option>
-                    <option value="4">EUR</option>                    
-                    <option value="5">CAD</option>
-                    <option value="6">AUD</option>
-                    <option value="7">GBP</option>
+                    <option selected="selected" value="188">PHP - Philippines</option>
+                    <option value="251">USD - United States</option>
+                    <option value="90">EUR - Europe</option>                    
+                    <option value="42">CAD - Canada</option>
+                    <option value="13">AUD - Australia</option>
+                    <option value="249">GBP - United Kingdom</option>
+                    @foreach($currencies as $c)
+                    <option value="{{$c->id}}">{{$c->currency_code}} - {{$c->currency_country}}</option>
+                    @endforeach
                   </select>
               </div>
               <!-- <div class="form-group">

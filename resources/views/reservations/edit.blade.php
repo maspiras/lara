@@ -335,14 +335,15 @@
               <div class="form-group">
                   <label>Currency</label>
                   <select class="form-control select2" style="width: 100%;" id="currency" name="currency">
-                    <option selected value="{{ $reservation->currency_id }}">{{ $reservation->currency_id }}</option>
-                    <option value="1">PHP</option>
-                    <option value="2">PHP</option>
-                    <option value="3">USD</option>
-                    <option value="4">EUR</option>                    
-                    <option value="5">CAD</option>
-                    <option value="6">AUD</option>
-                    <option value="7">GBP</option>
+                    <option selected value="{{ $reservation->currency_id }}">{{$reservation->currency_code}} - {{$reservation->currency_country}}</option>
+                    <option value="251">USD - United States</option>
+                    <option value="90">EUR - Europe</option>                    
+                    <option value="42">CAD - Canada</option>
+                    <option value="13">AUD - Australia</option>
+                    <option value="249">GBP - United Kingdom</option>
+                    @foreach($currencies as $c)
+                    <option value="{{$c->id}}">{{$c->currency_code}} - {{$c->currency_country}}</option>
+                    @endforeach
                   </select>
               </div>
               <!-- <div class="form-group">
@@ -357,7 +358,19 @@
               <div class="form-group">
                   <label>Type of payment</label>
                   <select class="form-control select2" style="width: 100%;" id="typeofpayment" name="typeofpayment">
-                    <option selected value="{{ $reservation->payment_type_id }}">{{ $reservation->payment_type_id }}</option>
+                    <option selected value="{{ $reservation->payment_type_id }}">
+                    @php                       
+                      if($reservation->payment_type_id == 1){
+                        echo 'Pay with cash';  
+                      }elseif($reservation->payment_type_id == 2){
+                        echo 'Pay via online money transfer';  
+                      }elseif($reservation->payment_type_id == 3){
+                        echo 'Pay via debit/credit card';  
+                      }else{  
+                        echo 'Pay via Cheque';  
+                      }
+                    @endphp
+                    </option>
                     <option value="1">Pay with cash</option>
                     <option value="2">Pay via online money transfer</option>
                     <option value="3">Pay via debit/credit card</option>
@@ -376,12 +389,12 @@
               </div>
 
               <div class="form-group">
-                <label for="inputEstimatedDuration">Prepayment</label>
+                <label for="inputEstimatedDuration">Total Prepayment</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>                  
-                  <input type="number" class="form-control" id="prepayment" name="prepayment" placeholder="0.00" value="{{ $reservation->prepayment }}" />
+                  <input disabled type="number" class="form-control" id="prepayment" name="prepayment" placeholder="0.00" value="{{ $reservation->prepayment }}" />
                 </div>
               </div>
 

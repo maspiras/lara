@@ -57,8 +57,11 @@
 </div>
 
 
+@if(count($myReservedServices) > 0)
+<div class="card card-primary servicescard">
+@else
 <div class="card card-primary collapsed-card servicescard">
-<!-- <div class="card card-primary servicescard"> -->
+@endif
     <div class="card-header">
         <h3 class="card-title">Additional Services</h3>
         <div class="card-tools">            
@@ -76,7 +79,32 @@
                     <div class="card-body"> -->
                         <hr class="hr" />
                     <div class="serviceschosen">
-                        
+                        @if(isset($reservedServices))
+                        @for($i=0; $i < count($reservedServices); $i++)
+                            <div class="service">
+                                <div class="form-group row">
+                                    <p for="serviceamount'+i+'" class="col-lg-7 col-md-7 col-7 col-form-label">{{$reservedServices[$i]->service_name}}</p>
+                                    <div class="col-lg-4 col-md-4 col-4">
+                                        <input type="hidden" id="service_id{{$i}}" name="service_id[]" value="{{$reservedServices[$i]->service_id}}">
+                                        <input type="number" class="form-control col servicesamount" id="serviceamount{{$i}}" name="servicesamount[]" value="{{$reservedServices[$i]->amount}}" placeholder="0.00">
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-1">
+                                        <a href="{{ url('/') }}/services/{{$reservedServices[$i]->service_id}}" class="btn btn-danger services_delete"><i class="fa fa-trash"></i></a>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <p for="servicestatus'+i+'" class="col-lg-7 col-7 col-form-label">Status</p>
+                                    <div class="col-lg-5 col-5">
+                                        <select class="form-control" id="services-status{{$i}}" name="servicepaymentstatus[]">
+                                        <option value="{{$reservedServices[$i]->paymentstatus}}" selected>@php echo $reservedServices[$i]->paymentstatus == 0  ? 'No payment' : 'Paid'; @endphp</option>
+                                            <option value="0">No payment</option><option value="1">Paid</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                    <hr class="hr" />
+                            </div>
+                        @endfor
+                        @endif
                         <!-- <div class="service">
                             <div class="form-group row">
                                 <p for="inputEmail3" class="col-lg-7 col-md-7 col-7 col-form-label">Foot Massage</p>

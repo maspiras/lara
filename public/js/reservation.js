@@ -460,4 +460,7 @@ $(document).ready(function(){
         e.preventDefault();
     }); */
     Reservation.DateRangePicker($('#checkout'),  $('#checkin').val()); 
+    servicestotalamount = CommonLib.MoneyFormat(Reservation.GetServicesTotal());
+    $('.servicestotalamount').text(servicestotalamount);
+    $('#servicestotalamount').val(servicestotalamount);
 });
