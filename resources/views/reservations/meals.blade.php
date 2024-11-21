@@ -12,10 +12,45 @@
         <div class="card card-primary">    
             <!-- /.card-header -->
             <div class="card-body">        
-                <div class="row">   
+                <div class="row">  
                     
-                <div class="col-sm-6">
-                <!-- checkbox -->
+                    <div class="col-sm-6">
+                        <div class="form-group clearfix">                            
+                            <div class="icheck-success d-inline">
+                            @if(isset($myReservedMeals->reservation_id))
+                                @if($myReservedMeals->reservation_id == 0 || $myReservedMeals->reservation_id = '')
+                                <input type="radio" id="meals0" name="meals" checked value="">
+                                @else
+                                <input type="radio" id="meals0" name="meals" value="">    
+                                @endif
+                            @else
+                                <input type="radio" id="meals0" name="meals" value="">
+                            @endif
+                                <label for="meals0"> Without Meals</label>
+                            </div>                      
+                        </div>
+                    </div> 
+                    
+                    
+                    @foreach($meals as $meal)
+                    <div class="col-sm-6">
+                        <div class="form-group clearfix">
+                            <div class="icheck-success d-inline">
+                                @if(isset($myReservedMeals->reservation_id))
+                                <input type="radio" id="meals{{$loop->index+1}}" name="meals" class="meals"{{ $myReservedMeals->meal_id == $meal->id ? 'checked' : '' }}  value="{{$meal->id}}">
+                                @else
+                                <input type="radio" id="meals{{$loop->index+1}}" name="meals" class="meals"  value="">    
+                                @endif
+                                <label for="meals{{$loop->index+1}}">
+                                {{$meal->meals_name}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                    
+            <!-- <div class="col-sm-6">
+                
                 <div class="form-group clearfix">
                     
                     <div class="icheck-success d-inline">
@@ -25,7 +60,6 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <!-- checkbox -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
                         <input type="radio" id="meals2" name="meals" class="meals" value="1">
@@ -36,7 +70,7 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <!-- checkbox -->
+                
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
                         <input type="radio" id="meals3" name="meals" class="meals" value="2">
@@ -47,7 +81,7 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <!-- checkbox -->
+                
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
                         <input type="radio" id="meals4" name="meals" class="meals" value="3">
@@ -58,7 +92,7 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <!-- checkbox -->
+                
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
                         <input type="radio" id="meals5" name="meals" class="meals" value="4">
@@ -69,7 +103,7 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <!-- checkbox -->
+                
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
                         <input type="radio" id="meals6" name="meals" class="meals" value="5">
@@ -80,7 +114,7 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <!-- checkbox -->
+                
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
                         <input type="radio" id="meals7" name="meals" class="meals" value="6">
@@ -91,7 +125,7 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <!-- checkbox -->
+                
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
                         <input type="radio" id="meals8" name="meals" class="meals" value="7">
@@ -100,7 +134,7 @@
                         </label>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
 
 
@@ -117,8 +151,12 @@
   </div>
 </div>
 
+
+@if(isset($myReservedMeals->reservation_id))
+<div class="card card-primary mealscard">
+@else
 <div class="card card-primary collapsed-card mealscard">
-<!-- <div class="card card-primary mealscard"> -->
+@endif
     <div class="card-header">
         <h3 class="card-title">Meal/s</h3>
         <div class="card-tools">
@@ -136,7 +174,11 @@
                     <div class="input-group-prepend">                    
                         <span class="input-group-text"><i class="far fa-user"></i></span>
                     </div>
-                    <input type="number" class="form-control" id="mealsadults"  min="0" max="300" name="mealsadults" placeholder="Adults">
+                    @if(isset($myReservedMeals->meal_adults))
+                    <input type="number" class="form-control" id="mealsadults"  min="0" max="300" name="mealsadults" placeholder="Adults" value="{{$myReservedMeals->meal_adults}}">
+                    @else
+                    <input type="number" class="form-control" id="mealsadults"  min="0" max="300" name="mealsadults" placeholder="Adults" >
+                    @endif
                 </div>
             </div>
         </div><!-- /.row -->
@@ -146,7 +188,11 @@
                     <div class="input-group-prepend">                    
                         <span class="input-group-text"><i class="fa fa-child"></i></span>                        
                     </div>
-                    <input type="number" class="form-control" id="mealschilds" min="0" max="300" name="mealschilds" placeholder="Childs">
+                    @if(isset($myReservedMeals->meal_childs))
+                    <input type="number" class="form-control" id="mealschilds" min="0" max="300" name="mealschilds" placeholder="Childs" value="{{$myReservedMeals->meal_childs}}">
+                    @else
+                    <input type="number" class="form-control" id="mealschilds" min="0" max="300" name="mealschilds" placeholder="Childs" >
+                    @endif
                 </div>
             </div>
         </div><!-- /.row -->
@@ -159,7 +205,11 @@
                             <div class="input-group-prepend">                    
                                 <span class="input-group-text"><i class="fa fa-money-bill"></i></span>
                             </div>
+                            @if(isset($myReservedMeals->amount))
+                            <input type="number" class="form-control" id="mealsamount"  min="0" name="mealsamount" placeholder="0.00" value="{{$myReservedMeals->amount}}">
+                            @else
                             <input type="number" class="form-control" id="mealsamount"  min="0" name="mealsamount" placeholder="0.00">
+                            @endif
                         </div>
                     </div>
                 </div>

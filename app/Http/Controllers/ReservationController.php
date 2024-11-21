@@ -10,6 +10,7 @@ use App\Repositories\ReservationRepository;
 use App\Repositories\RoomRepository;
 use App\Repositories\ReservedRoomRepository;
 use App\Repositories\PaymentRepository;
+use App\Repositories\MealRepository;
 use App\Repositories\ServiceRepository;
 use App\Repositories\ReservedMealRepository;
 use App\Repositories\ReservedServiceRepository;
@@ -31,10 +32,10 @@ use Illuminate\Database\Query\Builder;
 class ReservationController extends Controller
 {
     use ValidatesRequests;
-    private $reservationRepository, $reservedRoomRepository, $paymentRepository, $serviceRepository, $reservedmealRepository;
+    private $reservationRepository, $reservedRoomRepository, $paymentRepository, $mealRepository,$serviceRepository, $reservedmealRepository;
     private $roomRepository, $reservedserviceRepository, $currencyRepository, $bookingSourceRepository;
     
-    public function __construct(BookingSourceRepository $bookingSourceRepository,CurrencyRepository $currencyRepository,ReservedServiceRepository $reservedserviceRepository, ReservedMealRepository $reservedmealRepository, ServiceRepository $serviceRepository, PaymentRepository $paymentRepository, ReservedRoomRepository $reservedRoomRepository, ReservationRepository $reservationRepository, RoomRepository $roomRepository)
+    public function __construct(MealRepository $mealRepository, BookingSourceRepository $bookingSourceRepository,CurrencyRepository $currencyRepository,ReservedServiceRepository $reservedserviceRepository, ReservedMealRepository $reservedmealRepository, ServiceRepository $serviceRepository, PaymentRepository $paymentRepository, ReservedRoomRepository $reservedRoomRepository, ReservationRepository $reservationRepository, RoomRepository $roomRepository)
     {
         $this->reservationRepository = $reservationRepository;
         $this->roomRepository = $roomRepository;
@@ -45,6 +46,7 @@ class ReservationController extends Controller
         $this->reservedservicesRepository = $reservedserviceRepository;
         $this->currencyRepository = $currencyRepository;
         $this->bookingSourceRepository = $bookingSourceRepository;
+        $this->mealRepository = $mealRepository;
     }
 
     /**
@@ -120,7 +122,7 @@ class ReservationController extends Controller
         $services = $this->serviceRepository->getServices(auth()->user()->host_id); 
         $currencies = $this->currencyRepository->getCurrencies();
         $booking_sources = $this->bookingSourceRepository->getBookingSources();
-        
+        $meals = $this->mealRepository->getMeals();
         /* //foreach($services as $service => $v){
         foreach($services as $service => $v){            
             echo $v['service_name'].'<br>';
@@ -130,7 +132,7 @@ class ReservationController extends Controller
         $rooms = $this->roomRepository->all();
         #$rooms = $this->roomRepository->getPaginate(2);   
         $myReservedServices = [];
-        return view('reservations.create',compact('rooms', 'services', 'myReservedServices', 'currencies', 'booking_sources'))
+        return view('reservations.create',compact('rooms', 'meals', 'services', 'myReservedServices', 'currencies', 'booking_sources'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -411,6 +413,7 @@ class ReservationController extends Controller
      */
     public function edit($id)
     {
+        
        
         #$reservation = $this->reservationRepository->find($id);
         $reservation = $this->reservationRepository->getMyReservation($id);
@@ -421,20 +424,15 @@ class ReservationController extends Controller
         $booking_sources = $this->bookingSourceRepository->getBookingSources();
       
         
-        #$bookedrooms = [];
-        /* foreach($reservation->reservedRooms() as $r){
-            $bookedrooms[]= $r->room_id.'<br>';
-        } */
-        #print_r($reservation->with('reservedRooms')->get());
-        #$reservedRooms = $reservation->reservedRooms()->groupBy('room_id')->get();
-        #$reservedRooms = $reservation->reservedRooms;  
+        
+
         $services = $this->serviceRepository->getServices(auth()->user()->host_id);                            
         $reservedServices = $this->reservedservicesRepository->getMyReservedServices($id);
         $myReservedServices = [];
         foreach($reservedServices as $r => $v){
             $myReservedServices[] = $v->service_id;
         }
-        #$myReservedServices = array_unique($myReservedServices);        
+        $myReservedServices = array_unique($myReservedServices);        
         #print_r($myReservedServices);
         #exit;
         
@@ -445,9 +443,10 @@ class ReservationController extends Controller
         }
         $myReservedRooms = array_unique($myReservedRooms);
         #print_r($myReservedRooms);
-
-        #exit;
-        return view('reservations.edit', compact('reservation', 'rooms', 'myReservedRooms', 'services', 'myReservedServices','reservedServices', 'currencies', 'booking_sources'));
+        $meals = $this->mealRepository->getMeals();
+        $myReservedMeals = $this->reservedmealRepository->getMyReservedMeals($id);
+        
+        return view('reservations.edit', compact('reservation', 'rooms', 'myReservedRooms', 'meals', 'services', 'myReservedServices','reservedServices', 'currencies', 'booking_sources', 'myReservedMeals'));
         #print_r($reservation->id);
 
     }

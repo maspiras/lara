@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('host_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('reservation_id');
-            $table->string('meal_name');
+            $table->tinyInteger('meal_id');
             //$table->string('meal_adults')->nullable();
             $table->smallInteger('meal_adults'); 
             $table->smallInteger('meal_childs')->nullable(); 
