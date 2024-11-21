@@ -248,7 +248,7 @@ $(document).ready(function(){
 
     $( ".btn-meals-okay" ).on( "click", function(e) {       
         $('.mealsmodal').modal('hide');
-        if($('#meals1').is(':checked')) { 
+        if($('#meals0').is(':checked')) { 
             $('.mealscard').CardWidget('collapse');
             $('#mealsadults').val('');
             $('#mealsadults').attr("placeholder", "Adults");
