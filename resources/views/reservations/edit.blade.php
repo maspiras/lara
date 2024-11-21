@@ -397,17 +397,18 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
+                  <input type="hidden" class="form-control" value="{{ $reservation->prepayment }}" name="paid" id="paid">
                   <input disabled type="text" class="form-control" placeholder="0.00" value="{{ $reservation->balancepayment }}" name="balance" id="balance">
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="additionalpayment">Additional payment</label>
+                <label for="prepayment">Additional payment</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="0.00" value="" id="additionalpayment" name="additionalpayment">
+                  <input type="text" class="form-control" placeholder="0.00" value="0" id="prepayment" name="prepayment">
                 </div>
               </div>
              

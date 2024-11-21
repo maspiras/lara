@@ -59,10 +59,16 @@ $(document).ready(function(){
             }
         },
         GetBalance: function(){
-            grandtotal = Reservation.GetGrandTotal().replace(',','');  
+            grandtotal = parseFloat(Reservation.GetGrandTotal().replace(',',''));              
             prepayment = parseFloat($('#prepayment').val());
-            var balance = parseFloat(grandtotal) - prepayment
-          
+            if (isNaN(prepayment)) {
+                prepayment =0;                
+            }
+            paid = parseFloat($('#paid').val());            
+            balance = grandtotal - (paid + prepayment);
+            if(balance < 0){
+                balance = 0;
+            }
             if(grandtotal > prepayment){
                 $('#balance').val(CommonLib.MoneyFormat(balance));            
             }else{
@@ -256,6 +262,8 @@ $(document).ready(function(){
             $('#mealschilds').attr("placeholder", "Childs");
             $('#mealsamount').val('');
             $('#mealsamount').attr("placeholder", "0.00");
+            Reservation.ShowGrandTotal();
+            Reservation.GetBalance();
         }else{
             $('.mealscard').CardWidget('expand');   
             
