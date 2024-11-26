@@ -64,7 +64,10 @@ $(document).ready(function(){
             if (isNaN(prepayment)) {
                 prepayment =0;                
             }
-            paid = parseFloat($('#paid').val());            
+            paid = parseFloat($('#paid').val());  
+            if (isNaN(paid)) {
+                paid =0;                
+            }
             balance = grandtotal - (paid + prepayment);
             if(balance < 0){
                 balance = 0;
@@ -123,8 +126,8 @@ $(document).ready(function(){
                     
                     $('.serviceschosen').prepend('<div class="service"><div class="form-group row"><p for="serviceamount'+i+'" class="col-lg-7 col-md-7 col-7 col-form-label">'+$(this).prop('title')+'</p><div class="col-lg-4 col-md-4 col-4"><input type="hidden" id="service_id'+i+'" name="service_id[]" value="'+id+'"><input type="number" class="form-control col servicesamount" id="serviceamount'+i+'" name="servicesamount[]" value="'+ total +'" placeholder="0.00"></div><div class="col-lg-1 col-md-1 col-1"><a href="'+config.SitePath+'/services/'+id+'" class="btn btn-danger services_delete"><i class="fa fa-trash"></i></a></div></div><div class="form-group row"><p for="servicestatus'+i+'" class="col-lg-7 col-7 col-form-label">Status</p><div class="col-lg-5 col-5"><select class="form-control" id="services-status'+i+'" name="servicepaymentstatus[]"><option value="0">No payment</option><option value="1">Paid</option></select></div></div><hr class="hr" /></div>');
                 }); 
-                servicestotalamount =  CommonLib.MoneyFormat(Reservation.GetServicesTotal());              
-                $('.servicestotalamount').text(servicestotalamount);
+                servicestotalamount =  Reservation.GetServicesTotal();              
+                $('.servicestotalamount').text(CommonLib.MoneyFormat(servicestotalamount));
                 $('#servicestotalamount').val(servicestotalamount);
                 $('.servicescard').CardWidget('expand');            
             }else{
@@ -468,7 +471,7 @@ $(document).ready(function(){
         e.preventDefault();
     }); */
     Reservation.DateRangePicker($('#checkout'),  $('#checkin').val()); 
-    servicestotalamount = CommonLib.MoneyFormat(Reservation.GetServicesTotal());
-    $('.servicestotalamount').text(servicestotalamount);
+    servicestotalamount = Reservation.GetServicesTotal();
+    $('.servicestotalamount').text(CommonLib.MoneyFormat(servicestotalamount));
     $('#servicestotalamount').val(servicestotalamount);
 });

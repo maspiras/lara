@@ -10,6 +10,7 @@
                 <div class="col-sm-6">
                     <h1 class="m-0">Reservations</h1>
                 </div><!-- /.col -->
+                
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
@@ -51,9 +52,18 @@
             </div>
           </div>
       @endsession
+      @session('success')
+      <div class="row justify-content-md-center">
+        <div class="col-sm-6">                  
+            <div class="alert alert-success" role="alert"> 
+                {{ $value }}
+            </div>        
+        </div>
+      </div>
+      @endsession
       <div class="row">
         <div class="col-md-6">
-        <div class="card roomlistcard card-primary collapsed-card">
+        <div class="card roomlistcard card-primary ">
               <div class="card-header">
                 <h3 class="card-title">Room/s</h3>
 

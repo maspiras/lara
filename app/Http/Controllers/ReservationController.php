@@ -27,7 +27,8 @@ use Exception;
 use DataTables;
 use App\DataTables\ReservationsDataTable;
 use Illuminate\Database\Query\Builder;
-#use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Cache;
+
 
 class ReservationController extends Controller
 {
@@ -135,53 +136,14 @@ class ReservationController extends Controller
         return view('reservations.create',compact('rooms', 'meals', 'services', 'myReservedServices', 'currencies', 'booking_sources'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
-
-    public function reservationData($request){
-        $checkin = date('Y-m-d H:i:s', strtotime($request->checkin.' 2pm'));
-        $checkout = date('Y-m-d H:i:s', strtotime($request->checkout.' 12pm'));
-
-        $data['reservation'] = array(
-            'checkin' => $checkin,
-            'checkout' => $checkout,
-            'adults' => $request->input('adults'),
-            'childs' => $request->input('childs'),
-            'pets' => $request->input('pets'),
-            'fullname' => $request->input('fullname'),
-            'phone' => $request->input('phone'),
-            'email' => $request->input('email'),
-            'additional_info' => $request->input('additionalinformation'),
-            'booking_source_id' => $request->input('bookingsource_id'),
-            'doorcode' => 0,
-            'rateperday' => $request->ratesperday,
-            'daystay' => $request->daystay,
-            #'meals_total' => 0,
-            #'additional_services_total' => 0,
-            'subtotal' => $request->ratesperstay,
-            #'discount' => $request->discount,
-            #'tax' => $request->tax,
-            'grandtotal' => $request->ratesperstay,
-            'currency_id' => $request->currency,
-            'payment_type_id' => $request->typeofpayment,
-            'prepayment' => $request->prepayment,
-            'payment_status_id' => $request->paymentstatus,
-            'balancepayment' => ($request->ratesperstay-$request->prepayment),
-            'user_id' => $request->user()->id,
-            'host_id' => auth()->user()->host_id,
-            
-            #'booking_status_id' => $request->booking_status_id,            
-        );
-
-        $data['roomname'] = $request->roomname;
-
-        return $data;
-    }
+  
 
     public function mealsRequestData($request, $reservation_id=null){
         $mealData = array(
             'host_id' => auth()->user()->host_id,
             'user_id' => auth()->user()->id,
             'reservation_id' => $reservation_id,
-            'meal_name' => $request->meals,
+            'meal_id' => $request->meals,
             'meal_adults' => $request->mealsadults,
             'meal_childs' => $request->mealschilds,
             'amount' => $request->mealsamount,
@@ -456,41 +418,143 @@ class ReservationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $reservation_id = last(request()->segments());
-        $data = $this->reservationData($request);
+        
+        
+        $reservation_id = $id;#last(request()->segments());
 
-        #dd($data['reservation']['checkin']);
-        #exit;
+        $checkinDetails = $this->getCheckinDetails($request->checkin, $request->checkout);
+        $grandtotal = $this->getReservationGrandTotal($request->ratesperstay, $request->mealsamount, $request->servicestotalamount);
+        $payment_status = 1;
+        $balance = 0;
+        $amount = 0;
+        $reservation = $this->reservationRepository->getMyReservation($id);
+
+        if(!empty($request->prepayment)){
+           if($request->prepayment >= $grandtotal){
+                $payment_status = 3;
+                $balance = 0;
+                $amount = $grandtotal;
+           }else{
+                $balance = $grandtotal - ($reservation->prepayment + $request->prepayment);
+                $payment_status = 2;
+                $amount = $request->prepayment;
+           }
+           $booking_status_id =1;
+        }else{
+            $booking_status_id = $reservation->booking_status_id;
+        }
+
+        $data['reservation'] = array(
+            'checkin' => $checkinDetails['checkin'],
+            'checkout' => $checkinDetails['checkout'],
+            'adults' => $request->input('adults'),
+            'childs' => $request->input('childs'),
+            'pets' => $request->input('pets'),
+            'fullname' => $request->input('fullname'),
+            'phone' => $request->input('phone'),
+            'email' => $request->input('email'),
+            'additional_info' => $request->input('additionalinformation'),
+            'booking_source_id' => $request->input('bookingsource_id'),
+            'doorcode' => 0,
+            'rateperday' => $request->ratesperday,
+            'daystay' => $checkinDetails['nightDiff'],
+            'meals_total' => str_replace(',','', $request->mealsamount),
+            'additional_services_total' => str_replace(',','', $request->servicestotalamount),
+            'subtotal' => str_replace(',','', $request->ratesperstay),
+            #'discount' => $request->discount,
+            #'tax' => $request->tax,
+            'grandtotal' => str_replace(',','', $grandtotal),
+            'currency_id' => $request->currency,
+            'payment_type_id' => $request->typeofpayment,
+            'prepayment' => $reservation->prepayment + $request->prepayment,
+            'payment_status_id' => $payment_status,
+            'balancepayment' => $balance,
+            'user_id' => $request->user()->id,
+            'host_id' => auth()->user()->host_id,            
+            'booking_status_id' => $booking_status_id,            
+        );
+
+        $data['roomname'] = $request->roomname;
        
         DB::beginTransaction();
         try {   
-            
-            
             $this->reservationRepository->update($reservation_id, $data['reservation']);
-            #dd($data['reservation']);
+            Cache::forget('reservation_id_'.$id);
+
+            $changed = 0;
+            $old_checkin = date('m/d/Y', strtotime($reservation->checkin));
+            $new_checkin = $request->checkin;
+            $old_checkout = date('m/d/Y', strtotime($reservation->checkout));
+            $new_checkout = $request->checkout;
+            if($new_checkin != $old_checkin){
+                $changed = 1;
+            }
+
+            if($new_checkout != $old_checkout){
+                $changed = 1;
+            }
+
+            /* Start check if old reserved rooms are the same or not*/
+
+            $reservedRooms = $this->reservedRoomRepository->getMyReservedRooms($id);
+            $myOldReservedRooms = [];
+            foreach($reservedRooms as $v){
+                $myOldReservedRooms[] = $v->room_id;
+            }
+            $myOldReservedRooms = array_unique($myOldReservedRooms);
+
+            $diff = array_diff_assoc($myOldReservedRooms, $request->roomname);
+
+            if ($diff) {
+                $changed = 1;
+            }
+
+            /* End check if old reserved rooms are the same or not*/
+
+            if($changed == 1){
+                $reservedroomsdata = [];
+                $period = CarbonPeriod::create($checkinDetails['checkin'], '1 hour', $checkinDetails['checkout']);
+                
+                $reserved_dates = [];
+                foreach ($period as $date) {            
+                    $reserved_dates[] = $date->format('Y-m-d H:i');
+                    foreach($request->roomname as $bookedrooms){
+                        $reservedroomsdata[] = ['reservation_id' => $reservation_id, 'room_id' => $bookedrooms, 'reserved_dates' =>$date->format('Y-m-d H:i') ];
+                    }                
+                }                   
+                $this->reservedRoomRepository->updateMyReservedRoom($reservation_id, $reservedroomsdata); 
+            }
+
+            $paymentData = array(
+                'ref_number' => $reservation->ref_number,
+                'host_id' => auth()->user()->host_id,
+                'user_id' => auth()->user()->id,
+                'reservation_id' => $reservation->id,
+                'amount' => $amount,
+                'balance' => $balance                
+            );  
             
-            
-            #$checkin = date('Y-m-d H:i:s', strtotime($request->checkin.' 2pm'));
-            #$checkout = date('Y-m-d H:i:s', strtotime($request->checkout.' 12pm'));                
-            $reservedroomsdata = [];
-            $period = CarbonPeriod::create($data['reservation']['checkin'], '1 hour', $data['reservation']['checkout']);
-            
-            $reserved_dates = [];
-            foreach ($period as $date) {            
-                $reserved_dates[] = $date->format('Y-m-d H:i');
-                foreach($request->roomname as $bookedrooms){
-                    $reservedroomsdata[] = ['reservation_id' => $reservation_id, 'room_id' => $bookedrooms, 'reserved_dates' =>$date->format('Y-m-d H:i') ];
-                }                
+            if(!$this->isEmpty($request->prepayment)){
+                $this->paymentRepository->insert($paymentData);
+            }
+
+            if(!$this->isEmpty($request->meals)){    
+                #$this->reservedmealRepository->insert($this->mealsRequestData($request, $reservation->id));
+                $this->reservedmealRepository->update($reservation->id, $this->mealsRequestData($request, $reservation->id));
             }   
-            
-            $this->reservedRoomRepository->updateMyReservedRoom($reservation_id, $reservedroomsdata);
-            #$this->reservedRoomRepository->update($reservation_id, $reservedroomsdata );
+
+            if(!$this->isEmpty($request->service_id)){ /* I need a faster solution for this */
+                #$this->reservedservicesRepository->insert($this->servicesRequestData($request, $reservation_id));
+                $this->reservedservicesRepository->updateMyReservedServices($reservation->id, $this->servicesRequestData($request, $reservation->id));
+            }
+
             
             DB::commit(); 
          } catch(\Exception $e) {
                 DB::rollBack();
-                return redirect()->route('reservations.edit', $reservation_id)->with('error', 'Room/s occupied');
+                return redirect()->route('reservations.edit', $reservation_id)->with('error', 'Room/s occupied or Something went wrong');
                 //return $reservation_id;
+                #echo  $e->getMessage();
 
         } 
 
@@ -504,6 +568,16 @@ class ReservationController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function getCheckinDetails($checkin, $checkout){
+        $checkin = Carbon::parse($checkin.' 2pm');
+        $checkout = Carbon::parse($checkout.' 12pm');        
+        $nightDiff = $checkin->diffInDays($checkout);
+        $data['checkin'] = $checkin;
+        $data['checkout'] = $checkout;
+        $data['nightDiff'] = $nightDiff;
+        return $data;
     }
 
     

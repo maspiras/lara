@@ -125,11 +125,13 @@ class BaseRepository
     public function update(int $id, array $data)
     {
         //$this->getById($id)->update($inputs);
-        $result = $this->find($id);
+        /* $result = $this->find($id);
         if (!$result) {
             return false;
         }
-        return $result->update($data);
+        return $result->update($data); */
+        return $this->model->where('id', $id)
+                    ->update($data);
     }
 
     /**

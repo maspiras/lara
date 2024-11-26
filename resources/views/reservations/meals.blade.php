@@ -29,8 +29,7 @@
                                 <label for="meals0"> Without Meals</label>
                             </div>                      
                         </div>
-                    </div> 
-                    
+                    </div>                     
                     
                     @foreach($meals as $meal)
                     <div class="col-sm-6">
@@ -39,7 +38,7 @@
                                 @if(isset($myReservedMeals->reservation_id))
                                 <input type="radio" id="meals{{$loop->index+1}}" name="meals" class="meals"{{ $myReservedMeals->meal_id == $meal->id ? 'checked' : '' }}  value="{{$meal->id}}">
                                 @else
-                                <input type="radio" id="meals{{$loop->index+1}}" name="meals" class="meals"  value="">    
+                                <input type="radio" id="meals{{$loop->index+1}}" name="meals" class="meals"  value="{{$meal->id}}">    
                                 @endif
                                 <label for="meals{{$loop->index+1}}">
                                 {{$meal->meals_name}}

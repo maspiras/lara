@@ -5,6 +5,7 @@ use App\Models\Service;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class BookingSourceRepository extends BaseRepository
 {
@@ -20,7 +21,8 @@ class BookingSourceRepository extends BaseRepository
 		$data = cache($cache_keyword);        
 		if(is_null($data)){	
             $data = $this->model->orderBy('source_name')->get();
-		    cache([$cache_keyword => $data], now()->addYear()); 
+		    #cache([$cache_keyword => $data], now()->addYear()); 
+            Cache::forever($cache_keyword, $data);
 		}
 		return $data;
 
