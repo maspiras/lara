@@ -78,7 +78,7 @@ $(document).ready(function(){
                 $('#balance').val(0);
             }
 
-            if($('#balance').val() >= 0){                
+            if($('#balance').val() > 0){                
                 $("#prepayment").attr("disabled", false);
             }
         },
