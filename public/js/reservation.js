@@ -77,6 +77,10 @@ $(document).ready(function(){
             }else{
                 $('#balance').val(0);
             }
+
+            if($('#balance').val() >= 0){                
+                $("#prepayment").attr("disabled", false);
+            }
         },
      
         GetServicesTotal: function(){
@@ -163,7 +167,8 @@ $(document).ready(function(){
             input.daterangepicker({
               singleDatePicker: true,
               autoApply: true,
-              minDate: checkin
+              //minDate: checkin
+              minDate: moment().subtract(4, 'days')
             }, function(checkout, end1, label1) {                
                 /* Reservation.DayStay($('#checkin').val(), moment(checkout).format('MM/DD/YYYY') );
                 Reservation.RatesPerDay();  */
@@ -384,7 +389,8 @@ $(document).ready(function(){
     $('input[name="checkin"]').daterangepicker({
         singleDatePicker: true,
         autoApply: true,
-        minDate: moment().add(0, 'days')
+        //minDate: moment().add(0, 'days')
+        minDate: moment().subtract(4, 'days')
         
       }, function(checkin, end, label) {  
             var a = moment(checkin);

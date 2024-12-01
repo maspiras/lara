@@ -418,7 +418,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="0.00" value="0" id="prepayment" name="prepayment">
+                  <input type="number" class="form-control" placeholder="0.00" value="0" id="prepayment" name="prepayment">
                 </div>
               </div>
              

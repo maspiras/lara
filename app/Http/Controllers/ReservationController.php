@@ -418,31 +418,59 @@ class ReservationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        
+       
         
         $reservation_id = $id;#last(request()->segments());
 
         $checkinDetails = $this->getCheckinDetails($request->checkin, $request->checkout);
         $grandtotal = $this->getReservationGrandTotal($request->ratesperstay, $request->mealsamount, $request->servicestotalamount);
-        $payment_status = 1;
+        $reservation = $this->reservationRepository->getMyReservation($id);
+        $payment_status = $reservation->payment_status_id;
         $balance = 0;
         $amount = 0;
-        $reservation = $this->reservationRepository->getMyReservation($id);
-
+        
+        $prepayment = $reservation->prepayment;
         if(!empty($request->prepayment)){
-           if($request->prepayment >= $grandtotal){
+                $oldbalance = $grandtotal - $reservation->prepayment;
+            if($request->prepayment >= $grandtotal){
                 $payment_status = 3;
                 $balance = 0;
                 $amount = $grandtotal;
+                $prepayment = $reservation->prepayment + $oldbalance;
            }else{
+
+                /* $balance = $grandtotal - ($reservation->prepayment + $request->prepayment);                
+                $amount = $request->prepayment; */
+                
                 $balance = $grandtotal - ($reservation->prepayment + $request->prepayment);
-                $payment_status = 2;
                 $amount = $request->prepayment;
+
+               // echo $request->prepayment. ' x '.$reservation->prepayment.' x ' .$oldbalance . ' x '.($reservation->prepayment + $request->prepayment).'<br>';
+               
+                if($request->prepayment >= $oldbalance){
+                    $payment_status = 3;
+                    $amount = $oldbalance;
+                    $prepayment = $reservation->prepayment + $oldbalance;
+                }else{
+                    $payment_status = 2;
+                    $prepayment = $reservation->prepayment + $request->prepayment;
+                }
+                
+                if($balance < 0){
+                    $balance = 0;
+                }
+
+                
            }
            $booking_status_id =1;
         }else{
             $booking_status_id = $reservation->booking_status_id;
+            $balance = $reservation->balancepayment;
+            
         }
+
+        //echo $request->prepayment. ' x '.$grandtotal.' x '.$balance.' x '.($payment_status);
+        //exit;
 
         $data['reservation'] = array(
             'checkin' => $checkinDetails['checkin'],
@@ -466,7 +494,8 @@ class ReservationController extends Controller
             'grandtotal' => str_replace(',','', $grandtotal),
             'currency_id' => $request->currency,
             'payment_type_id' => $request->typeofpayment,
-            'prepayment' => $reservation->prepayment + $request->prepayment,
+            #'prepayment' => $reservation->prepayment + $request->prepayment,
+            'prepayment' => $prepayment,
             'payment_status_id' => $payment_status,
             'balancepayment' => $balance,
             'user_id' => $request->user()->id,
@@ -525,16 +554,17 @@ class ReservationController extends Controller
                 $this->reservedRoomRepository->updateMyReservedRoom($reservation_id, $reservedroomsdata); 
             }
 
-            $paymentData = array(
-                'ref_number' => $reservation->ref_number,
-                'host_id' => auth()->user()->host_id,
-                'user_id' => auth()->user()->id,
-                'reservation_id' => $reservation->id,
-                'amount' => $amount,
-                'balance' => $balance                
-            );  
+              
             
-            if(!$this->isEmpty($request->prepayment)){
+            if(!empty($request->prepayment)){
+                $paymentData = array(
+                    'ref_number' => $reservation->ref_number,
+                    'host_id' => auth()->user()->host_id,
+                    'user_id' => auth()->user()->id,
+                    'reservation_id' => $reservation->id,
+                    'amount' => $amount,
+                    'balance' => $balance                
+                );
                 $this->paymentRepository->insert($paymentData);
             }
 

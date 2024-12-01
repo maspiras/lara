@@ -132,7 +132,8 @@ class RoomsController extends Controller
         
         $data = array('room_name'=> $request->input('room_name'), 
                       'room_status_id' => $request->input('room_status_id'),
-                      'hosts_id' => $request->input('hosts_id'));
+                      #'host_id' => $request->input('hosts_id')
+                    );
 
         $this->roomRepository->update($id, $data);
     

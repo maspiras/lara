@@ -12,6 +12,6 @@ class Room extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'room_name', 'room_status_id', 'hosts_id'
+        'room_name', 'room_status_id', 'host_id'
     ];
 }
