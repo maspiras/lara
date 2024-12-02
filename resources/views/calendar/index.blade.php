@@ -37,11 +37,7 @@
 
     
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
+   
 
           <div class="card card-info">
               <div class="card-header">
@@ -66,23 +62,34 @@
             <!-- /.card -->
           
               
-                
-              
-          </div>
-          <!-- /.col -->
-        </div>
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-
-
+   
 
 </div>
 @endsection
 @push('styles')  
   <link rel="stylesheet" href="{{ url('/') }}/css/mobiscroll.jquery.min.css">  
+  <style>
+    .mbsc-timeline-header-column,
+    .mbsc-timeline-column {
+      width: 3.8em;
+    }
+    .mbsc-timeline-resource-col {
+  width: 80px;
+}
+
+/* For sticky event labels */
+@supports (overflow: clip) {
+  .mbsc-timeline.mbsc-ltr .mbsc-schedule-event-inner {
+    left: 80px;
+  }
+
+  .mbsc-timeline.mbsc-rtl .mbsc-schedule-event-inner {
+    right: 80px;
+  }
+}
+
+
+  </style>
 @endpush
 @push('scripts')
 <script src="js/mobiscroll.jquery.min.js"></script>
