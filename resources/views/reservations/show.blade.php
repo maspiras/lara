@@ -52,6 +52,7 @@
             </div>
             <span class="text-body-secondary">{{number_format($myReservation->subtotal, 2, '.', ',')}}</span>
           </li>
+          @if(isset($myReservedMeals->meals_name))
           <li class="list-group-item d-flex justify-content-between lh-sm">
             <div>
               <h6 class="my-0">Meal/s</h6>
@@ -59,6 +60,8 @@
             </div>
             <span class="text-body-secondary">{{number_format($myReservation->meals_total, 2, '.', ',')}}</span>
           </li>
+          @endif
+          @if(count($myReservedServices)> 0)
           @foreach($myReservedServices as $mrs)
           <li class="list-group-item d-flex justify-content-between lh-sm">
             <div>
@@ -66,9 +69,9 @@
               
             </div>
             <span class="text-body-secondary">{{number_format($mrs->amount, 2, '.', ',')}}</span>
-          </li>
-                  
+          </li>                  
           @endforeach
+          @endif
           
           <!-- <li class="list-group-item d-flex justify-content-between bg-body-tertiary">
             <div class="text-success">
@@ -134,7 +137,7 @@
                 </div>
                 <!-- /.col -->
               </div>
-          <div class="row"><hr class="my-4"></div>
+          <hr class="my-4">
           <h4 class="mb-3">Payment</h4>
           <div class="row gy-3">            
             <div class="col-sm-3">

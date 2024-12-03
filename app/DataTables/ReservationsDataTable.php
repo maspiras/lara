@@ -90,7 +90,7 @@ class ReservationsDataTable extends DataTable
         
         return $model
         #->where('checkin', '>=', now()->subDays(7))
-        ->where('checkin', '>=', now())
+        ->where('checkin', '>=', now()->subDays(1))
         ->where('host_id', auth()->user()->host_id)
         ->orderBy('checkin');
         #->where('created_at', '>=', $last_month );
