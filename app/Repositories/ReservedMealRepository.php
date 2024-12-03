@@ -24,7 +24,12 @@ class ReservedMealRepository extends BaseRepository
         $cache_keyword = 'myReservedMeals_'.$id;	
         $data = cache($cache_keyword);        
         if(is_null($data)){	
-            $data = $this->model->where('reservation_id', '=', $id)->first();
+            $data = $this->model
+            ->select(['reserved_meals.id as id', 'reserved_meals.meal_id as meal_id', 'reserved_meals.meal_adults as meal_adults', 'reserved_meals.meal_childs as meal_childs',
+                       'reserved_meals.amount as amount', 'reserved_meals.added_on as added_on', 'meals.meals_name as meals_name',
+            ])    
+                ->leftJoin('meals', 'reserved_meals.meal_id', '=', 'meals.id')
+                    ->where('reserved_meals.reservation_id', '=', $id)->first();
             cache([$cache_keyword => $data], now()->addDays(1)); 
         }
         return $data;    

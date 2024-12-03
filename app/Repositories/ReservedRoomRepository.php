@@ -20,7 +20,11 @@ class ReservedRoomRepository extends BaseRepository
     }
 
     public function getMyReservedRooms($id){       
-        return $this->model->distinct()->where('reservation_id', '=', $id)->get();
+        return $this->model->distinct()
+        ->select(['reserved_rooms.id as id', 'reserved_rooms.room_id as room_id', 'rooms.room_name as room_name'
+            ])    
+                ->leftJoin('rooms', 'reserved_rooms.room_id', '=', 'rooms.id')
+        ->where('reservation_id', '=', $id)->get();
         
     }
 

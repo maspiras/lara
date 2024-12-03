@@ -205,6 +205,26 @@ class ReservationController extends Controller
     #public function store(Request $request)
     public function store(ReservationRequest $request)#: RedirectResponse
     {
+        /* $checkin = Carbon::parse($request->checkin.' 2pm');
+        $checkout = Carbon::parse($request->checkout.' 12pm');
+        if($request->checkin == $request->checkout){
+          $checkout = $checkout->addDays(1);  
+        }        
+        $diff = $checkin->diffInDays($checkout);
+        echo $checkout.'<br>';
+        echo $diff.'<br>';
+        $reservedroomsdata = [];
+            $period = CarbonPeriod::create($checkin, '1 hour', $checkout);
+            $reserved_dates = [];
+            foreach ($period as $date) {            
+                $reserved_dates[] = $date->format('Y-m-d H:i');
+                foreach($request->roomname as $bookedrooms){
+                    $reservedroomsdata[] = ['room_id' => $bookedrooms, 'reserved_dates' =>$date->format('Y-m-d H:i') ];
+                }                
+            }
+        print_r($reservedroomsdata);
+
+        exit; */
         #echo $this->getReservationGrandTotal($request->ratesperstay, $request->mealsamount, $request->servicestotalamount);
         
         /* if($request->mealsamount){
@@ -223,7 +243,11 @@ class ReservationController extends Controller
         
         $checkin = Carbon::parse($request->checkin.' 2pm');
         $checkout = Carbon::parse($request->checkout.' 12pm');
+        if($request->checkin == $request->checkout){
+          $checkout = $checkout->addDays(1);  
+        }        
         $diff = $checkin->diffInDays($checkout);
+        //
         
 
        // return $checkin.' - '.$checkout;
@@ -301,7 +325,8 @@ class ReservationController extends Controller
                         'balancepayment' => $balance,
                         'user_id' => $request->user()->id,
                         'host_id' => auth()->user()->host_id,
-                        'booking_status_id' => empty($request->prepayment) ? 0 : 1,                        
+                        'booking_status_id' => empty($request->prepayment) ? 0 : 1,     
+                        'created_at' => now(),                   
                 );
         
                       
@@ -365,9 +390,22 @@ class ReservationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        return view('reservations.show');
+        $myReservation = $this->reservationRepository->getMyReservation($id);
+        $reservedRooms = $this->reservedRoomRepository->getMyReservedRooms($id);
+        $myReservedRooms = [];
+        foreach($reservedRooms as $r){
+            $myReservedRooms[] = $r->room_name;
+        }
+        $myReservedRooms = array_unique($myReservedRooms);        
+        $myReservedServices = $this->reservedservicesRepository->getMyReservedServices($id);  
+        
+        $myReservedMeals = $this->reservedmealRepository->getMyReservedMeals($id);
+       
+        $currencies = $this->currencyRepository->getCurrencies();
+
+        return view('reservations.show',compact('myReservation', 'myReservedRooms', 'myReservedServices', 'myReservedMeals','currencies'));
     }
 
     /**

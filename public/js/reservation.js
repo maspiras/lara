@@ -42,8 +42,13 @@ $(document).ready(function(){
                 $('#balance').val(rate);
             }
         },
-        RatesPerStay: function(frm, e){        
-            var rates = (Math.round($('#ratesperday').val() * $('#daystay').val() * 100) / 100).toFixed(2);
+        RatesPerStay: function(frm, e){     
+            nightstay = $('#daystay').val();
+            if (isNaN(nightstay) || nightstay == 0) {
+                nightstay = 1;
+            }
+            var rates = (Math.round($('#ratesperday').val() * nightstay * 100) / 100).toFixed(2);
+            
             return parseFloat(rates);          
           
         },
@@ -156,6 +161,7 @@ $(document).ready(function(){
                 mealsamount = 0;
             }         
             grandtotal = Reservation.GetServicesTotal() + Reservation.RatesPerStay() + mealsamount;
+            
             return CommonLib.MoneyFormat(grandtotal);
             //$('#grandtotal').val();
            
