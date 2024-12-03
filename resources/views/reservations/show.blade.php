@@ -50,14 +50,14 @@
               @endforeach
               </small>
             </div>
-            <span class="text-body-secondary">{{$myReservation->subtotal}}</span>
+            <span class="text-body-secondary">{{number_format($myReservation->subtotal, 2, '.', ',')}}</span>
           </li>
           <li class="list-group-item d-flex justify-content-between lh-sm">
             <div>
               <h6 class="my-0">Meal/s</h6>
               <small class="text-body-secondary">{{$myReservedMeals->meals_name}}</small>
             </div>
-            <span class="text-body-secondary">{{$myReservation->meals_total}}</span>
+            <span class="text-body-secondary">{{number_format($myReservation->meals_total, 2, '.', ',')}}</span>
           </li>
           @foreach($myReservedServices as $mrs)
           <li class="list-group-item d-flex justify-content-between lh-sm">
@@ -65,7 +65,7 @@
               <h6 class="my-0">{{$mrs->service_name}}</h6>
               
             </div>
-            <span class="text-body-secondary">{{$mrs->amount}}</span>
+            <span class="text-body-secondary">{{number_format($mrs->amount, 2, '.', ',')}}</span>
           </li>
                   
           @endforeach
@@ -79,7 +79,7 @@
           </li> -->
           <li class="list-group-item d-flex justify-content-between">
             <span>Total ({{$myReservation->currency_code}})</span>
-            <strong>{{ $myReservation->grandtotal }}</strong>
+            <strong>{{number_format($myReservation->grandtotal, 2, '.', ',')}}</strong>
           </li>
         </ul>
 
@@ -198,7 +198,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input disabled type="text" class="form-control" placeholder="0.00" value="{{ $myReservation->grandtotal }}" name="grandtotal" id="grandtotal">
+                  <input disabled type="text" class="form-control" placeholder="0.00" value="{{number_format($myReservation->grandtotal, 2, '.', ',')}}" name="grandtotal" id="grandtotal">
                 </div>
             </div>
             <div class="col-md-6">
@@ -207,7 +207,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input disabled type="text" class="form-control" placeholder="0.00" value="{{ $myReservation->prepayment }}" name="prepayment" id="prepayment">
+                  <input disabled type="text" class="form-control" placeholder="0.00" value="{{number_format($myReservation->prepayment, 2, '.', ',')}}" name="paid" id="paid">
                 </div>
             </div>
             <div class="col-md-6">
@@ -215,23 +215,23 @@
               <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
-                  </div>
-                  <input type="hidden" class="form-control" value="{{ $myReservation->prepayment }}" name="paid" id="paid">
-                  <input disabled type="text" class="form-control" placeholder="0.00" value="{{ $myReservation->balancepayment }}" name="balance" id="balance">
+                  </div>                  
+                  <input disabled type="text" class="form-control" placeholder="0.00" value="{{number_format($myReservation->balancepayment, 2, '.', ',')}}" name="balance" id="balance">
                 </div>
             </div>
 
             <div class="col-md-12">
-              <label for="cc-expiration" class="form-label">Additional payment</label>
+              <label for="cc-expiration" class="form-label">Amount received</label>
               
               <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="number" min="0" class="form-control" placeholder="0.00" value="0" id="prepayment" name="prepayment">
-                </div>
+                  <input type="number" min="0" class="form-control" placeholder="0.00" id="prepayment" name="prepayment" required>
+              </div>
+              
               <div class="invalid-feedback">
-                Expiration date required
+                Additional payment is required
               </div>
             </div>
 
@@ -341,6 +341,7 @@
 </style>
 @endpush
 @push('scripts')
+
 <script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script type="text/javascript">
 // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -359,9 +360,37 @@
 
       form.classList.add('was-validated')
     }, false)
-  })
-})()
+  });
+
+  $('#prepayment').on('input', function() {
+            var grandtotal = parseFloat($('#grandtotal').val().replace(',',''));                         
+            var prepayment = parseFloat($('#prepayment').val());
+            if (isNaN(prepayment)) {
+                prepayment =0;                
+            }
+           
+             var paid = parseFloat($('#paid').val().replace(',',''));  
+            if (isNaN(paid)) {
+                paid =0;                
+            }
+            
+            var balance = grandtotal - (paid + prepayment);
+            if(balance < 0){
+                balance = 0;
+            }
+            if(grandtotal > prepayment){
+                $('#balance').val(CommonLib.MoneyFormat(balance));            
+            }else{
+                $('#balance').val(0);
+            }
+
+            if($('#balance').val() > 0){                
+                $("#prepayment").attr("disabled", false);
+            }
+  });
+})();
 </script>
+
 @endpush
 
         

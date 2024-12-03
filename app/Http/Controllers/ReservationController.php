@@ -296,7 +296,7 @@ class ReservationController extends Controller
             }
           } */
         
-        $ref_number = time().'-'.$request->user()->id;
+        $ref_number = substr(md5(time().'-'.auth()->user()->id), 0, 10);
         $reservationdata = array(
                         'ref_number' => $ref_number,
                         'checkin' => $checkin,
@@ -392,6 +392,8 @@ class ReservationController extends Controller
      */
     public function show($id)
     {
+        #echo substr(md5(time().'-'.auth()->user()->id), 0, 10) ;
+
         $myReservation = $this->reservationRepository->getMyReservation($id);
         $reservedRooms = $this->reservedRoomRepository->getMyReservedRooms($id);
         $myReservedRooms = [];
@@ -531,8 +533,7 @@ class ReservationController extends Controller
             #'tax' => $request->tax,
             'grandtotal' => str_replace(',','', $grandtotal),
             'currency_id' => $request->currency,
-            'payment_type_id' => $request->typeofpayment,
-            #'prepayment' => $reservation->prepayment + $request->prepayment,
+            'payment_type_id' => $request->typeofpayment,            
             'prepayment' => $prepayment,
             'payment_status_id' => $payment_status,
             'balancepayment' => $balance,
