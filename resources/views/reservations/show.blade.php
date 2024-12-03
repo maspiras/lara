@@ -133,13 +133,10 @@
                   
                 </div>
                 <!-- /.col -->
-          <hr class="my-4">
-
-          
-
+              </div>
+          <div class="row"><hr class="my-4"></div>
           <h4 class="mb-3">Payment</h4>
-          <div class="row gy-3">
-            
+          <div class="row gy-3">            
             <div class="col-sm-3">
               <div class="form-check">
                 <input id="cash" name="paymentMethod" type="radio" class="form-check-input" checked required>
