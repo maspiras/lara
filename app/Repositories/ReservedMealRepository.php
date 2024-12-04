@@ -26,7 +26,7 @@ class ReservedMealRepository extends BaseRepository
         if(is_null($data)){	
             $data = $this->model
             ->select(['reserved_meals.id as id', 'reserved_meals.meal_id as meal_id', 'reserved_meals.meal_adults as meal_adults', 'reserved_meals.meal_childs as meal_childs',
-                       'reserved_meals.amount as amount', 'reserved_meals.added_on as added_on', 'meals.meals_name as meals_name',
+                       'reserved_meals.amount as amount','reserved_meals.reservation_id as reservation_id' , 'reserved_meals.added_on as added_on', 'meals.meals_name as meals_name',
             ])    
                 ->leftJoin('meals', 'reserved_meals.meal_id', '=', 'meals.id')
                     ->where('reserved_meals.reservation_id', '=', $id)->first();
