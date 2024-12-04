@@ -649,5 +649,81 @@ class ReservationController extends Controller
         return $data;
     }
 
-    
+    public function makePayment($id, Request $r){
+        $reservation = $this->reservationRepository->getMyReservation($id);
+        if($reservation->host_id != auth()->user()->host_id ){
+            exit;
+        }
+               
+        $grandtotal = $reservation->grandtotal;        
+        $payment_status = $reservation->payment_status_id;
+        $booking_status_id = $reservation->booking_status_id;
+        $balance = $reservation->balancepayment;
+        $amount = 0;
+        
+        $prepayment = $reservation->prepayment;
+        if(!empty($r->prepayment)){
+                $oldbalance = $grandtotal - $reservation->prepayment;
+            if($r->prepayment >= $grandtotal){
+                $payment_status = 3;
+                $balance = 0;
+                $amount = $oldbalance;
+                $prepayment = $reservation->prepayment + $oldbalance;
+           }else{
+                $balance = $grandtotal - ($reservation->prepayment + $r->prepayment);
+                $amount = $r->prepayment;
+               
+                if($r->prepayment >= $oldbalance){
+                    $payment_status = 3;
+                    $amount = $oldbalance;
+                    $prepayment = $reservation->prepayment + $oldbalance;
+                }else{
+                    $payment_status = 2;
+                    $prepayment = $reservation->prepayment + $r->prepayment;
+                }
+                
+                if($balance < 0){
+                    $balance = 0;
+                }
+           }
+           $booking_status_id =1;
+        }
+
+        $data['reservation'] = [
+                    'prepayment' => $prepayment,
+                    'balancepayment' => $balance,
+                    'payment_status_id' => $payment_status,
+                    'booking_status_id' => $booking_status_id,
+                ];
+        $data['payment'] = [
+                    'ref_number' => $reservation->ref_number,
+                    'host_id' => auth()->user()->host_id,
+                    'user_id' => auth()->user()->id,
+                    'reservation_id' => $reservation->id,
+                    'amount' => $amount,
+                    'balance' => $balance,
+                    'currency_id' => $r->currency,
+                    'payment_type_id' => $r->paymentMethod
+        ];
+        
+        
+
+        
+        $msg = "Successfully Paid";
+        $status = null;
+        DB::beginTransaction();
+        try {
+            $this->reservationRepository->update($id, $data['reservation']);
+            $this->paymentRepository->insert($data['payment']);
+            Cache::forget('reservation_id_'.$id);
+            $status = 1;
+            DB::commit(); 
+        } catch(\Exception $e) {
+               DB::rollBack();
+         #      return redirect()->route('reservations.edit', $reservation_id)->with('error', 'Room/s occupied or Something went wrong');
+            $msg = $e->getMessage();
+            #echo  $e->getMessage();
+        }     
+        return array('status' => $status, 'msg' => $msg);
+    }
 }

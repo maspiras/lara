@@ -35,7 +35,7 @@ return new class extends Migration
             $table->decimal('discount', 9, 2)->nullable();
             $table->decimal('tax', 9, 2)->nullable();
             $table->decimal('grandtotal', 9, 2)->nullable();
-            $table->tinyInteger('payment_type_id')->nullable();
+            #$table->tinyInteger('payment_type_id')->nullable();
             $table->decimal('prepayment', 9, 2)->nullable();
             $table->tinyInteger('payment_status_id')->nullable();
             $table->decimal('balancepayment', 9, 2)->nullable();
@@ -43,7 +43,7 @@ return new class extends Migration
             $table->unsignedBigInteger('host_id');
             $table->string('ref_number');
             $table->tinyInteger('booking_status_id')->nullable();
-            $table->tinyInteger('currency_id')->nullable();
+            #$table->mediumInteger('currency_id')->nullable();
             $table->softDeletes('deleted_at', precision: 0);
             $table->timestamps();
 
@@ -59,7 +59,7 @@ return new class extends Migration
             $table->index('booking_status_id', 'booking_status_id');
             $table->index('user_id', 'user_id');
             $table->index('booking_source_id', 'booking_source_id');
-            $table->index('currency_id', 'currency_id');
+            #$table->index('currency_id', 'currency_id');
             $table->unique(['ref_number']);
             //$table->unique(['order_id', 'prod_id']);
         });

@@ -83,9 +83,10 @@ $(document).ready(function(){
                 $('#balance').val(0);
             }
 
-            if($('#balance').val() > 0){                
-                $("#prepayment").attr("disabled", false);
+            if(balance > 0){
+                $("#prepayment").attr("disabled", false);                
             }
+            
         },
      
         GetServicesTotal: function(){
@@ -485,5 +486,6 @@ $(document).ready(function(){
     Reservation.DateRangePicker($('#checkout'),  $('#checkin').val()); 
     servicestotalamount = Reservation.GetServicesTotal();
     $('.servicestotalamount').text(CommonLib.MoneyFormat(servicestotalamount));
-    $('#servicestotalamount').val(servicestotalamount);
+    $('#servicestotalamount').val(servicestotalamount);      
+    Reservation.GetBalance();
 });

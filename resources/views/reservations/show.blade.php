@@ -36,9 +36,35 @@
 
     <div class="row g-5">
       <div class="col-md-5 col-lg-4 order-md-last">
+        @if(!empty($myReservation->additional_info))
+        <ul class="list-group mb-3">
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">Additional Information</h6>              
+            </div>
+          </li>          
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <span class="text-body-secondary">{{$myReservation->additional_info}}</span>
+          </li>          
+        </ul>
+        @endif
         <h4 class="d-flex justify-content-between align-items-center mb-3">
           <span class="text-primary">Your bill</span>
-          <span class="badge bg-primary rounded-pill">3</span>
+          <span class="badge bg-primary rounded-pill">
+          @php
+
+            $mrr = count($myReservedRooms);  
+            $mrm = 0;
+            $mrs = 0;
+            if(!empty($myReservedMeals->meals_name)){
+              $mrm = 1;
+            }
+
+            if(count($myReservedServices) > 0){
+              $mrs = count($myReservedServices);
+            }
+          @endphp
+          {{$mrr+$mrm+$mrs}}</span>
         </h4>
         <ul class="list-group mb-3">
           <li class="list-group-item d-flex justify-content-between lh-sm">
@@ -92,11 +118,14 @@
             <button type="submit" class="btn btn-secondary">Redeem</button>
           </div>
         </form>
+
+        
       </div>
       <div class="col-md-7 col-lg-8">
         
-      <form class="needs-validation" novalidate>  
-          
+      <form id="paymentForm" class="needs-validation" novalidate action="{{ route('reservation.makePayment',$myReservation->id) }}" method="POST">  
+      @csrf
+      @method('patch')    
               <!-- info row -->
               <div class="row invoice-info">
                 <div class="col-sm-4 invoice-col">
@@ -142,38 +171,28 @@
           <div class="row gy-3">            
             <div class="col-sm-3">
               <div class="form-check">
-                <input id="cash" name="paymentMethod" type="radio" class="form-check-input" checked required>
+                <input id="cash" name="paymentMethod" type="radio" value="1" class="form-check-input" checked required>
                 <label class="form-check-label" for="cash">Cash</label>
               </div>
             </div>
             <div class="col-sm-3">
               <div class="form-check">
-                <input id="obt" name="paymentMethod" type="radio" class="form-check-input">
+                <input id="obt" name="paymentMethod" type="radio" value="2" class="form-check-input">
                 <label class="form-check-label" for="obt">Online Bank Transfer</label>
               </div>
             </div>
             <div class="col-sm-3">
               <div class="form-check">
-                <input id="credit" name="paymentMethod" type="radio" class="form-check-input">
-                <label class="form-check-label" for="credit">Credit card</label>
+                <input id="credit" name="paymentMethod" type="radio" value="3" class="form-check-input">
+                <label class="form-check-label" for="credit">Credit/Debit card</label>
               </div>
             </div>
             <div class="col-sm-3">
               <div class="form-check">
-                <input id="cheque" name="paymentMethod" type="radio" class="form-check-input">
+                <input id="cheque" name="paymentMethod" type="radio" value="4" class="form-check-input">
                 <label class="form-check-label" for="cheque">Cheque</label>
               </div>
-            </div>  
-            <!-- <div class="col-sm-3">
-              <div class="form-check">
-                <input id="debit" name="paymentMethod" type="radio" class="form-check-input" required>
-                <label class="form-check-label" for="debit">Debit card</label>
-              </div>
-              <div class="form-check">
-                <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" required>
-                <label class="form-check-label" for="paypal">PayPal</label>
-              </div>
-            </div> -->
+            </div>              
           </div>
 
           <div class="row gy-3">
@@ -193,7 +212,7 @@
             </div>
 
             <div class="col-md-6">
-              <label for="cc-number" class="form-label">Grand Total</label>
+              <label for="cc-number" class="form-label text-primary">Grand Total</label>
               <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
@@ -202,7 +221,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-              <label for="cc-number" class="form-label">Prepayment</label>
+              <label for="cc-number" class="form-label text-success">Prepayment</label>
               <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
@@ -211,7 +230,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-              <label for="cc-number" class="form-label">Balance to pay</label>
+              <label for="cc-number" class="form-label text-danger">Balance to pay</label>
               <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
@@ -221,18 +240,19 @@
             </div>
 
             <div class="col-md-12">
-              <label for="cc-expiration" class="form-label">Amount received</label>
+              <label for="cc-expiration" class="form-label text-success">Amount received</label>
               
               <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                  <input type="number" min="0" class="form-control" placeholder="0.00" id="prepayment" name="prepayment" required>
-              </div>
+                  <input type="number" disabled min="0" class="form-control" placeholder="0.00" id="prepayment" name="prepayment" required>
+                  <div class="invalid-feedback">
+                    Additional payment is required
+                  </div>  
+                </div>
               
-              <div class="invalid-feedback">
-                Additional payment is required
-              </div>
+              
             </div>
 
             
@@ -240,7 +260,7 @@
 
           <hr class="my-4">
 
-          <button class="w-100 btn btn-primary btn-lg" type="submit">Make payment</button>
+          <button class="w-100 btn btn-primary btn-lg" id="btn_makepayment" type="submit" disabled>Make payment</button>
         </form>
       </div>
     </div>
@@ -258,6 +278,8 @@
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 <link href="https://getbootstrap.com/docs/5.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="{{ url('/') }}//plugins/toastr/toastr.min.css">
 <style>
     .container {
   max-width: 960px;
@@ -343,6 +365,8 @@
 @push('scripts')
 
 <script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<!-- Toastr -->
+<script src="{{ url('/') }}/plugins/toastr/toastr.min.js"></script>
 <script type="text/javascript">
 // Example starter JavaScript for disabling form submissions if there are invalid fields
 (() => {
@@ -357,10 +381,46 @@
         event.preventDefault()
         event.stopPropagation()
       }
-
       form.classList.add('was-validated')
     }, false)
   });
+
+  var Payment = {
+
+    Update: function(frm, e){
+        var formData = $( frm ).serialize();
+        var saving = AjaxLib.postAjaxData( config.SitePath + '/reservations/{{$myReservation->id}}/payment', formData );
+        saving.done(function(data){  
+            if(data.status ==1){                
+                //frm[0].reset();                                    
+                
+                frm.removeClass('was-validated');
+                var paid = parseFloat($('#paid').val().replace(',',''));
+                var totalpaid = paid + parseFloat($('#prepayment').val().replace(',','')); 
+                var grandtotal = parseFloat($('#grandtotal').val().replace(',',''));
+                var balance = parseFloat($('#balance').val().replace(',',''));
+                if(totalpaid > grandtotal){
+                  totalpaid = grandtotal;  
+                }
+                if(balance <= 0){
+                  $("#prepayment").attr("disabled", true);
+                }
+                $('#paid').val(CommonLib.MoneyFormat(totalpaid));
+                $('#prepayment').val('');
+                $('#prepayment').focus();
+                $("#btn_makepayment").attr("disabled", true);
+                toastr.success('<h5>'+data.msg+'</h5>');
+            }else{                
+
+            }
+        });
+        saving.fail(function(jqXHR, textStatus, errorThrown) {             
+            alert(data.msg + ' '+textStatus + ': ' + errorThrown);
+        });
+        e.preventDefault();
+    }
+}
+
 
   $('#prepayment').on('input', function() {
             var grandtotal = parseFloat($('#grandtotal').val().replace(',',''));                         
@@ -372,22 +432,45 @@
              var paid = parseFloat($('#paid').val().replace(',',''));  
             if (isNaN(paid)) {
                 paid =0;                
-            }
-            
-            var balance = grandtotal - (paid + prepayment);
+            }            
+                    
+            var totalpaid = paid + prepayment;
+            var balance = grandtotal - totalpaid;
             if(balance < 0){
                 balance = 0;
             }
             if(grandtotal > prepayment){
-                $('#balance').val(CommonLib.MoneyFormat(balance));            
+                $('#balance').val(CommonLib.MoneyFormat(balance));                 
+                
             }else{
                 $('#balance').val(0);
             }
 
-            if($('#balance').val() > 0){                
+            if(balance > 0){                
                 $("#prepayment").attr("disabled", false);
             }
+
+            if(parseFloat($(this).val()) >= 1){
+              $("#btn_makepayment").attr("disabled", false);
+            }else{
+              $("#btn_makepayment").attr("disabled", true);
+            }
+
+            
+            //$('#paid').val(totalpaid);
+
+            
   });
+  
+  if( parseFloat($('#balance').val().replace(',','')) > 0){
+    $('#prepayment').attr("disabled", false);
+  }
+
+    $('#paymentForm').submit(function(e){
+        Payment.Update($(this), e)
+        e.preventDefault();   
+    });
+    $('#prepayment').focus();
 })();
 </script>
 

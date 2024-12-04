@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('employees', UserController::class);
     Route::resource('rooms', RoomsController::class);
     Route::resource('reservations', ReservationController::class);
+    Route::patch('reservations/{id}/payment', [ReservationController::class, 'makePayment'])->name('reservation.makePayment');
     Route::resource('refunds', RefundController::class);
     Route::resource('services', ServiceController::class);
     Route::resource('calendar', CalendarController::class);
