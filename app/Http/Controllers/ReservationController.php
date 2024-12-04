@@ -467,12 +467,13 @@ class ReservationController extends Controller
         $grandtotal = $this->getReservationGrandTotal($request->ratesperstay, $request->mealsamount, $request->servicestotalamount);
         $reservation = $this->reservationRepository->getMyReservation($id);
         $payment_status = $reservation->payment_status_id;
+        $oldbalance = $grandtotal - $reservation->prepayment;
         $balance = 0;
         $amount = 0;
         
         $prepayment = $reservation->prepayment;
         if(!empty($request->prepayment)){
-                $oldbalance = $grandtotal - $reservation->prepayment;
+                
             if($request->prepayment >= $grandtotal){
                 $payment_status = 3;
                 $balance = 0;
@@ -506,7 +507,8 @@ class ReservationController extends Controller
            $booking_status_id =1;
         }else{
             $booking_status_id = $reservation->booking_status_id;
-            $balance = $reservation->balancepayment;
+           # $balance = $reservation->balancepayment;
+            $balance = $oldbalance;
             
         }
 
