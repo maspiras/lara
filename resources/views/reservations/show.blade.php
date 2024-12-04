@@ -7,10 +7,18 @@
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
-          <div class="col-sm-6">
-            
+          <div class="col-sm-9">            
+          @if($myReservation->balancepayment <= 0)
+          <div class="row justify-content-md-center">
+            <div class="col-sm-12">                  
+                <div class="alert alert-success" role="alert"> 
+                    <h4 class="text-center">FULLY PAID</h4>
+                </div>        
+            </div>
+          </div>
+          @endif
           </div><!-- /.col -->            
-          <div class="col-sm-6">
+          <div class="col-sm-3">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
               <li class="breadcrumb-item active">Reservations</li>
@@ -33,21 +41,10 @@
       <h2>Checkout form</h2>
       <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
     </div> -->
-
+    
     <div class="row g-5">
       <div class="col-md-5 col-lg-4 order-md-last">
-        @if(!empty($myReservation->additional_info))
-        <ul class="list-group mb-3">
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">Additional Information</h6>              
-            </div>
-          </li>          
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <span class="text-body-secondary">{{$myReservation->additional_info}}</span>
-          </li>          
-        </ul>
-        @endif
+        
         <h4 class="d-flex justify-content-between align-items-center mb-3">
           <span class="text-primary">Your bill</span>
           <span class="badge bg-primary rounded-pill">
@@ -112,12 +109,15 @@
           </li>
         </ul>
 
+
         <form class="card p-2">
           <div class="input-group">
             <input type="text" class="form-control" placeholder="Promo code">
             <button type="submit" class="btn btn-secondary">Redeem</button>
           </div>
         </form>
+
+        
 
         
       </div>
@@ -166,6 +166,7 @@
                 </div>
                 <!-- /.col -->
               </div>
+          
           <hr class="my-4">
           <h4 class="mb-3">Payment</h4>
           <div class="row gy-3">            
@@ -262,6 +263,24 @@
 
           <button class="w-100 btn btn-primary btn-lg" id="btn_makepayment" type="submit" disabled>Make payment</button>
         </form>
+        <hr class="my-4">
+        <div class="col-md-12">
+              
+              
+              @if(!empty($myReservation->additional_info))
+              <ul class="list-group mb-3">
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                  <div>
+                    <h6 class="my-0">Additional Information</h6>              
+                  </div>
+                </li>          
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                  <span class="text-body-secondary">{{$myReservation->additional_info}}</span>
+                </li>          
+              </ul>
+              @endif
+              
+            </div>
       </div>
     </div>
   </main>
