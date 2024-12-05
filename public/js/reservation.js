@@ -488,4 +488,23 @@ $(document).ready(function(){
     $('.servicestotalamount').text(CommonLib.MoneyFormat(servicestotalamount));
     $('#servicestotalamount').val(servicestotalamount);      
     Reservation.GetBalance();
+
+    $('.cancelreservation').on( "click", function(e) {
+        Swal.fire({
+            title: "Are you sure you want to cancel this reservation?",
+            //showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            //denyButtonText: `Don't save`
+          }).then((result) => {            
+            if (result.isConfirmed) {                
+              Swal.fire("On Development", "", "success");
+            } 
+          });
+        e.preventDefault();   
+    });
+    $('.refundreservation').on( "click", function(e) {
+        alert('on development');
+        e.preventDefault();   
+    });
 });

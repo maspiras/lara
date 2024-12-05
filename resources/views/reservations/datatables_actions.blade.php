@@ -8,12 +8,12 @@
     <a href="{{ route('reservations.show', $reservation->id) }}" class='btn btn-primary showreservation'>
         <i class="fa fa-list"></i> show
     </a>
-    <a href="{{ route('reservations.destroy', $reservation->id) }}" class='btn btn-danger cancelreservation'>
+   <!--  <a href="{{ route('reservations.destroy', $reservation->id) }}" class='btn btn-danger cancelreservation'>
         <i class="fa fa-trash"></i> cancel
     </a>
     <a href="{{ route('refunds.edit', $reservation->id) }}" class='btn btn-info refundreservation'>
         <i class="fa fa-money-bill"></i> refund
-    </a>
+    </a> -->
     
 </div>
 </form>

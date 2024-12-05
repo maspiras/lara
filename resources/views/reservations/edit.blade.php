@@ -8,7 +8,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Reservations</h1>
+                    <h5 class="m-0">Ref #: {{$reservation->ref_number}} ( {{$reservation->fullname }} )</h5>
                 </div><!-- /.col -->
                 
                 <div class="col-sm-6">
@@ -439,10 +439,19 @@
               <div class="form-group justify-content-md-center row">
                   
                   <div class="col col-6 text-center">
-                      <button type="cancel" class="btn btn-secondary btn-lg"><i class="fas fa-download"></i> Cancel Reservation</button>
+                      
+                  
+                      <div class='btn-group'>
+                          <a href="{{ route('reservations.destroy', $reservation->id) }}" class='btn btn-danger btn-lg cancelreservation'>
+                              <i class="fa fa-trash"></i> Cancel
+                          </a>
+                          <a href="{{ route('refunds.edit', $reservation->id) }}" class='btn btn-info btn-lg refundreservation'>
+                              <i class="fa fa-money-bill"></i> Refund
+                          </a>                      
+                      </div>
                   </div>
                   
-                  <div class="col col-6 text-center">
+                  <div class="col col-6 text-center btn-group">
                       <button type="submit" class="btn btn-success btn-lg"><i class="far fa-credit-card"></i> Save Reservation</button>
                   </div>
               </div>
@@ -484,7 +493,8 @@
   <link rel="stylesheet" href="{{ url('/') }}/plugins/bs-stepper/css/bs-stepper.min.css">
   <!-- dropzonejs -->
   <link rel="stylesheet" href="{{ url('/') }}/plugins/dropzone/min/dropzone.min.css">
-  <!-- Theme style -->
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="{{ url('/') }}/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
   
 @endpush
 @push('scripts')
@@ -498,7 +508,7 @@
 <!-- jquery-validation -->
 <script src="{{ url('/') }}/plugins/jquery-validation/jquery.validate.min.js"></script>
 <script src="{{ url('/') }}/plugins/jquery-validation/additional-methods.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript" src="{{ url('/') }}/js/reservation.js"></script>
 
 <script>
