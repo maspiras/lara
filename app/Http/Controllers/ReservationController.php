@@ -420,6 +420,17 @@ class ReservationController extends Controller
        
         #$reservation = $this->reservationRepository->find($id);
         $reservation = $this->reservationRepository->getMyReservation($id);
+        if($reservation->booking_status_id == 2){
+            return redirect('reservations');
+        }
+        if(isset($reservation->host_id)){        
+            if($reservation->host_id != auth()->user()->host_id ){                
+                exit;
+            }
+        }else{
+            exit;
+        }
+        
         
         
         $rooms = $this->roomRepository->all();
@@ -764,7 +775,9 @@ class ReservationController extends Controller
         $status = null;
         DB::beginTransaction();
         try {
+            $this->reservationRepository->update($id, ['booking_status_id' => 2]);
             $this->reservedRoomRepository->removeReservedRoom($id);
+            Cache::forget('reservation_id_'.$id);
             $status = 1;
             DB::commit(); 
         } catch(\Exception $e) {
