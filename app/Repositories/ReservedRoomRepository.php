@@ -3,6 +3,7 @@
 namespace App\Repositories;
 use App\Models\ReservedRoom;
 use Illuminate\Support\LazyCollection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\Builder;
 
@@ -50,15 +51,27 @@ class ReservedRoomRepository extends BaseRepository
     }
 
     public function updateMyReservedRoom($reservation_id, $data){     
-        $this->model->where('reservation_id', '=', $reservation_id)->delete();        
+        //$this->model->where('reservation_id', '=', $reservation_id)->delete();        
+        $this->removeReservedRoom($reservation_id);
         /* $this->model->where('reservation_id', '=', $reservation_id)->chunkById(1000, function ($reservedrooms) {
             //go through the collection and delete every post.
             foreach($reservedrooms as $r) {
                 $r->delete();
             }
         }); */
-                
+
         $this->model->insert($data);
+    }
+
+    public function removeReservedRoom($reservation_id){        
+        $this->model->where('reservation_id', '=', $reservation_id)->chunkById(100, function (Collection $reservedrooms) {           
+            foreach($reservedrooms as $r) {
+               // $r->delete();
+               DB::table('reserved_rooms')
+                ->where('id', $r->id)
+                ->delete();
+            }
+        }); 
     }
 
     

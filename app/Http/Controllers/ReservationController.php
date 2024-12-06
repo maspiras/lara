@@ -625,12 +625,11 @@ class ReservationController extends Controller
             }
 
             if(!$this->isEmpty($request->meals)){    
-                #$this->reservedmealRepository->insert($this->mealsRequestData($request, $reservation->id));
+                
                 $this->reservedmealRepository->update($reservation->id, $this->mealsRequestData($request, $reservation->id));
             }   
 
-            if(!$this->isEmpty($request->service_id)){ /* I need a faster solution for this */
-                #$this->reservedservicesRepository->insert($this->servicesRequestData($request, $reservation_id));
+            if(!$this->isEmpty($request->service_id)){ /* I need a faster solution for this */                
                 $this->reservedservicesRepository->updateMyReservedServices($reservation->id, $this->servicesRequestData($request, $reservation->id));
             } 
 
@@ -761,7 +760,19 @@ class ReservationController extends Controller
         }else{
             exit;
         }
-        
+        $msg = "Successfully Cancelled";
+        $status = null;
+        DB::beginTransaction();
+        try {
+            $this->reservedRoomRepository->removeReservedRoom($id);
+            $status = 1;
+            DB::commit(); 
+        } catch(\Exception $e) {
+               DB::rollBack();         
+            $msg = $e->getMessage();
+        }  
+
+        return array('status' => $status, 'msg' => $msg);
         
     }
 }

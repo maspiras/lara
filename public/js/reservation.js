@@ -188,6 +188,23 @@ $(document).ready(function(){
                 //alert('checkin '+$('#checkin').val() + ' checkout '+ moment(checkout).format('MM/DD/YYYY') );
               }
             );
+        },
+
+        Cancel: function(id){
+            var getData = AjaxLib.getAjaxDataJson(config.SitePath + '/reservations/'+id+'/cancel');
+            
+            getData.done(function(data){
+                
+                if(data.status ==1){
+                    Swal.fire(data.msg, "", "success");
+                    window.location.href = config.SitePath+"/calendar";
+                }else{
+                    Swal.fire(data.msg, "", "error");
+                }                                
+            });    
+            getData.fail(function(jqXHR, textStatus, errorThrown) {                
+                Swal.fire(textStatus + ': ' + errorThrown, "", "error");
+            });
         }
 
     } /* End of class Reservation */
@@ -498,7 +515,12 @@ $(document).ready(function(){
             //denyButtonText: `Don't save`
           }).then((result) => {            
             if (result.isConfirmed) {                
-              Swal.fire("On Development", "", "success");
+              //Swal.fire("On Development", "", "success");
+              cancel_url = $(this).attr('href').split('/');              
+              id = cancel_url[cancel_url.length-2];              
+              Reservation.Cancel(id);
+              $("#reservationForm").prop("disabled", true);
+              
             } 
           });
         e.preventDefault();   
