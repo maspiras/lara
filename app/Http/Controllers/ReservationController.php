@@ -35,9 +35,10 @@ class ReservationController extends Controller
     use ValidatesRequests;
     private $reservationRepository, $reservedRoomRepository, $paymentRepository, $mealRepository,$serviceRepository, $reservedmealRepository;
     private $roomRepository, $reservedserviceRepository, $currencyRepository, $bookingSourceRepository;
-    
-    public function __construct(MealRepository $mealRepository, BookingSourceRepository $bookingSourceRepository,CurrencyRepository $currencyRepository,ReservedServiceRepository $reservedserviceRepository, ReservedMealRepository $reservedmealRepository, ServiceRepository $serviceRepository, PaymentRepository $paymentRepository, ReservedRoomRepository $reservedRoomRepository, ReservationRepository $reservationRepository, RoomRepository $roomRepository)
+    var $r;
+    public function __construct(Request $r, MealRepository $mealRepository, BookingSourceRepository $bookingSourceRepository,CurrencyRepository $currencyRepository,ReservedServiceRepository $reservedserviceRepository, ReservedMealRepository $reservedmealRepository, ServiceRepository $serviceRepository, PaymentRepository $paymentRepository, ReservedRoomRepository $reservedRoomRepository, ReservationRepository $reservationRepository, RoomRepository $roomRepository)
     {
+        $this->r = $r;
         $this->reservationRepository = $reservationRepository;
         $this->roomRepository = $roomRepository;
         $this->reservedRoomRepository =  $reservedRoomRepository;
@@ -460,12 +461,19 @@ class ReservationController extends Controller
     public function update(Request $request, string $id)
     {
        
-        
+        $reservation = $this->reservationRepository->getMyReservation($id);
         $reservation_id = $id;#last(request()->segments());
+        if(isset($reservation->host_id)){        
+            if($reservation->host_id != auth()->user()->host_id ){                
+                exit;
+            }
+        }else{
+            exit;
+        }
 
         $checkinDetails = $this->getCheckinDetails($request->checkin, $request->checkout);
         $grandtotal = $this->getReservationGrandTotal($request->ratesperstay, $request->mealsamount, $request->servicestotalamount);
-        $reservation = $this->reservationRepository->getMyReservation($id);
+       
         $payment_status = $reservation->payment_status_id;
         $oldbalance = $grandtotal - $reservation->prepayment;
         $balance = 0;
@@ -542,7 +550,8 @@ class ReservationController extends Controller
             'balancepayment' => $balance,
             'user_id' => $request->user()->id,
             'host_id' => auth()->user()->host_id,            
-            'booking_status_id' => $booking_status_id,            
+            'booking_status_id' => $booking_status_id,
+            'updated_at' => now(),
         );
 
         $data['roomname'] = $request->roomname;
@@ -568,6 +577,8 @@ class ReservationController extends Controller
             /* Start check if old reserved rooms are the same or not*/
 
             $reservedRooms = $this->reservedRoomRepository->getMyReservedRooms($id);
+
+            
             $myOldReservedRooms = [];
             foreach($reservedRooms as $v){
                 $myOldReservedRooms[] = $v->room_id;
@@ -580,9 +591,11 @@ class ReservationController extends Controller
                 $changed = 1;
             }
 
+            
+
             /* End check if old reserved rooms are the same or not*/
 
-            if($changed == 1){
+            if($changed == 1 || count($myOldReservedRooms) == 0){
                 $reservedroomsdata = [];
                 $period = CarbonPeriod::create($checkinDetails['checkin'], '1 hour', $checkinDetails['checkout']);
                 
@@ -593,11 +606,12 @@ class ReservationController extends Controller
                         $reservedroomsdata[] = ['reservation_id' => $reservation_id, 'room_id' => $bookedrooms, 'reserved_dates' =>$date->format('Y-m-d H:i') ];
                     }                
                 }                   
+                
                 $this->reservedRoomRepository->updateMyReservedRoom($reservation_id, $reservedroomsdata); 
+                
             }
 
-              
-            
+           
             if(!empty($request->prepayment)){
                 $paymentData = array(
                     'ref_number' => $reservation->ref_number,
@@ -618,7 +632,7 @@ class ReservationController extends Controller
             if(!$this->isEmpty($request->service_id)){ /* I need a faster solution for this */
                 #$this->reservedservicesRepository->insert($this->servicesRequestData($request, $reservation_id));
                 $this->reservedservicesRepository->updateMyReservedServices($reservation->id, $this->servicesRequestData($request, $reservation->id));
-            }
+            } 
 
             
             DB::commit(); 
@@ -643,18 +657,25 @@ class ReservationController extends Controller
     }
 
     public function getCheckinDetails($checkin, $checkout){
-        $checkin = Carbon::parse($checkin.' 2pm');
-        $checkout = Carbon::parse($checkout.' 12pm');        
-        $nightDiff = $checkin->diffInDays($checkout);
-        $data['checkin'] = $checkin;
-        $data['checkout'] = $checkout;
+        $newcheckin = Carbon::parse($checkin.' 2pm');
+        $newcheckout = Carbon::parse($checkout.' 12pm');        
+        if($checkin == $checkout){
+            $newcheckout = $newcheckout->addDays(1);  
+        }
+        $nightDiff = $newcheckin->diffInDays($newcheckout);
+        $data['checkin'] = $newcheckin;
+        $data['checkout'] = $newcheckout;
         $data['nightDiff'] = $nightDiff;
         return $data;
     }
 
     public function makePayment($id, Request $r){
         $reservation = $this->reservationRepository->getMyReservation($id);
-        if($reservation->host_id != auth()->user()->host_id ){
+        if(isset($reservation->host_id)){        
+            if($reservation->host_id != auth()->user()->host_id ){                
+                exit;
+            }
+        }else{
             exit;
         }
                
@@ -697,6 +718,7 @@ class ReservationController extends Controller
                     'balancepayment' => $balance,
                     'payment_status_id' => $payment_status,
                     'booking_status_id' => $booking_status_id,
+                    'updated_at' => now(),
                 ];
         $data['payment'] = [
                     'ref_number' => $reservation->ref_number,
@@ -728,5 +750,18 @@ class ReservationController extends Controller
             #echo  $e->getMessage();
         }     
         return array('status' => $status, 'msg' => $msg);
+    }
+
+    public function cancelReservation($id){
+        $reservation = $this->reservationRepository->getMyReservation($id);
+        if(isset($reservation->host_id)){        
+            if($reservation->host_id != auth()->user()->host_id ){                
+                exit;
+            }
+        }else{
+            exit;
+        }
+        
+        
     }
 }

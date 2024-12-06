@@ -57,7 +57,7 @@ class ReservedRoomRepository extends BaseRepository
                 $r->delete();
             }
         }); */
-        sleep(2);
+                
         $this->model->insert($data);
     }
 

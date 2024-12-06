@@ -442,7 +442,7 @@
                       
                   
                       <div class='btn-group'>
-                          <a href="{{ route('reservations.destroy', $reservation->id) }}" class='btn btn-danger btn-lg cancelreservation'>
+                          <a href="{{ route('reservation.cancelReservation',$reservation->id) }}" class='btn btn-danger btn-lg cancelreservation'>
                               <i class="fa fa-trash"></i> Cancel
                           </a>
                           <a href="{{ route('refunds.edit', $reservation->id) }}" class='btn btn-info btn-lg refundreservation'>
