@@ -64,7 +64,7 @@ $(document).ready(function(){
             }
         },
         GetBalance: function(){
-            grandtotal = parseFloat(Reservation.GetGrandTotal().replace(',',''));              
+            grandtotal = parseFloat(Reservation.GetGrandTotal().replace(/,/g,''));              
             prepayment = parseFloat($('#prepayment').val());
             if (isNaN(prepayment)) {
                 prepayment =0;                
@@ -74,6 +74,7 @@ $(document).ready(function(){
                 paid =0;                
             }
             balance = grandtotal - (paid + prepayment);
+            
             if(balance < 0){
                 balance = 0;
             }
@@ -94,7 +95,7 @@ $(document).ready(function(){
             var services_added = 0;
             $('.serviceschosen .service .servicesamount').each(function(i){
                 services_added++;
-                serviceamount = $(this).val() == '' ? 0 : $(this).val().replace(',', "");
+                serviceamount = $(this).val() == '' ? 0 : $(this).val().replace(/,/g, "");
                 amount = amount + parseFloat(serviceamount);
             });
             if(services_added == 0){
@@ -526,7 +527,22 @@ $(document).ready(function(){
         e.preventDefault();   
     });
     $('.refundreservation').on( "click", function(e) {
-        alert('on development');
+        
+        $('.refundmodal').modal('show');
+        
+        e.preventDefault();   
+    });
+
+    $('.refundmodal').on('shown.bs.modal', function () {
+        $('#refund').trigger('focus')
+    });
+
+    
+    $('#refundForm').submit(function(e){
+        //$("#serviceForm")[0].reset();  
+        alert('on development');     
+        $(this)[0].reset();
+        $('.refundmodal').modal('hide');
         e.preventDefault();   
     });
 });

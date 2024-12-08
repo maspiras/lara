@@ -472,7 +472,7 @@
   </form>
 </div> <!-- /.content-wrapper -->
 @include('reservations.addservice')
-
+@include('reservations.refund')
 
 @endsection
 @push('styles')

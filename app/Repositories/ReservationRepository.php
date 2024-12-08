@@ -34,12 +34,17 @@ class ReservationRepository extends BaseRepository
                 ->leftJoin('currencies', 'reservations.currency_id', '=', 'currencies.id')
                 ->leftJoin('booking_sources', 'reservations.booking_source_id', '=', 'booking_sources.id')
                 ->where('reservations.id', '=', $id)
+                ->where('reservations.host_id', '=', auth()->user()->host_id)
                 ->first();
 		    cache([$cache_keyword => $data], 86400); 
 		}
-		return $data;        
-
+		return $data;
     }
+
+    /* public function update(int $id, array $data){        
+        return $this->model->where('id', $id)
+                    ->update($data);
+    } */
 
     
 }

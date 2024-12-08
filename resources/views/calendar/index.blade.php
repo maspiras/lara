@@ -13,7 +13,7 @@
           <div class="col-sm-3">                
                     <div class="pull-right">
                         @can('room-create')                        
-                        <a class="btn btn-success" href="{{ route('reservations.create') }}"><i class="fa fa-plus"></i> Create New Reservation</a>&nbsp;                                                
+                        <!-- <a class="btn btn-success" href="{{ route('reservations.create') }}"><i class="fa fa-plus"></i> Create New Reservation</a>&nbsp;    -->                                             
                         @endcan
                     </div>    
                 </div>
@@ -39,9 +39,13 @@
 
    
 
+          <!-- <div class="card card-info"> -->
           <div class="card card-info">
               <div class="card-header">
-                <h3 class="card-title">Maximize</h3>
+                
+                @can('room-create')                        
+                        <a class="btn btn-secondary" href="{{ route('reservations.create') }}"><i class="fa fa-plus"></i> Create New Reservation</a>&nbsp;                                                
+                        @endcan
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i>
                   </button>

@@ -94,6 +94,18 @@ class BaseRepository
         return $this->model->insert($inputs);
     }
 
+    public function massiveInsert($data){
+        $insert_data = collect($data); // Make a collection to use the chunk method
+        // it will chunk the dataset in smaller collections containing 200 values each. 
+        // Play with the value to get best result
+        $chunks = $insert_data->chunk(200);
+        foreach ($chunks as $chunk)
+        {
+        //\DB::table('items_details')->insert($chunk->toArray());
+            $this->insert($chunk->toArray());
+        }
+    }
+
     public function insertGetId(array $inputs){
         return $this->model->insertGetId($inputs);
     }
