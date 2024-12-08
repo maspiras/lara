@@ -206,6 +206,20 @@ $(document).ready(function(){
             getData.fail(function(jqXHR, textStatus, errorThrown) {                
                 Swal.fire(textStatus + ': ' + errorThrown, "", "error");
             });
+        },
+
+        Refund: function(frm){
+            var formData = $( frm ).serialize();
+            var getData = AjaxLib.postAjaxData(config.SitePath + '/reservations/'+id+'/refund', formData );
+            
+            getData.done(function(data){
+                
+                Swal.fire(data.msg, "", "success");
+                //toastr.success('<h5>'+data.msg+'</h5>');
+            });    
+            getData.fail(function(jqXHR, textStatus, errorThrown) {                
+                Swal.fire(textStatus + ': ' + errorThrown, "", "error");
+            });
         }
 
     } /* End of class Reservation */
@@ -540,7 +554,10 @@ $(document).ready(function(){
     
     $('#refundForm').submit(function(e){
         //$("#serviceForm")[0].reset();  
-        alert('on development');     
+        
+        refund_url = $('.refundreservation').attr('href').split('/');              
+        id = refund_url[refund_url.length-2];
+        Reservation.Refund($(this));
         $(this)[0].reset();
         $('.refundmodal').modal('hide');
         e.preventDefault();   

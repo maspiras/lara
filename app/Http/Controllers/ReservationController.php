@@ -833,4 +833,11 @@ class ReservationController extends Controller
         return array('status' => $status, 'msg' => $msg);
         
     }
+
+    public function refund($id){
+        $msg = "Refund Successful";
+        $status = null;
+
+        return array('status' => $status, 'msg' => $msg);
+    }
 }

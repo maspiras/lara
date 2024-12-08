@@ -445,7 +445,7 @@
                           <a href="{{ route('reservation.cancelReservation',$reservation->id) }}" class='btn btn-danger btn-lg cancelreservation'>
                               <i class="fa fa-trash"></i> Cancel
                           </a>
-                          <a href="{{ route('refunds.edit', $reservation->id) }}" class='btn btn-info btn-lg refundreservation'>
+                          <a href="{{ route('reservation.refund', $reservation->id) }}" class='btn btn-info btn-lg refundreservation'>
                               <i class="fa fa-money-bill"></i> Refund
                           </a>                      
                       </div>
