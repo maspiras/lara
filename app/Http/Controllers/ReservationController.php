@@ -361,7 +361,8 @@ class ReservationController extends Controller
                 'amount' => $amount,
                 'balance' => $balance,
                 'currency_id' => $request->currency,
-                'payment_type_id' => $request->typeofpayment          
+                'payment_type_id' => $request->typeofpayment,
+                'action_type_id' => $amount >= $grandtotal? 3:1,
             );  
             #if(!empty($request->prepayment)){
             if(!$this->isEmpty($request->prepayment)){
@@ -615,8 +616,7 @@ class ReservationController extends Controller
        
         DB::beginTransaction();
         try {   
-            $this->reservationRepository->update($reservation_id, $data['reservation']);
-            Cache::forget('reservation_id_'.$id);
+            
 
             $changed = 0;
             $old_checkin = date('m/d/Y', strtotime($reservation->checkin));
@@ -672,6 +672,20 @@ class ReservationController extends Controller
 
            
             if(!empty($request->prepayment)){
+                if($reservation->prepayment > 0){             
+                    if($prepayment >= $grandtotal){                    
+                        $action_type = 3;
+                    }else{
+                        $action_type = 2;
+                    }
+                }else{
+                    if($prepayment >= $grandtotal){                    
+                        $action_type = 3;
+                    }else{
+                        $action_type = 1;
+                    }
+                }
+                
                 $paymentData = array(
                     'ref_number' => $reservation->ref_number,
                     'host_id' => auth()->user()->host_id,
@@ -680,7 +694,8 @@ class ReservationController extends Controller
                     'amount' => $amount,
                     'balance' => $balance,
                     'currency_id' => $request->currency,
-                    'payment_type_id' => $request->typeofpayment,                
+                    'payment_type_id' => $request->typeofpayment,  
+                    'action_type_id' => $action_type,              
                 );
                 $this->paymentRepository->insert($paymentData);
             }
@@ -694,7 +709,8 @@ class ReservationController extends Controller
                 $this->reservedservicesRepository->updateMyReservedServices($reservation->id, $this->servicesRequestData($request, $reservation->id));
             } 
 
-            
+            $this->reservationRepository->update($reservation_id, $data['reservation']);
+            Cache::forget('reservation_id_'.$id);
             DB::commit(); 
          } catch(\Exception $e) {
                 DB::rollBack();

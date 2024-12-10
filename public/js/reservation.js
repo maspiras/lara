@@ -575,5 +575,20 @@ $(document).ready(function(){
         $('.refundmodal').modal('hide');
         e.preventDefault();   
     });
+
+    /* $("#your_form_id").find('input'), function(){
+        $(this).bind('keypress keydown keyup', function(e){
+           if(e.keyCode == 13) { e.preventDefault(); }
+        });
+    $('#reservationForm').find('input') */
+    $('#reservationForm input,select').not("#prepayment").keypress(function(event) {
+        // detect ENTER key
+        if (event.keyCode == 13) {
+            // simulate submit button click
+            //$("#btn-submit").click();
+            // stop form from submitting via ENTER key press
+            event.preventDefault ? event.preventDefault() : event.returnValue = false;
+        }
+    });
  Reservation.GetBalance();
 });

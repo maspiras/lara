@@ -22,11 +22,28 @@
                   </thead>
                   <tbody>
                     @foreach($myPayments as $p)
-                    <tr class="{{$p->amount>0?'table-success': 'table-danger'}}">
+                      @php
+                      /* 1=prepayment, 2=partial, 3=Fully payment, 4=refunded */
+                        $action_status = null;
+                        if($p->action_type_id == 1){
+                          $action_status = 'Prepayment';
+                          $class = 'table-success';
+                        }elseif($p->action_type_id == 2){
+                          $action_status = 'Partial';
+                          $class = 'table-success';
+                        }elseif($p->action_type_id == 3){
+                          $action_status = 'Fully Paid';
+                          $class = 'table-warning';
+                        }else{
+                          $action_status = 'Refunded';  
+                          $class = 'table-danger';
+                        }
+                      @endphp                  
+                    <tr class="{{$class}}">
                       <td>{{date('M d, Y h:i:s a', strtotime($p->added_on))}}</td>
                       <td>{{number_format($p->amount, 2, '.', ',')}}</td>
                       <td>{{number_format($p->balance, 2, '.', ',')}}</td>
-                      <td>{{$p->amount>0?'Paid': 'Refunded'}}</td>
+                      <td>{{$action_status}}</td>
                     </tr>
                     @endforeach
                    

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('reservation_id');
             $table->mediumInteger('currency_id');
             $table->tinyInteger('payment_type_id');
+            $table->tinyInteger('action_type_id'); /* 1=prepayment, 2=partial, 3=Fully payment, 4=refunded */
             $table->decimal('amount', 9, 2);
             $table->decimal('balance', 9, 2)->nullable();
             $table->timestamp('added_on');
