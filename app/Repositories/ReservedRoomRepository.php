@@ -35,7 +35,7 @@ class ReservedRoomRepository extends BaseRepository
         
        
         $reservedrooms = $this->model->distinct()
-        ->selectRaw('room_id, fullname, checkin, checkout, prepayment, DATE(checkout) AS checkoutday')
+        ->selectRaw('room_id, fullname, checkin, checkout, prepayment, grandtotal, balancepayment as balance, DATE(checkout) AS checkoutday')
         ->join('reservations', 'reserved_rooms.reservation_id', '=', 'reservations.id')
         ->where('host_id', auth()->user()->host_id)
         ->whereBetween('reserved_dates',

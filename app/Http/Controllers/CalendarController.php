@@ -28,6 +28,8 @@ class CalendarController extends Controller
         $rooms =  $this->roomRepository->all();       
         
         $reservedrooms = $this->reservedRoomRepository->getHostReservedRooms(Carbon::create(date('Y-m-d', strtotime("-1 month")))->startOfMonth(), Carbon::create(date('Y-m-d', strtotime("+13 months")))->endOfMonth());
+        
+        #print_r($reservedrooms);
         return view('calendar.index',compact('rooms', 'reservedrooms'))
             ->with('i', (request()->input('page', 1) - 1) * 5); 
     }

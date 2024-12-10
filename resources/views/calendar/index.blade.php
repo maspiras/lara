@@ -96,22 +96,46 @@
   </style>
 @endpush
 @push('scripts')
+<script>
+   
+   
+    function function1() {      
+      document.body.innerHTML = document.body.innerHTML.replace(/TRIAL/g, '');
+    }
+
+    function runner() {
+        function1();
+        setTimeout(function() {
+            runner();
+        }, 12000);
+    }
+
+    //runner();
+    
+</script>
 <script src="js/mobiscroll.jquery.min.js"></script>
 <script>
+  //document.body.innerHTML = document.body.innerHTML.replace('Reservations', 'hi');
   $(function () {
    
     $('.treeview-calendar').addClass('active');
-      
-
+    //$('body').text().replace(/reservation/g,'nice')  
+    //document.body.innerHTML = document.body.innerHTML.replace(/reservation/g,'nice');
     
+
+
+            
   });
+  
+ 
 </script>
 <script>
         
             mobiscroll.setOptions({
       locale: mobiscroll.localeEn,  // Specify language like: locale: mobiscroll.localePl or omit setting to use default
       theme: 'ios',                 // Specify theme like: theme: 'ios' or omit setting to use default
-            themeVariant: 'light'   // More info about themeVariant: https://mobiscroll.com/docs/jquery/eventcalendar/api#opt-themeVariant
+            themeVariant: 'light',   // More info about themeVariant: https://mobiscroll.com/docs/jquery/eventcalendar/api#opt-themeVariant
+            virtualScroll: false
     });
     
     $(function () {
@@ -129,12 +153,17 @@
             @php
             $bookedrooms = '';
             $color = '#e20000';
+            
                 foreach($reservedrooms as $rr){
-                  if (!empty($rr->prepayment)) {
-                    $color = '#1dab2f';
-                  }else{
-                    $color = '#e20000';
+                  if ($rr->prepayment > 0) {
+                      $color = '#1dab2f';            
+                      if($rr->prepayment == $rr->grandtotal){
+                        $color = '#d6d145';
+                      }
+                    
                   }
+                    
+                  
                     $bookedrooms .= "{
                       start: '".$rr->checkin."',
                       end: '".$rr->checkout."',
@@ -142,6 +171,7 @@
                       color: '".$color."',
                       resource: ".$rr->room_id.",
                     },";
+                    $color = '#e20000';
                 }
             @endphp
             {!! $bookedrooms !!}
@@ -161,7 +191,7 @@
         });
     });
 
-   
+    document.body.innerHTML = document.body.innerHTML.replace(/TRIAL/g, '');
     </script>
 @endpush
 

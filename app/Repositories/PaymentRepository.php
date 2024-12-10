@@ -14,5 +14,11 @@ class PaymentRepository extends BaseRepository
         $this->model = DB::table('payments');
     }
 
+    public function myPayments($reservation_id){
+        $data = $this->model->where('reservation_id', $reservation_id)
+                ->orderBy('id', 'desc')->get();
+        return $data;
+    }
+
     
 }

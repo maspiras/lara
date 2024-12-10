@@ -438,16 +438,16 @@
           <div class="col-12">
               <div class="form-group justify-content-md-center row">
                   
-                  <div class="col col-6 text-center">
-                      
-                  
+                  <div class="col col-6 {{$reservation->prepayment==0?'text-left':'text-center'}}">
                       <div class='btn-group'>
                           <a href="{{ route('reservation.cancelReservation',$reservation->id) }}" class='btn btn-danger btn-lg cancelreservation'>
                               <i class="fa fa-trash"></i> Cancel
                           </a>
+                          @if($reservation->prepayment > 0)
                           <a href="{{ route('reservation.refund', $reservation->id) }}" class='btn btn-info btn-lg refundreservation'>
                               <i class="fa fa-money-bill"></i> Refund
-                          </a>                      
+                          </a>
+                          @endif
                       </div>
                   </div>
                   
@@ -456,8 +456,9 @@
                   </div>
               </div>
           </div>
-
-          <!-- /.card -->
+          
+          @include('reservations.payment_history')
+          
         </div>
       </div>
       <!-- <div class="row">

@@ -8,7 +8,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-9">            
-          @if($myReservation->balancepayment <= 0)
+          @if($myReservation->prepayment == $myReservation->grandtotal)
           <div class="row justify-content-md-center">
             <div class="col-sm-12">                  
                 <div class="alert alert-success" role="alert"> 
@@ -267,20 +267,23 @@
         <div class="col-md-12">
               
               
-              @if(!empty($myReservation->additional_info))
-              <ul class="list-group mb-3">
-                <li class="list-group-item d-flex justify-content-between lh-sm">
-                  <div>
-                    <h6 class="my-0">Additional Information</h6>              
-                  </div>
-                </li>          
-                <li class="list-group-item d-flex justify-content-between lh-sm">
-                  <span class="text-body-secondary">{{$myReservation->additional_info}}</span>
-                </li>          
-              </ul>
-              @endif
-              
-            </div>
+          @if(!empty($myReservation->additional_info))
+          <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <div>
+                <h6 class="my-0">Additional Information</h6>              
+              </div>
+            </li>          
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <span class="text-body-secondary">{{$myReservation->additional_info}}</span>
+            </li>          
+          </ul>
+          @endif
+          
+        </div>
+        <hr class="my-4">
+        @include('reservations.payment_history')
+
       </div>
     </div>
   </main>
@@ -414,10 +417,10 @@
                 //frm[0].reset();                                    
                 
                 frm.removeClass('was-validated');
-                var paid = parseFloat($('#paid').val().replace(',',''));
-                var totalpaid = paid + parseFloat($('#prepayment').val().replace(',','')); 
-                var grandtotal = parseFloat($('#grandtotal').val().replace(',',''));
-                var balance = parseFloat($('#balance').val().replace(',',''));
+                var paid = parseFloat($('#paid').val().replace(/,/g,''));
+                var totalpaid = paid + parseFloat($('#prepayment').val().replace(/,/g,'')); 
+                var grandtotal = parseFloat($('#grandtotal').val().replace(/,/g,''));
+                var balance = parseFloat($('#balance').val().replace(/,/g,''));
                 if(totalpaid > grandtotal){
                   totalpaid = grandtotal;  
                 }
@@ -442,13 +445,13 @@
 
 
   $('#prepayment').on('input', function() {
-            var grandtotal = parseFloat($('#grandtotal').val().replace(',',''));                         
+            var grandtotal = parseFloat($('#grandtotal').val().replace(/,/g,''));                         
             var prepayment = parseFloat($('#prepayment').val());
             if (isNaN(prepayment)) {
                 prepayment =0;                
             }
            
-             var paid = parseFloat($('#paid').val().replace(',',''));  
+             var paid = parseFloat($('#paid').val().replace(/,/g,''));  
             if (isNaN(paid)) {
                 paid =0;                
             }            
@@ -481,9 +484,12 @@
             
   });
   
-  if( parseFloat($('#balance').val().replace(',','')) > 0){
+  //if( parseFloat($('#paid').val().replace(/,/g,'')) != parseFloat($('#grandtotal').val().replace(/,/g,''))){
+  if( parseFloat($('#balance').val().replace(/,/g,'')) > 0){
     $('#prepayment').attr("disabled", false);
   }
+
+  
 
     $('#paymentForm').submit(function(e){
         Payment.Update($(this), e)

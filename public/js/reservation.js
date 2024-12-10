@@ -206,6 +206,10 @@ $(document).ready(function(){
             getData.fail(function(jqXHR, textStatus, errorThrown) {                
                 Swal.fire(textStatus + ': ' + errorThrown, "", "error");
             });
+
+            $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+                options.async = true;
+            });
         },
 
         Refund: function(frm){
@@ -219,6 +223,9 @@ $(document).ready(function(){
             });    
             getData.fail(function(jqXHR, textStatus, errorThrown) {                
                 Swal.fire(textStatus + ': ' + errorThrown, "", "error");
+            });
+            $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+                options.async = true;
             });
         }
 
@@ -250,6 +257,9 @@ $(document).ready(function(){
                 $('.servicessavestatus').addClass('alert-success alert');
                 $('.servicessavestatus').text(data.msg + ' '+textStatus + ': ' + errorThrown);
             });
+            $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+                options.async = true;
+            });
             e.preventDefault();
         },
 
@@ -278,6 +288,9 @@ $(document).ready(function(){
             getData.fail(function(jqXHR, textStatus, errorThrown) {
                 //console.log(textStatus + ': ' + errorThrown);
                 toastr.error('<h5>'+textStatus + ': ' + errorThrown+'</h5>'); 
+            });
+            $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+                options.async = true;
             });
         }
 
@@ -519,7 +532,7 @@ $(document).ready(function(){
     servicestotalamount = Reservation.GetServicesTotal();
     $('.servicestotalamount').text(CommonLib.MoneyFormat(servicestotalamount));
     $('#servicestotalamount').val(servicestotalamount);      
-    Reservation.GetBalance();
+   
 
     $('.cancelreservation').on( "click", function(e) {
         Swal.fire({
@@ -562,4 +575,5 @@ $(document).ready(function(){
         $('.refundmodal').modal('hide');
         e.preventDefault();   
     });
+ Reservation.GetBalance();
 });

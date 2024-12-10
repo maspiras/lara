@@ -273,7 +273,7 @@ class ReservationController extends Controller
         //dd($request->prepayment);
         $grandtotal = $this->getReservationGrandTotal($request->ratesperstay, $request->mealsamount, $request->servicestotalamount);
         $payment_status = 1;
-        $balance = 0;
+        $balance = $grandtotal;
         $amount = 0;
 
         if(!empty($request->prepayment)){
@@ -359,7 +359,9 @@ class ReservationController extends Controller
                 'user_id' => $request->user()->id,
                 'reservation_id' => $reservation_id,
                 'amount' => $amount,
-                'balance' => $balance                
+                'balance' => $balance,
+                'currency_id' => $request->currency,
+                'payment_type_id' => $request->typeofpayment          
             );  
             #if(!empty($request->prepayment)){
             if(!$this->isEmpty($request->prepayment)){
@@ -407,10 +409,10 @@ class ReservationController extends Controller
         $myReservedServices = $this->reservedservicesRepository->getMyReservedServices($id);  
         
         $myReservedMeals = $this->reservedmealRepository->getMyReservedMeals($id);
-       
+        $myPayments = $this->paymentRepository->myPayments($id);
         $currencies = $this->currencyRepository->getCurrencies();
 
-        return view('reservations.show',compact('myReservation', 'myReservedRooms', 'myReservedServices', 'myReservedMeals','currencies'));
+        return view('reservations.show',compact('myReservation', 'myReservedRooms', 'myReservedServices', 'myReservedMeals', 'myPayments','currencies'));
     }
 
     public function isMyHostReservations($reservation){
@@ -485,9 +487,10 @@ class ReservationController extends Controller
         #print_r($myReservedRooms);
         $meals = $this->mealRepository->getMeals();
         $myReservedMeals = $this->reservedmealRepository->getMyReservedMeals($id);
+
+        $myPayments = $this->paymentRepository->myPayments($id);
         
-        
-        return view('reservations.edit', compact('reservation', 'rooms', 'myReservedRooms', 'meals', 'services', 'myReservedServices','reservedServices', 'currencies', 'booking_sources', 'myReservedMeals'));
+        return view('reservations.edit', compact('reservation', 'rooms', 'myReservedRooms', 'meals', 'services', 'myReservedServices','reservedServices', 'currencies', 'booking_sources', 'myReservedMeals','myPayments'));
         #print_r($reservation->id);
 
     }
@@ -675,7 +678,9 @@ class ReservationController extends Controller
                     'user_id' => auth()->user()->id,
                     'reservation_id' => $reservation->id,
                     'amount' => $amount,
-                    'balance' => $balance                
+                    'balance' => $balance,
+                    'currency_id' => $request->currency,
+                    'payment_type_id' => $request->typeofpayment,                
                 );
                 $this->paymentRepository->insert($paymentData);
             }
@@ -834,9 +839,52 @@ class ReservationController extends Controller
         
     }
 
+    
+
     public function refund($id){
-        $msg = "Refund Successful";
+        $reservation = $this->reservationRepository->getMyReservation($id);
+        if(isset($reservation->host_id)){        
+            if($reservation->host_id != auth()->user()->host_id ){                
+                exit;
+            }
+        }else{
+            exit;
+        }
+        
+        if($this->r->refund >=  $reservation->prepayment){
+            $amount = -$reservation->prepayment;
+            $prepayment = 0;
+        }else{
+            $amount = -$this->r->refund;
+            $prepayment = ($reservation->prepayment - $this->r->refund);
+        }
+        $data['payment'] = [
+            'ref_number' => $reservation->ref_number,
+            'host_id' => auth()->user()->host_id,
+            'user_id' => auth()->user()->id,
+            'reservation_id' => $reservation->id,
+            'amount' => $amount,
+            'balance' => 0,
+            'currency_id' => $this->r->currency_id,
+            'payment_type_id' => 1
+            ];
+        $data['reservation'] = [
+            'balancepayment' => 0,
+            'prepayment' => $prepayment,
+            ];
+        $msg = "Refund Successful ";
         $status = null;
+        DB::beginTransaction();
+        try {
+            $this->paymentRepository->insert($data['payment']);
+            $this->reservationRepository->update($id, $data['reservation']);
+            Cache::forget('reservation_id_'.$id);            
+            $status = 1;
+            DB::commit(); 
+        } catch(\Exception $e) {
+               DB::rollBack();         
+            $msg = $e->getMessage();
+        }
 
         return array('status' => $status, 'msg' => $msg);
     }
