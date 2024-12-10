@@ -887,7 +887,8 @@ class ReservationController extends Controller
             'amount' => $amount,
             'balance' => 0,
             'currency_id' => $this->r->currency_id,
-            'payment_type_id' => 1
+            'payment_type_id' => 1,
+            'action_type_id' => 4
             ];
         $data['reservation'] = [
             'balancepayment' => 0,
