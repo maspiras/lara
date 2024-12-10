@@ -770,10 +770,14 @@ class ReservationController extends Controller
                 $balance = 0;
                 $amount = $oldbalance;
                 $prepayment = $reservation->prepayment + $oldbalance;
-           }else{
+                $action_type = 3;
+            }else{
                 $balance = $grandtotal - ($reservation->prepayment + $r->prepayment);
                 $amount = $r->prepayment;
-               
+                $action_type = 2;
+                if($reservation->prepayment < 1){
+                    $action_type = 1;
+                }
                 if($r->prepayment >= $oldbalance){
                     $payment_status = 3;
                     $amount = $oldbalance;
@@ -786,7 +790,7 @@ class ReservationController extends Controller
                 if($balance < 0){
                     $balance = 0;
                 }
-           }
+            }
            $booking_status_id =1;
         }
 
@@ -805,7 +809,8 @@ class ReservationController extends Controller
                     'amount' => $amount,
                     'balance' => $balance,
                     'currency_id' => $r->currency,
-                    'payment_type_id' => $r->paymentMethod
+                    'payment_type_id' => $r->paymentMethod,
+                    'action_type_id' => $action_type,   
         ];
         
         
