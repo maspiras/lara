@@ -34,9 +34,12 @@
                         }elseif($p->action_type_id == 3){
                           $action_status = 'Fully Paid';
                           $class = 'table-warning';
-                        }else{
+                        }elseif($p->action_type_id == 4){
                           $action_status = 'Refunded';  
                           $class = 'table-danger';
+                        }else{
+                          $action_status = '';  
+                          $class = '';
                         }
                       @endphp                  
                     <tr class="{{$class}}">
