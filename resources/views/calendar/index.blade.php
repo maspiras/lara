@@ -155,12 +155,19 @@
             $color = '#e20000';
             
                 foreach($reservedrooms as $rr){
-                  if ($rr->prepayment > 0) {
+                  /* if ($rr->prepayment > 0) { //payment_status_id
                       $color = '#1dab2f';            
                       if($rr->prepayment == $rr->grandtotal){
                         $color = '#d6d145';
                       }
-                    
+                  } */
+
+                  if($rr->payment_status_id == 2){
+                    $color = '#1dab2f';   
+                  }elseif($rr->payment_status_id == 3){
+                    $color = '#d6d145';
+                  }else{
+                    $color = '#e20000';
                   }
                     
                   
