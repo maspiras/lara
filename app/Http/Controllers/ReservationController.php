@@ -105,12 +105,17 @@ class ReservationController extends Controller
         } */
         
         #return view('reservations.index');
-        return $dataTable->render('reservations.index');
+        #return $dataTable->render('reservations.index');
         #print_r($data);
         
+        $todayscheckin = $this->reservationRepository->getTodaysCheckin();
+        $todayscheckout = $this->reservationRepository->getTodaysCheckout();
+        $currentlyhosting = $this->reservationRepository->getCurrentlyHosting();
+        $recentreservation = $this->reservationRepository->getRecentReservation();
+        
 
-        /* return view('reservations.index',compact('rooms', 'reservedrooms'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);  */
+        return view('reservations.index',compact( 'todayscheckin', 'todayscheckout', 'currentlyhosting', 'recentreservation'))
+            ->with('i', (request()->input('page', 1) - 1) * 5); 
            
     }
 

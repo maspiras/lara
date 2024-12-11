@@ -46,5 +46,53 @@ class ReservationRepository extends BaseRepository
                     ->update($data);
     } */
 
+    public function getTodaysCheckin(){
+        $checkin = $this->model->select(['reservations.id as reservation_id','reservations.ref_number', 'reservations.checkin','reservations.fullname', 'reservations.checkout', 'reservations.payment_status_id as payment_status','reserved_rooms.room_id as room_id', 'rooms.room_name'])
+                ->leftJoin('reserved_rooms', 'reservations.id', '=', 'reserved_rooms.reservation_id')
+                ->leftJoin('rooms', 'reserved_rooms.room_id', '=', 'rooms.id')
+                ->where('reservations.host_id', '=', auth()->user()->host_id)
+                ->whereDate('reservations.checkin', '=', now()->today())
+                ->groupBy('reserved_rooms.room_id')
+                ->get();
+                #->whereRaw('checkin = now()->today()')->get();
+        return $checkin;
+        //return now()->today();      
+    }
+
+    public function getTodaysCheckout(){
+        $checkout = DB::table('reservations')->select(['reservations.id as reservation_id','reservations.ref_number', 'reservations.checkin','reservations.fullname', 'reservations.checkout', 'reservations.payment_status_id as payment_status','reserved_rooms.room_id as room_id', 'rooms.room_name'])
+                ->leftJoin('reserved_rooms', 'reservations.id', '=', 'reserved_rooms.reservation_id')
+                ->leftJoin('rooms', 'reserved_rooms.room_id', '=', 'rooms.id')
+                ->where('reservations.host_id', '=', auth()->user()->host_id)
+                ->whereDate('reservations.checkout', '=', now()->today())
+                ->groupBy('reserved_rooms.room_id')
+                ->get();
+                #->whereRaw('checkin = now()->today()')->get();
+        return $checkout;
+        //return now()->today();      
+    }
+
+    public function getCurrentlyHosting(){
+        $current = DB::table('reservations')->select(['reservations.id as reservation_id','reservations.ref_number', 'reservations.checkin as checkin','reservations.fullname', 'reservations.checkout as checkout', 'reservations.payment_status_id as payment_status','reserved_rooms.room_id as room_id', 'rooms.room_name'])
+                ->leftJoin('reserved_rooms', 'reservations.id', '=', 'reserved_rooms.reservation_id')
+                ->leftJoin('rooms', 'reserved_rooms.room_id', '=', 'rooms.id')
+                ->where('reservations.host_id', '=', auth()->user()->host_id)
+                ->whereDate('reserved_rooms.reserved_dates', '=', now()->today())
+                ->groupBy('reserved_rooms.room_id')
+                ->get();
+                #->whereRaw('checkin = now()->today()')->get();
+        return $current;
+    }
+
+    public function getRecentReservation(){
+        $recentreservation = DB::table('reservations')->select(['reservations.id as reservation_id','reservations.ref_number', 'reservations.checkin','reservations.fullname', 'reservations.checkout', 'reservations.payment_status_id as payment_status'])                
+                ->where('reservations.host_id', '=', auth()->user()->host_id)
+                ->orderByDesc('id')
+                ->limit(10)
+                ->get();
+                #->whereRaw('checkin = now()->today()')->get();
+        return $recentreservation;
+    }
+
     
 }

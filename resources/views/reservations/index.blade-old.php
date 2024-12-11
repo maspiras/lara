@@ -38,12 +38,31 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        
+        <div class="row">
+          <div class="col-12">          
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">All Reservations</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                  <div class="table-responsive">
+                    {{ $dataTable->table(['class' => 'table table-bordered reservations table-hover', 'width' => "100%"]) }}   
+                  </div>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->  
+              
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
          <div class="row">
-              @include('reservations.todays_checkin')
+         @include('reservations.todays_checkin')
               @include('reservations.todays_checkout')
               @include('reservations.currently_hosting')
-              @include('reservations.recent-reservations')
+              @include('reservations.recent-transaction')
          </div>
       </div>
       <!-- /.container-fluid -->
@@ -88,7 +107,7 @@
 <script src="{{ url('/') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
 
-
+{{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 <script>
   $(function () {
     /*$("#example1").DataTable({
@@ -162,25 +181,21 @@
 
     $("#currently_hosting").DataTable({
       "responsive": false, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "excel", "pdf", "print", "colvis"],
-      "ordering": false,
+      "buttons": ["copy", "excel", "pdf", "print", "colvis"]
     }).buttons().container().appendTo('#currently_hosting_wrapper .col-md-6:eq(0)');
     
     $("#todayscheckin").DataTable({
-      "responsive": false, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy",  "excel", "pdf", "print", ],
-      "ordering": false,
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy",  "excel", "pdf", "print", ]
     }).buttons().container().appendTo('#todayscheckin_wrapper .col-md-6:eq(0)');
     
     $("#todayscheckout").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy",  "excel", "pdf", "print", ],
-      "ordering": false,
+      "buttons": ["copy",  "excel", "pdf", "print", ]
     }).buttons().container().appendTo('#todayscheckout_wrapper .col-md-6:eq(0)');
     $("#recent_transaction").DataTable({
       "responsive": false, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "excel", "pdf", "print", "colvis"],
-      "ordering": false,
+      "buttons": ["copy", "excel", "pdf", "print", "colvis"]
     }).buttons().container().appendTo('#recent_transaction_wrapper .col-md-6:eq(0)');
     
     
