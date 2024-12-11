@@ -91,6 +91,7 @@
 
 <script>
   $(function () {
+    $('.treeview-reservations').addClass('active');
     /*$("#example1").DataTable({
       //scrollX: 400,
       scrollX: true,

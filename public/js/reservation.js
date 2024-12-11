@@ -73,6 +73,18 @@ $(document).ready(function(){
             if (isNaN(paid)) {
                 paid =0;                
             }
+            discount = parseFloat($('#discount').val().replace(/,/g,''));
+            if (isNaN(discount)) {
+                discount =0;                
+            }
+            if($('#discountoption').val() == 1){
+                grandtotal = grandtotal - discount;
+            }else{
+                grandtotal = grandtotal - ((grandtotal * discount) / 100);
+            }
+
+            
+            
             balance = grandtotal - (paid + prepayment);
             
             if(balance < 0){
@@ -505,6 +517,21 @@ $(document).ready(function(){
         $('#prepayment').on('input', function() {
               Reservation.GetBalance();
         });
+
+        $('#discount').on('input', function() {
+            if($('#discountoption').val() == 2){                
+                if($(this).val() > 100){
+                    $(this).val(100)                    
+                }
+            }
+
+            Reservation.GetBalance();
+            
+        });
+
+        $('#discountoption').on('change', function() {
+            Reservation.GetBalance();
+          });
   
     /* $('.reservations').on('click', '.editreservation', function(e){        
         

@@ -88,7 +88,7 @@
                         <span class="text-success">
                           <i class="fas fa-arrow-up"></i> {{ number_format($salespercent['thisyeartotalsalespercent'], 2, ".", ",")}}%
                         </span>
-                        <span class="text-muted">Since last month</span>
+                        <span class="text-muted">Since last year</span>
                       </p>
                     </div>
                     <!-- /.d-flex -->

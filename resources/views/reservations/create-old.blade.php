@@ -320,9 +320,8 @@
             </div>
             <div class="card-body">
 
-              <!-- <div class="form-group row">
-                  <label for="currency" class="col-xs-4 col-sm-4 col-form-label">Currency</label>
-                  <div class="col col-xs-8 col-sm-8">
+              <div class="form-group">
+                  <label>Currency</label>
                   <select class="form-control select2" style="width: 100%;" id="currency" name="currency">
                     <option selected="selected" value="188">PHP - Philippines</option>
                     <option value="251">USD - United States</option>
@@ -334,125 +333,55 @@
                     <option value="{{$c->id}}">{{$c->currency_code}} - {{$c->currency_country}}</option>
                     @endforeach
                   </select>
-                  </div>
               </div>
-              <div class="form-group row">
-                  <label for="typeofpayment"  class="col-sm-4 col-form-label">Type of payment</label>
-                  <div class="col-sm-8">
-                  <select class="form-control select2" style="width: 100%;" id="typeofpayment" name="typeofpayment">                    
+              <!-- <div class="form-group">
+                  <label>Payment status</label>
+                  <select class="form-control select2" style="width: 100%;" id="paymentstatus" name="paymentstatus">
+                    <option selected="selected" value="1">No payment</option>
+                    <option value="2">Prepayment paid</option>
+                    <option value="3">Fully paid</option>                 
+                  </select>
+              </div> -->  
+
+              <div class="form-group">
+                  <label>Type of payment</label>
+                  <select class="form-control select2" style="width: 100%;" id="typeofpayment" name="typeofpayment">
+                    
                     <option selected="selected" value="1">Pay with cash</option>
                     <option value="2">Pay via online money transfer</option>
                     <option value="3">Pay via debit/credit card</option>
                     <option value="4">Pay via Cheque</option>
                   </select>
-                  </div>
               </div>  
-              <div class="form-group row">
-                <label for="grandtotal"  class="col-sm-4 col-form-label">Grand Total</label>
-                <div class="col-sm-8">
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
-                    </div>
-                    <input disabled type="text" class="form-control" placeholder="0.00" value="0" name="grandtotal" id="grandtotal">
+              <div class="form-group">
+                <label for="inputEstimatedDuration">Grand Total</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
+                  <input disabled type="text" class="form-control" placeholder="0.00" value="0" name="grandtotal" id="grandtotal">
                 </div>
               </div>
 
-              <div class="form-group row">
-                <label for="prepayment" class="col-sm-4 col-form-label">Prepayment</label>
-                <div class="col-sm-8">
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
-                    </div>
-                    <input type="number" class="form-control" id="prepayment" name="prepayment" placeholder="0.00">
+              <div class="form-group">
+                <label for="inputEstimatedDuration">Prepayment</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
+                  <input type="number" class="form-control" id="prepayment" name="prepayment" placeholder="0.00">
                 </div>
               </div>
-              <div class="form-group row">
-                <label for="balance" class="col-sm-4 col-form-label">Balance</label>
-                <div class="col-sm-8">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
-                    </div>
-                    <input disabled type="text" class="form-control" placeholder="0.00" value="0" name="balance" id="balance">
+
+              <div class="form-group">
+                <label for="inputEstimatedDuration">Balance</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                   </div>
-                </div>
-              </div> -->
-
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">Currency</span>
-                  <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
-                </div>
-                <select class="form-control select2" id="currency" name="currency">
-                    <option selected="selected" value="188">PHP - Philippines</option>
-                    <option value="251">USD - United States</option>
-                    <option value="90">EUR - Europe</option>                    
-                    <option value="42">CAD - Canada</option>
-                    <option value="13">AUD - Australia</option>
-                    <option value="249">GBP - United Kingdom</option>
-                    @foreach($currencies as $c)
-                    <option value="{{$c->id}}">{{$c->currency_code}} - {{$c->currency_country}}</option>
-                    @endforeach
-                  </select>
-              </div>
-
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">Type of Payment</span>
-                  <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
-                </div>
-                <select class="form-control select2" id="typeofpayment" name="typeofpayment">                    
-                    <option selected="selected" value="1">Pay with cash</option>
-                    <option value="2">Pay via online money transfer</option>
-                    <option value="3">Pay via debit/credit card</option>
-                    <option value="4">Pay via Cheque</option>
-                  </select>
-              </div>
-
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">Grand Total</span>
-                  <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
-                </div>
-                <input disabled type="text" class="form-control" placeholder="0.00" value="0" name="grandtotal" id="grandtotal">
-              </div>
-
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">Discount</span>
-                  <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
-                </div>
-                <input type="number" class="form-control" id="discount" name="discount" placeholder="0.00">
-                <div class="input-group-append">                  
-                <select class="form-control select2" id="discountoption" name="discountoption">                    
-                    <option selected="selected" value="1">PHP</option>
-                    <option value="2">%</option>
-                  </select>
+                  <input disabled type="text" class="form-control" placeholder="0.00" value="0" name="balance" id="balance">
                 </div>
               </div>
-
-              
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">Balance</span>
-                  <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
-                </div>
-                <input disabled type="text" class="form-control" placeholder="0.00" value="0" name="balance" id="balance">
-              </div>
-
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">Prepayment</span>
-                  <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
-                </div>
-                <input type="number" class="form-control" id="prepayment" name="prepayment" placeholder="0.00">
-              </div>
-
-              
              
               
 

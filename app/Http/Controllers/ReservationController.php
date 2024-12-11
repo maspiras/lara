@@ -24,8 +24,8 @@ use Carbon\CarbonPeriod;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Exception;
-use DataTables;
-use App\DataTables\ReservationsDataTable;
+#use DataTables;
+#use App\DataTables\ReservationsDataTable;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Cache;
 
@@ -55,7 +55,8 @@ class ReservationController extends Controller
      * Display a listing of the resource.
      */
     
-    public function index(ReservationsDataTable $dataTable)
+    //public function index(ReservationsDataTable $dataTable)
+    public function index()
     {
         
         #$rooms =  $this->roomRepository->all();
